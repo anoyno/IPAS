@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>114年第二次 AI應用規劃師中級｜第一科詳解整理（好記版）</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --panel: #ffffff;
+      --soft: #f8fbff;
+      --panel-soft: #f8fbff;
+      --text: #1f2937;
+      --muted: #64748b;
+      --line: #d9e3f0;
+      --primary: #2563eb;
+      --primary-soft: #dbeafe;
+      --success: #15803d;
+      --success-soft: #dcfce7;
+      --warn: #d97706;
+      --warn-soft: #fef3c7;
+      --shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "Microsoft JhengHei", sans-serif;
+      color: var(--text);
+      background: linear-gradient(180deg, #eaf2ff 0, var(--bg) 220px);
+      line-height: 1.7;
+      transition: background 0.25s ease, color 0.25s ease;
+    }
+    body.dark-mode {
+      --bg: #0f172a;
+      --panel: #111827;
+      --soft: #182235;
+      --panel-soft: #1f2937;
+      --text: #e5eefb;
+      --muted: #94a3b8;
+      --line: #334155;
+      --primary: #60a5fa;
+      --primary-soft: #1e3a8a;
+      --success: #4ade80;
+      --success-soft: #14532d;
+      --warn: #f59e0b;
+      --warn-soft: #3b2b12;
+      --shadow: 0 14px 32px rgba(2, 6, 23, 0.45);
+      background: linear-gradient(180deg, #0b1220 0, var(--bg) 220px);
+    }
+    .container {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 56px;
+    }
+    .hero, .toolbar, .question-card, .footer, .quick-nav {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+    }
+    .hero {
+      padding: 28px;
+      margin-bottom: 18px;
+    }
+    h1, h2, h3 { margin: 0; }
+    h1 { font-size: clamp(1.8rem, 3vw, 2.6rem); margin-bottom: 10px; }
+    .lead { color: var(--muted); margin: 0; }
+    .chips { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+    .chip { padding: 6px 12px; border-radius: 999px; background: var(--primary-soft); color: var(--primary); font-size: 0.92rem; font-weight: 700; }
+    .toolbar { padding: 16px 18px; margin-bottom: 18px; display: grid; gap: 12px; }
+    .toolbar-grid { display: grid; grid-template-columns: minmax(240px,1.7fr) repeat(2, minmax(150px,0.9fr)); gap: 12px; }
+    .toolbar-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+    input, select {
+      width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: #fff; font-size: 0.98rem; color: #0f172a;
+    }
+    .tool-button, .review-button {
+      appearance: none; border: 1px solid var(--line); background: var(--panel); color: var(--text); border-radius: 999px; padding: 10px 14px; font-size: 0.92rem; font-weight: 700; cursor: pointer;
+    }
+    .tool-button.active, .review-button.active { background: var(--primary-soft); color: var(--primary); border-color: var(--primary); }
+    .meta-text { color: var(--muted); font-size: 0.95rem; }
+    .layout { position: relative; }
+    .question-list { display: grid; gap: 16px; }
+    .question-card { padding: 20px; transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease; }
+    .question-card.review-marked { border-color: #f59e0b; box-shadow: 0 12px 28px rgba(245, 158, 11, 0.18); }
+    .card-top { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; }
+    .badge { display: inline-flex; align-items: center; padding: 6px 12px; border-radius: 999px; font-size: 0.9rem; font-weight: 700; }
+    .badge.no { background: #f8fafc; border: 1px solid var(--line); color: var(--text); }
+    .badge.answer { background: var(--success-soft); color: var(--success); cursor: pointer; user-select: none; }
+    .badge.answer.is-hidden { background: #e2e8f0; color: #475569; border: 1px dashed #cbd5e1; }
+    .badge.answer.is-hidden::before { content: "🙈 "; }
+    .badge.source { background: var(--primary-soft); color: var(--primary); }
+    .question-text { font-size: 1.05rem; margin-bottom: 12px; }
+    .question-media { margin: 0 0 12px; }
+    .question-media img { display: block; width: min(100%, 860px); margin: 0 auto; border: 1px solid #d9e3f0; border-radius: 14px; box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08); background: #fff; }
+    .question-media figcaption { margin-top: 8px; color: var(--muted); font-size: 0.92rem; text-align: center; }
+    .choices-block, .explanation, .memory-box, details { border-radius: 14px; padding: 14px 16px; margin-bottom: 12px; }
+    .choices-block { background: var(--soft); border: 1px solid #d7e5f7; }
+    .choices-title { color: var(--primary); font-weight: 700; margin-bottom: 8px; }
+    .choices { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+    .choices li { background: #fff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 8px 10px; }
+    .choices strong { color: #0f172a; margin-right: 6px; }
+    .explanation { background: #fffdf6; border: 1px solid #f3dfb2; }
+    .memory-box { background: #eefaf3; border: 1px solid #c8efd6; }
+    .memory-box h4 { margin: 0 0 8px; font-size: 0.95rem; color: #0f6b36; }
+    .memory-box p { margin: 0; }
+    .mnemonic { margin-top: 8px; font-weight: 800; color: #0f6b36; }
+    .answer-dependent.is-hidden { display: none; }
+    details { background: #fbfdff; border: 1px dashed #bfd0e8; }
+    summary { cursor: pointer; color: var(--primary); font-weight: 700; }
+    .notes { margin: 10px 0 0; padding-left: 20px; }
+    .footer { margin-top: 22px; padding: 20px; color: var(--muted); }
+    .quick-nav { position: fixed; top: 24px; right: 20px; width: 220px; max-height: calc(100vh - 48px); overflow: auto; padding: 16px; z-index: 20; }
+    .quick-nav h3 { font-size: 1rem; margin-bottom: 10px; }
+    .quick-nav-section + .quick-nav-section { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
+    .quick-nav-title { font-size: 0.9rem; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+    .quick-nav-links { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; }
+    .quick-nav a { display: inline-flex; align-items: center; justify-content: center; min-height: 32px; border-radius: 10px; background: var(--panel-soft); border: 1px solid var(--line); color: var(--text); text-decoration: none; font-size: 0.88rem; font-weight: 700; }
+    .quick-nav a.review-link { border-color: #f59e0b; color: #b45309; background: #fff7ed; }
+    .quick-nav a:hover { background: var(--primary-soft); color: var(--primary); }
+    .top-link { position: fixed; right: 20px; bottom: 20px; background: var(--primary); color: #fff; text-decoration: none; border-radius: 999px; padding: 10px 14px; font-weight: 700; box-shadow: var(--shadow); }
+    .hidden { display: none !important; }
+    body.dark-mode .hero,
+    body.dark-mode .toolbar,
+    body.dark-mode .question-card,
+    body.dark-mode .footer,
+    body.dark-mode .quick-nav,
+    body.dark-mode .tool-button,
+    body.dark-mode .review-button { background: var(--panel); border-color: var(--line); color: var(--text); }
+    body.dark-mode input,
+    body.dark-mode select,
+    body.dark-mode .choices li,
+    body.dark-mode details,
+    body.dark-mode .choices-block,
+    body.dark-mode .badge.no { background: var(--panel-soft); border-color: var(--line); color: var(--text); }
+    body.dark-mode .choices strong,
+    body.dark-mode .explanation strong,
+    body.dark-mode details strong,
+    body.dark-mode .memory-box strong { color: #f8fafc; }
+    body.dark-mode .question-media img { background: #0f172a; border-color: #334155; }
+    body.dark-mode .badge.answer.is-hidden { background: #334155; color: #cbd5e1; border-color: #475569; }
+    body.dark-mode .explanation { background: #2a2314; border-color: #6b5a2b; }
+    body.dark-mode .memory-box { background: #142b22; border-color: #28543f; }
+    body.dark-mode .memory-box h4, body.dark-mode .mnemonic { color: #86efac; }
+    body.dark-mode .quick-nav a { background: var(--panel-soft); border-color: var(--line); color: var(--text); }
+    body.dark-mode .quick-nav a.review-link { background: #3b2b12; border-color: #f59e0b; color: #fbbf24; }
+    body.dark-mode .top-link { color: #eff6ff; }
+    @media (max-width: 880px) { .toolbar-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 720px) { .container { width: min(100% - 20px, 1180px); } .hero, .toolbar, .question-card, .footer { border-radius: 16px; } .quick-nav { display: none; } }
+    @media (min-width: 1200px) { .container { width: min(1180px, calc(100% - 320px)); margin-left: auto; margin-right: auto; } }
+  </style>
+</head>
+<body>
+  <aside class="quick-nav" aria-label="快速選題">
+    <h3>快速選題</h3>
+    <div id="quickNavContent"></div>
+  </aside>
+  <div class="container" id="top">
+    <header class="hero">
+      <h1>114年第二次 AI應用規劃師中級｜第一科詳解整理（好記版）</h1>
+      <p class="lead">依據正式試題整理 50 題題幹、四個選項、正確答案、詳解、題目選項相關背景知識，並補上好記版解說與口訣型記憶版。</p>
+      <div class="chips"><span class="chip">第一科：人工智慧技術應用與規劃</span><span class="chip">共 50 題</span><span class="chip">含口訣型記憶版</span><span class="chip">可搜尋 / 快速選題 / 標註複習</span></div>
+    </header>
+
+    <section class="toolbar">
+      <div class="toolbar-grid">
+        <input id="searchInput" type="text" placeholder="搜尋題目、詳解、關鍵字、口訣，例如：Transformer、LASSO、交叉驗證" />
+        <select id="extraFilter"><option value="all">全部題號</option><option value="1-10">1-10</option><option value="11-20">11-20</option><option value="21-30">21-30</option><option value="31-40">31-40</option><option value="41-50">41-50</option></select>
+        <select id="answerFilter">
+          <option value="all">全部答案</option>
+          <option value="A">答案 A</option>
+          <option value="B">答案 B</option>
+          <option value="C">答案 C</option>
+          <option value="D">答案 D</option>
+        </select>
+      </div>
+      <div class="toolbar-actions">
+        <button class="tool-button" id="themeToggle" type="button">🌙 Dark Mode</button>
+        <button class="tool-button" id="answerToggle" type="button">👁️ 顯示全部答案</button>
+        <button class="tool-button" id="reviewFilterToggle" type="button">⭐ 只看已標註題</button>
+      </div>
+      <div class="meta-text" id="resultCount">共 50 題</div>
+    </section>
+
+    <section class="question-list" id="questionList"></section>
+
+    <section class="footer">
+      <h3>備註</h3>
+      <p>本頁已補入好記版解說與口訣型記憶版，適合快速複習與課堂教學。若你要，我也可以再補成可列印版或錯題本模式。</p>
+    </section>
+  </div>
+
+  <a class="top-link" href="#top">回到頂部</a>
+
+  <script>
+    const questions = [
+  {
+    "no": 1,
+    "answer": "B",
+    "question": "某電商企業希望利用自然語言處理（NLP）技術，分析顧客在社群平台與商品評論中的文字內容，以即時掌握顧客對產品的滿意度變化。若採用情感分析（Sentiment Analysis）模型，其主要目的為何？",
+    "options": {
+      "A": "預測顧客使用的語言風格與語氣",
+      "B": "判斷文本中所表達的情感傾向",
+      "C": "將顧客留言自動翻譯成企業內部指定語言",
+      "D": "產生顧客評論的自動化摘要內容"
+    },
+    "explanation": "情感分析的核心任務是判斷文字的情緒極性或情感傾向，例如正向、負向、中性，因此答案是 B。它不是做翻譯、摘要，也不是單純辨識語言風格。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>NLP</b>：讓電腦聽懂、看懂、理解人類語言的技術。</li><li><b>情感分析</b>：AI判斷一段文字帶有正向、負向或中立情緒的技術。</li></ul>"
+    ],
+    "memoryTip": "情感分析就是判斷文字情緒，不是翻譯也不是摘要。",
+    "mnemonic": "情感看情緒",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 2,
+    "answer": "A",
+    "question": "某跨國金融科技公司導入 Transformer 架構開發多語客服系統，以提升長篇金融文件的自動翻譯品質。下列何者為該模型能顯著改善翻譯準確度的主要原因？",
+    "options": {
+      "A": "透過自注意力機制（Self-Attention Mechanism）捕捉長距離語境依賴關係",
+      "B": "透過卷積運算（Convolution Operation）加速訓練過程",
+      "C": "透過強化學習（Reinforcement Learning）自動調整語句生成策略",
+      "D": "透過資料增強（Data Augmentation）平衡多語語料比例"
+    },
+    "explanation": "Transformer 的關鍵優勢在於自注意力機制，可直接建模長距離詞語關係，對長篇翻譯特別重要，因此答案是 A。卷積與強化學習都不是其提升翻譯表現的主要核心。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>Transformer</b>：一款基於「注意力機制」的AI模型架構，擅長處理長篇文字，是ChatGPT的底層基礎。</li><li><b>自注意力機制</b>：讓模型在看一個詞時，能同時注意到句子中其他重要字詞的技術。</li><li><b>卷積運算</b>：常用於影像處理，用一個小方塊在圖片上滑動來尋找邊緣或形狀特徵的計算方式。</li><li><b>強化學習</b>：讓AI從錯誤中學習的策略（做對給獎勵、做錯給懲罰）。</li><li><b>資料增強</b>：把原有的資料稍微修改（如圖片旋轉、放大），人為創造出更多訓練樣本的方法。</li></ul>"
+    ],
+    "memoryTip": "Transformer 翻譯強在自注意力能抓長距上下文。",
+    "mnemonic": "長文靠注意",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 3,
+    "answer": "B",
+    "question": "某企業計畫應用 BERT 模型分析大量顧客意見，以強化客服自動回覆系統。在 BERT 的預訓練過程中，遮罩語言模型（MLM）的主要訓練策略為何？",
+    "options": {
+      "A": "依序遮罩句尾詞語，讓模型從左到右逐步生成完整句子",
+      "B": "隨機遮罩部分詞語，並讓模型根據雙向上下文預測被遮罩的詞",
+      "C": "透過對抗訓練生成語意相似的擾動樣本以提升泛化性",
+      "D": "以未遮罩的詞為條件，使用解碼器結構重建整句內容"
+    },
+    "explanation": "BERT 的 MLM 會隨機遮住部分 token，再讓模型利用左右文預測它們，因此正解是 B。這也是 BERT 得以學到雙向語意表徵的關鍵。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>BERT</b>：一種Google開發的語言模型，強項是能「雙向」看完整句話的前後文來理解詞意。</li><li><b>MLM</b>：把句子裡的一些字遮起來，讓AI像玩填空題一樣猜出那些字，藉此學習語言。</li><li><b>對抗訓練</b>：加入微小擾動的「陷阱題」給AI練習，讓AI變得抗干擾、不容易被騙。</li><li><b>解碼器</b>：生成式AI的「輸出端」，負責把學到的特徵轉換成人類看懂的文字或圖片。</li></ul>"
+    ],
+    "memoryTip": "BERT 的 MLM 是隨機遮詞，再用雙向上下文猜回來。",
+    "mnemonic": "遮詞雙向猜",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 4,
+    "answer": "C",
+    "question": "在詞向量（Word Embedding）訓練方法中，GloVe 與 Word2Vec 的主要差異為何？",
+    "options": {
+      "A": "Word2Vec 以詞頻權重訓練詞向量，而 GloVe 以隨機初始化向量進行學習",
+      "B": "Word2Vec 以全局統計矩陣為基礎，而 GloVe 採用神經網路進行上下文預測",
+      "C": "Word2Vec 為基於預測的模型，而 GloVe 為基於共現統計的模型",
+      "D": "Word2Vec 僅能用於靜態文本語料，而 GloVe 可應用於即時語料更新"
+    },
+    "explanation": "Word2Vec 主要透過上下文預測學習詞向量，而 GloVe 則使用全域共現統計矩陣來建模詞間關係，因此答案是 C。這是兩者最常被拿來比較的核心差異。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>詞向量</b>：把人類的文字轉換成電腦看得懂的數字座標，意思相近的詞在空間中距離越近。</li><li><b>Word2Vec</b>：把詞轉換成向量的經典技術，主要透過「猜前後文」來學習詞意。</li><li><b>GloVe</b>：另一種把詞轉成向量的技術，主要透過統計「兩個詞有多常一起出現」來學習。</li><li><b>共現統計</b>：計算兩個詞在大量文章中，有多常一起出現的統計方法。</li></ul>"
+    ],
+    "memoryTip": "Word2Vec 重預測，GloVe 重共現統計。",
+    "mnemonic": "預測對共現",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 5,
+    "answer": "A",
+    "question": "某企業以 TF-IDF 方法分析顧客意見內容，但發現模型在處理篇幅較長的回饋文本時，無法準確反映關鍵詞的重要性。下列何者為造成此現象的主要原因？",
+    "options": {
+      "A": "長文本中的詞頻偏高，導致常見詞權重被過度放大",
+      "B": "長文本中缺乏明確句子邊界，造成 TF-IDF 無法計算詞頻",
+      "C": "TF-IDF 無法同時處理多份文件",
+      "D": "長文本會改變 IDF 的計算，使所有詞權重趨於相近"
+    },
+    "explanation": "長文本中某些常見詞的 TF 值容易被放大，若沒有良好正規化，就可能稀釋真正關鍵詞的重要性，因此 A 最合理。TF-IDF 能處理多文件，問題不在句子邊界本身。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>TF-IDF</b>：用來找出文章關鍵字的統計法。常出現的字通常分數高，但在所有文章都出現的字分數會被壓低。</li></ul>"
+    ],
+    "memoryTip": "TF-IDF 遇長文本時，詞頻偏高可能掩蓋真正關鍵詞。",
+    "mnemonic": "長文 TF 易膨脹",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 6,
+    "answer": "B",
+    "question": "某企業嘗試以 N-gram 語言模型建立客服自動回覆系統，但發現模型生成的句子雖在片段上合理，卻缺乏整體語意連貫性。此問題最可能源自 N-gram 模型的哪一項限制？",
+    "options": {
+      "A": "N-gram 模型在訓練過程中需要龐大計算量，導致長句無法收斂",
+      "B": "N-gram 模型僅根據固定長度的前序詞建立機率估計，難以捕捉長距離依賴關係",
+      "C": "N-gram 模型缺乏語意嵌入層，因此無法表徵詞語間的語意相似度",
+      "D": "N-gram 模型假設詞與詞之間相互獨立，導致無法建構上下文語意關聯"
+    },
+    "explanation": "N-gram 只看固定長度上下文，視窗之外的語意關聯難以捕捉，因此生成句子容易局部合理、整體不連貫，答案是 B。這正是其長距依賴能力不足的典型問題。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>N-gram</b>：假設每一個字只和它前面的N個字有關，以此來計算句子出現機率的傳統統計模型。</li></ul>"
+    ],
+    "memoryTip": "N-gram 只看固定窗口，所以抓不住長距依賴。",
+    "mnemonic": "N 元只看近",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 7,
+    "answer": "A",
+    "question": "在企業導入的智慧監控系統中，模型以物件偵測方式自動辨識影像中的人物與車輛。若評估指標採用平均精確率（mAP），其中 IoU 閾值設定較高時，代表下列哪一項意義？",
+    "options": {
+      "A": "預測邊界框與真實邊界框的重疊程度越高，模型偵測結果越精準",
+      "B": "預測邊界框與真實邊界框的誤差越大，導致 mAP 數值上升",
+      "C": "模型整體精確率降低，但召回率上升",
+      "D": "預測邊界框的評估結果不受真實框大小影響"
+    },
+    "explanation": "IoU 閾值越高，代表要達到更高重疊比例才算偵測正確，因此評估標準更嚴格，答案是 A。這通常意味著模型必須定位得更準。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>mAP</b>：衡量AI在圖片中「框出所有類別物件」綜合準確度的一種常見給分標準。</li><li><b>IoU</b>：計算「AI畫的預測框」跟「人工畫的真實框」重疊程度的指標，越高代表框得越準。</li><li><b>召回率</b>：在所有「真正標準答案」中，AI成功挑出抓中幾個。注重的是「不要漏抓」。</li><li><b>精確率</b>：AI判斷為「陽性或有罪」的所有結果中，到底有多少是真的。注重的是減少「誤報/抓錯人」。</li></ul>"
+    ],
+    "memoryTip": "IoU 閾值越高，代表框要更重疊才算對。",
+    "mnemonic": "IoU 高更嚴",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 8,
+    "answer": "C",
+    "question": "關於 Softmax 與 Max-Pooling，下列敘述何者正確？",
+    "options": {
+      "A": "Softmax 與 Max-Pooling 都會將特徵張量壓縮為單一最大值",
+      "B": "Max-Pooling 會對輸入進行機率分佈的轉換",
+      "C": "Softmax 會保留所有輸入資訊，但以比例表示；Max-Pooling 只保留區域最大值",
+      "D": "Softmax 主要用於特徵降維，而 Max-Pooling 用於分類輸出"
+    },
+    "explanation": "Softmax 會把輸入轉成機率分布，保留各類別相對大小；Max-Pooling 則只保留局部區域最大值，因此答案是 C。兩者用途完全不同。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>Softmax</b>：把AI輸出的一堆任意數字，轉換成加起來等於100%的「機率」，用來判斷模型最猜哪個類別。</li><li><b>Max-Pooling</b>：把圖片區域縮小，只保留區塊裡數值最大（最明顯）的特徵，用來簡化後續計算。</li></ul>"
+    ],
+    "memoryTip": "Softmax 轉機率分布，Max-Pooling 只留區域最大值。",
+    "mnemonic": "軟分布硬取大",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 9,
+    "answer": "B",
+    "question": "某企業在訓練生成式 AI 模型時導入資料增強，但觀察到模型效能反而下降。下列哪一項最可能的原因與對應改善策略最為正確？",
+    "options": {
+      "A": "增強樣本未經隨機初始化，導致模型梯度更新不穩定，應重新設計訓練啟動流程",
+      "B": "增強後資料的特徵分佈與原始資料不一致，影響模型的泛化能力，應檢查並調整增強策略以維持語意一致性",
+      "C": "增強樣本的比例過高，造成模型對特定資料產生偏好，應適度提高增強比例並調整學習率",
+      "D": "增強後資料的標註可信度下降，導致訓練訊號偏差，應以半監督學習方式重新校正資料"
+    },
+    "explanation": "若資料增強方式破壞了原始語意或分佈，模型反而會學到錯誤模式，因此答案是 B。好的增強應保留任務相關語意一致性。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>資料增強</b>：把原有的資料稍微修改（如圖片旋轉、放大），人為創造出更多訓練樣本的方法。</li><li><b>泛化能力</b>：預測模型除了在訓練背熟答案外，真正在「面對沒看過的新資料」時也能給出準確預測的能力。</li></ul>"
+    ],
+    "memoryTip": "資料增強若破壞原始語意，模型表現反而會下降。",
+    "mnemonic": "增強勿變義",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 10,
+    "answer": "D",
+    "question": "如果希望同時兼顧精確率（Precision）和召回率（Recall），下列哪一個指標可以作為綜合評估的標準？",
+    "options": {
+      "A": "準確率（Accuracy）",
+      "B": "均方根誤差（RMSE）",
+      "C": "均方誤差（MSE）",
+      "D": "F1 分數（F1 Score）"
+    },
+    "explanation": "F1 分數是 Precision 與 Recall 的調和平均，特別適合類別不平衡時綜合評估分類模型，因此答案是 D。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>召回率</b>：在所有「真正標準答案」中，AI成功挑出抓中幾個。注重的是「不要漏抓」。</li><li><b>F1分數</b>：綜合考量「精確率」和「召回率」的調和平均，常在正負樣本不平衡時用來評估模型好壞。</li><li><b>持續整合</b>：工程師一提交程式碼，系統就自動幫忙建置與執行各種測試，及早發現錯誤（多用於軟體開發）。</li><li><b>精確率</b>：AI判斷為「陽性或有罪」的所有結果中，到底有多少是真的。注重的是減少「誤報/抓錯人」。</li><li><b>MSE</b>：把每次預測的「誤差值平方」再全加起來算平均，數值越小代表模型整體猜得越準。</li><li><b>RMSE</b>：把 MSE 算好的結果再進行「開根號」，這樣誤差單位的量級就能跟原始要預測的目標單位一樣了。</li></ul>"
+    ],
+    "memoryTip": "要同時顧 Precision 和 Recall，就看 F1。",
+    "mnemonic": "精召看 F1",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 11,
+    "answer": "C",
+    "question": "企業資料分析團隊使用 DBSCAN 演算法進行顧客行為分群，並希望模型能自動區分主要群集與雜訊資料。在此演算法中，決定聚類結果的兩個主要超參數為下列何者？",
+    "options": {
+      "A": "特徵數與學習率",
+      "B": "K 值與距離閾值",
+      "C": "鄰域半徑（Epsilon ε）與最小點數（MinPts）",
+      "D": "交叉熵與權重初始化"
+    },
+    "explanation": "DBSCAN 的核心超參數就是鄰域半徑 ε 與最小點數 MinPts，因此答案是 C。它藉此判斷哪些點形成高密度群集、哪些點屬於雜訊。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>DBSCAN</b>：一種AI分群演算法，只要資料密集就圈成一群，而且能自動把孤立的點當作「雜訊」。</li><li><b>PSI</b>：一種衡量「當初模型訓練抓到的特性分布」跟「實際上線後進來的特性分布」到底漂移了多遠的分數。</li></ul>"
+    ],
+    "memoryTip": "DBSCAN 兩大參數就是 epsilon 與 MinPts。",
+    "mnemonic": "密度靠 ε 與點數",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 12,
+    "answer": "B",
+    "question": "某金融科技公司建立房價預測模型，使用多項特徵進行線性迴歸分析。資料分析師發現多個特徵之間存在高度相關性，導致模型係數不穩定、預測誤差上升。為解決此問題，下列哪一種方法最適合？",
+    "options": {
+      "A": "繼續保留所有特徵，不進行任何處理",
+      "B": "使用主成分分析（PCA）將相關特徵轉換為彼此獨立的主成分",
+      "C": "新增更多原始變數以提升模型表現",
+      "D": "改用分類模型進行預測"
+    },
+    "explanation": "題目描述的是多重共線性問題。PCA 可將高度相關特徵轉成彼此正交的主成分，降低係數不穩定，因此答案是 B。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>多重共線性</b>：當你用來預測的多個特徵間高度相關（例如坪數和平方公尺），會讓模型係數計算混亂的問題。</li><li><b>PCA</b>：把原本很多、很雜的資料特徵，濃縮轉換成幾個互不干擾、且能保留最大資訊量的「主成分」。</li></ul>"
+    ],
+    "memoryTip": "多重共線性嚴重時，可用 PCA 先把相關特徵轉正交。",
+    "mnemonic": "共線先做 PCA",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 13,
+    "answer": "B",
+    "question": "下列何者為 Kubernetes 在 AI 模型部署與運行中的核心功能？",
+    "options": {
+      "A": "自動化管理模型的訓練流程與參數調校",
+      "B": "管理與協調模型服務的部署、擴展與運行環境",
+      "C": "提供 AI 模型的資料儲存與版本控管功能",
+      "D": "負責深度學習推論的 GPU 加速運算"
+    },
+    "explanation": "Kubernetes 的核心在容器編排，包含部署、擴縮、自我修復與服務管理，因此答案是 B。它不是專門做訓練調參或資料版本控管。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>Kubernetes</b>：一種用來管理、自動調度大量放在「容器」裡的應用程式的平台。</li></ul>"
+    ],
+    "memoryTip": "Kubernetes 主要做部署、擴展、協調與運行管理。",
+    "mnemonic": "K8s 管部署",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 14,
+    "answer": "A",
+    "question": "在調整模型超參數時，若希望避免因過度調整參數而導致過擬合，下列哪一種做法最有效提升模型的泛化能力？",
+    "options": {
+      "A": "採用交叉驗證於多組參數組合間反覆評估，選擇在驗證資料上表現最穩定的設定",
+      "B": "使用早期停止機制監控訓練誤差並在收斂前停止訓練，以防模型學習過度",
+      "C": "對輸入特徵進行標準化以減少特徵值差異帶來的過擬合風險",
+      "D": "提高模型複雜度並使用更多超參數搜尋範圍，以確保模型能充分學習資料特徵"
+    },
+    "explanation": "題目焦點是超參數調整過程中如何選到泛化最好的一組設定，因此最合適的是用交叉驗證評估多組參數，答案是 A。早停有幫助，但更偏訓練正則化。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>泛化能力</b>：預測模型除了在訓練背熟答案外，真正在「面對沒看過的新資料」時也能給出準確預測的能力。</li><li><b>交叉驗證</b>：把資料切塊，輪流拿一塊當考卷、其他當練習題，藉此反覆測試模型真實實力的方法。</li><li><b>早期停止</b>：AI在訓練過程中，一旦發現「在驗證集」越考越差時，就提早結束訓練以防止過擬合。</li><li><b>特徵縮放</b>：把數值大小差別很大的各種欄位，轉換壓縮到差不多的數值範圍，避免模型大小眼。</li><li><b>過擬合</b>：模型把練習題（訓練資料）死背下來，考得極高分，但在沒看過的題目（測試資料）上慘敗。</li></ul>"
+    ],
+    "memoryTip": "超參數調整怕過擬合，就用交叉驗證挑最穩設定。",
+    "mnemonic": "調參先交叉",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 15,
+    "answer": "C",
+    "question": "在企業導入的 MLOps 流程中，Model Registry 最常用於哪一個階段？",
+    "options": {
+      "A": "用於設定運算資源與執行環境以確保訓練穩定",
+      "B": "用於建立可重複使用的資料與特徵版本",
+      "C": "用於集中管理模型版本、訓練紀錄與部署狀態",
+      "D": "用於追蹤模型上線後的表現與漂移情況"
+    },
+    "explanation": "Model Registry 的主要角色是集中管理模型版本、訓練來源、狀態與部署紀錄，因此答案是 C。它是模型治理與交接的重要中樞。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>MLOps</b>：一套讓AI從開發訓練、上線部署到持續監控，都能像自動化流水線順暢運作的管理方式。</li><li><b>Model Registry</b>：AI模型專用的倉庫，負責統一管理模型的所有改版紀錄、來源細節與各種狀態。</li></ul>"
+    ],
+    "memoryTip": "Model Registry 是模型版本與部署狀態的管理中心。",
+    "mnemonic": "模型版本倉",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 16,
+    "answer": "D",
+    "question": "下列哪一種情境中最適合使用序列到序列（Seq2Seq）模型？",
+    "options": {
+      "A": "預測銷售趨勢曲線，輸出未來數值序列",
+      "B": "辨識文本中出現的人名、地名與組織名稱等實體資訊",
+      "C": "對輸入文本中的關鍵字進行頻率統計與可視化",
+      "D": "將輸入文字轉換成語意等價的另一段文字，如自動翻譯或摘要生成"
+    },
+    "explanation": "Seq2Seq 的典型用途就是把一段輸入序列轉成另一段輸出序列，例如翻譯、摘要、對話生成，因此答案是 D。",
+    "notes": [],
+    "memoryTip": "Seq2Seq 最典型就是翻譯、摘要這種序列轉序列任務。",
+    "mnemonic": "序到序做轉寫",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "選項背景知識"
+  },
+  {
+    "no": 17,
+    "answer": "D",
+    "question": "在自然語言處理中，RAG 是一種結合語言模型與向量搜尋的技術。若要建立一套高效能的 RAG 系統，下列何者為在檢索階段最關鍵的挑戰？",
+    "options": {
+      "A": "確保檢索到的文件能被完整納入語言模型的上下文視窗中進行生成",
+      "B": "選擇使用 Faiss 或 ScaNN 等近似最近鄰搜尋函式庫",
+      "C": "降低嵌入模型在高維空間中的計算成本與記憶體占用",
+      "D": "避免向量檢索結果僅具語意相似但與查詢意圖無實質關聯的情況"
+    },
+    "explanation": "RAG 的檢索成敗關鍵在於「找得到真正相關且對回答有用的內容」，而不只是語意相似，因此答案是 D。只靠向量相似度常會取回表面相近但意圖不符的文件。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>NLP</b>：讓電腦聽懂、看懂、理解人類語言的技術。</li><li><b>RAG</b>：讓AI回答問題前，先去系統裡「搜尋正確的參考文件」，再根據搜到的內容回答，減少AI亂編。</li></ul>"
+    ],
+    "memoryTip": "RAG 檢索最怕只語意像，但其實不回答問題。",
+    "mnemonic": "像不等於對",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 18,
+    "answer": "D",
+    "question": "當 Transformer 模型發生注意力分布過於平均（Attention Collapse）的情形時，下列哪一項策略可有效改善此問題？",
+    "options": {
+      "A": "提高 Query-Key 點積的縮放常數",
+      "B": "在 Softmax 前加入高斯雜訊",
+      "C": "使用 ReLU 函數取代 Softmax",
+      "D": "對注意力權重施加稀疏化約束（Sparsity Constraint）"
+    },
+    "explanation": "注意力過度平均代表模型無法聚焦重要位置，加入稀疏化約束可鼓勵注意力更集中於少數關鍵 token，因此答案是 D。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>Transformer</b>：一款基於「注意力機制」的AI模型架構，擅長處理長篇文字，是ChatGPT的底層基礎。</li><li><b>Softmax</b>：把AI輸出的一堆任意數字，轉換成加起來等於100%的「機率」，用來判斷模型最猜哪個類別。</li><li><b>Attention Collapse</b>：AI在算注意力時，每個字都分配差不多的重要性，導致模型抓不到真正的重點。</li><li><b>稀疏化</b>：強迫模型把許多不重要的參數或注意力權重直接變成「零」，以強化模型對少數關鍵的專注度。</li><li><b>ReLU</b>：神經網路最受歡迎的啟動函數。遇到負數變0，正數保持不變。這能簡單快速保留訊號特徵並引進非線性。</li></ul>"
+    ],
+    "memoryTip": "Attention 太平均時，可用稀疏化讓模型重新聚焦。",
+    "mnemonic": "注意太散就稀疏",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 19,
+    "answer": "B",
+    "question": "某研究團隊正在訓練一個針對低資源語言的語言模型，但該語言僅有約 1 萬筆語料可用。在不新增真實語料的前提下提升模型泛化能力，採用下列哪一種方法最為適合？",
+    "options": {
+      "A": "將 Transformer 的隱藏層維度擴增至 1024，以提升表徵能力",
+      "B": "採用反向翻譯（Back-Translation）技術，以生成額外目標語句的偽平行語料",
+      "C": "對詞嵌入矩陣施加 L1 正則化以壓縮模型參數",
+      "D": "將多語言 BERT 中所有 Transformer 層全部凍結以保留預訓練知識"
+    },
+    "explanation": "低資源語言常用 Back-Translation 生成偽平行語料，藉此擴充可訓練資料並提升泛化，因此答案是 B。這是機器翻譯與低資源 NLP 的經典技術。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>Transformer</b>：一款基於「注意力機制」的AI模型架構，擅長處理長篇文字，是ChatGPT的底層基礎。</li><li><b>NLP</b>：讓電腦聽懂、看懂、理解人類語言的技術。</li><li><b>BERT</b>：一種Google開發的語言模型，強項是能「雙向」看完整句話的前後文來理解詞意。</li><li><b>泛化能力</b>：預測模型除了在訓練背熟答案外，真正在「面對沒看過的新資料」時也能給出準確預測的能力。</li><li><b>Back-Translation</b>：先將A語言翻譯成B語言，再把B語言翻回A語言，用以創造出更多不同句型的新訓練資料。</li></ul>"
+    ],
+    "memoryTip": "低資源語言常靠 Back-Translation 擴充偽平行語料。",
+    "mnemonic": "低資源靠回譯",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 20,
+    "answer": "B",
+    "question": "在使用 GAN 進行人臉影像生成時，若出現模式崩潰（Mode Collapse）現象，下列哪一種方法最常被用來有效解決此問題？",
+    "options": {
+      "A": "在鑑別器中加入梯度懲罰以穩定訓練過程",
+      "B": "採用 Wasserstein 距離（WGAN 損失）替代原始的 GAN 損失函數",
+      "C": "對生成器輸入的潛在向量加入隨機擾動",
+      "D": "使用多尺度鑑別器架構以提高對多樣性的判別能力"
+    },
+    "explanation": "WGAN 透過 Wasserstein 距離改善原始 GAN 訓練不穩與 mode collapse 問題，是最具代表性的改良方向，因此答案是 B。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>GAN</b>：由兩個神經網路（一個造假、一個抓假）互相博弈，藉此訓練出能產出逼真資料的生成模型。</li><li><b>Wasserstein距離</b>：一種改良版的數學量測距離，能讓GAN在訓練時不容易發生崩潰，過程更穩定。</li></ul>"
+    ],
+    "memoryTip": "GAN 模式崩潰常用 WGAN 損失來改善。",
+    "mnemonic": "崩潰換 WGAN",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 21,
+    "answer": "B",
+    "question": "在多模態 AI 模型訓練或推論過程中，遇到某一模態資料缺失，下列哪一種策略最有效維持模型效能？",
+    "options": {
+      "A": "以零向量或固定向量填充缺失模態輸入",
+      "B": "訓練具備模態缺失感知能力的模型，使其適應缺失狀況",
+      "C": "利用生成模型預測並補全缺失模態資料",
+      "D": "直接捨棄缺少模態的樣本，避免干擾訓練或推論"
+    },
+    "explanation": "從穩健性角度來看，最有效的是直接訓練模型具備 missing modality awareness，能在模態不完整時仍合理推論，因此答案是 B。",
+    "notes": [],
+    "memoryTip": "多模態缺資料時，最穩的是讓模型天生能處理模態缺失。",
+    "mnemonic": "缺模態先容錯",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "選項背景知識"
+  },
+  {
+    "no": 22,
+    "answer": "D",
+    "question": "某電商平台開發的顧客流失預測模型在上線數月後，預測準確率明顯下降，懷疑出現資料漂移。為了偵測並確認資料分佈是否發生變化，下列哪一種作法最合適？",
+    "options": {
+      "A": "定期重新訓練模型以應對外部變化",
+      "B": "提升模型複雜度以捕捉更多資料變異性",
+      "C": "增加測試資料量以提高評估準確度",
+      "D": "計算輸入特徵分佈間的 KL 散度（KL Divergence）"
+    },
+    "explanation": "若目的是偵測分布改變，最直接就是量化新舊資料分布差異，例如 KL Divergence，因此答案是 D。重新訓練是後續處置，不是偵測方法本身。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>資料漂移</b>：模型上線後，使用者輸入的新資料特性漸漸偏離當初訓練用的資料，導致預測準確率下滑。</li><li><b>KL散度</b>：資訊理論中用來測量「這兩種機率分布形狀到底差多遠」的指標。</li></ul>"
+    ],
+    "memoryTip": "偵測資料漂移就是比新舊分布差異，例如 KL divergence。",
+    "mnemonic": "漂移看分布",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 23,
+    "answer": "A",
+    "question": "某大型醫院即將部署一套輔助診斷的 AI 系統，為降低對臨床流程的衝擊，同時確保風險可控與回饋可收斂，應採取何種漸進式部署策略最為合適？",
+    "options": {
+      "A": "從單一專科或特定病房開始啟用，逐步擴展至全院",
+      "B": "先部署於病例量較高的急診單位，加速收集高頻使用回饋",
+      "C": "僅在夜班或離峰時段啟用，避免影響主要臨床工作負載",
+      "D": "在使用者界面啟用提示模式，讓全院同步體驗但不影響診斷流程"
+    },
+    "explanation": "真正的 phased rollout 強調從小範圍、低風險場域試行，逐步驗證與擴大，因此答案是 A。醫療場景更需要可控風險與逐步收斂。",
+    "notes": [],
+    "memoryTip": "高風險 AI 上線最好先小範圍試點，再逐步擴張。",
+    "mnemonic": "先小後大",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "選項背景知識"
+  },
+  {
+    "no": 24,
+    "answer": "D",
+    "question": "某金融機構的 AI 風控系統遭受對抗性攻擊。為了從根本上解決模型自身對這類攻擊的脆弱性，下列何者並非針對此種攻擊型態的技術手段？",
+    "options": {
+      "A": "強化資料前處理，用以過濾掉格式不符或數值極端異常的輸入",
+      "B": "在模型訓練階段導入對抗樣本訓練，以提升模型對惡意特徵擾動的辨識與防禦能力",
+      "C": "於推論後階段使用規則引擎，以確保模型的預測結果不違反既有的業務硬性規定",
+      "D": "在模型部署環境中強化網路防火牆，以阻擋來自未授權來源的網路連線"
+    },
+    "explanation": "題目問的是「不是針對對抗樣本攻擊本身的技術手段」。防火牆屬網路邊界安全，不能直接解決模型對微擾輸入的脆弱性，因此答案是 D。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>對抗訓練</b>：加入微小擾動的「陷阱題」給AI練習，讓AI變得抗干擾、不容易被騙。</li></ul>"
+    ],
+    "memoryTip": "對抗樣本是模型脆弱性問題，不是防火牆就能解。",
+    "mnemonic": "模型攻擊非網攻",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 25,
+    "answer": "B",
+    "question": "某企業部署生成式 AI 系統協助行銷與內容產出，但近期遭質疑部分生成內容可能涉及著作權侵權。為降低法律責任與風險，下列哪一項策略最能有效預防侵權問題產生？",
+    "options": {
+      "A": "對生成內容進行語意相似度比對，自動標註可能涉及既有著作的輸出結果",
+      "B": "建立訓練資料篩選與授權驗證機制，排除未授權或高風險資料來源",
+      "C": "在訓練與微調過程中採用差分隱私技術，避免模型記憶特定受著作權保護的樣本",
+      "D": "在模型輸出端嵌入浮水印或數位指紋技術，以確保生成內容可追溯"
+    },
+    "explanation": "預防著作權風險最根本的做法，是從資料治理源頭控管訓練資料的授權與來源，因此答案是 B。其他做法有幫助，但不是最核心預防措施。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>差分隱私</b>：透過加入受控噪音，確保就算公開了總體統計數據，別人也無法反推出你個人的私密資料。</li></ul>"
+    ],
+    "memoryTip": "著作權風險最根本的防線在訓練資料授權治理。",
+    "mnemonic": "版權先管資料",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 26,
+    "answer": "D",
+    "question": "在房價預測任務中，若發現特徵如房間數與坪數存在高度多重共線性，為降低共線性對模型參數估計的負面影響，應優先選擇下列哪種模型？",
+    "options": {
+      "A": "不受多重共線性影響的決策樹模型",
+      "B": "傳統線性迴歸模型，不含正則化項",
+      "C": "支持向量機搭配線性核函數",
+      "D": "含 L1 正則化的 LASSO 迴歸模型"
+    },
+    "explanation": "面對多重共線性，加入正則化的線性模型通常更穩定。LASSO 可抑制不必要特徵、降低參數不穩，因此答案是 D。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>多重共線性</b>：當你用來預測的多個特徵間高度相關（例如坪數和平方公尺），會讓模型係數計算混亂的問題。</li><li><b>LASSO</b>：透過數學懲罰，強迫模型把不重要特徵的係數直接變成零，自動幫你做到「特徵篩選」。</li><li><b>決策樹</b>：讓AI像玩「猜猜看」一樣，根據條件(是或否)一層一層往下問，最後得出分類或數值結果。</li><li><b>SVM</b>：演算法試圖在不同類別的資料群中，劃出一條「最寬的界線（邊界最大化）」來分隔它們。</li></ul>"
+    ],
+    "memoryTip": "多重共線性下，LASSO 可穩定係數又兼做特徵選擇。",
+    "mnemonic": "共線選 LASSO",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 27,
+    "answer": "C",
+    "question": "某企業需分析半結構化的系統日誌（JSON 格式），以提取關鍵的時序特徵供故障預測模型使用。考量日誌結構複雜且包含巢狀欄位，下列哪一種策略最有效且實務可行？",
+    "options": {
+      "A": "先將 JSON 資料扁平化轉成 CSV，再對欄位計算統計量作為特徵",
+      "B": "使用 RNN 直接輸入原始 JSON 字串進行時序特徵抽取",
+      "C": "設計遞迴函式展開巢狀欄位，並基於時間窗口進行聚合與特徵萃取",
+      "D": "只保留時間戳記欄位，忽略其他巢狀內容以簡化特徵工程"
+    },
+    "explanation": "題目強調巢狀欄位與時序特徵，因此最實務的作法是先結構化展開，再依時間窗做聚合特徵，答案是 C。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>特徵工程</b>：分析師把原始資料整理、轉換、合成出能夠讓AI更好理解且更有預測力的新表格欄位。</li></ul>"
+    ],
+    "memoryTip": "JSON 日誌先遞迴展開，再依時間窗做聚合特徵最實務。",
+    "mnemonic": "展欄再聚時窗",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 28,
+    "answer": "C",
+    "question": "在一個同時包含連續型特徵與類別型特徵的資料集中，若希望透過適當的特徵工程流程來提升模型整體表現，下列哪一種作法最為合適？",
+    "options": {
+      "A": "將類別型特徵使用標籤編碼後，與連續特徵直接合併進行模型訓練",
+      "B": "將連續特徵進行離散化或分桶轉為類別型特徵，統一以類別方式處理",
+      "C": "對連續特徵做標準化，類別特徵採用目標編碼，並生成交互特徵提升模型表現",
+      "D": "只保留連續特徵，忽略類別型變量以簡化模型"
+    },
+    "explanation": "這題考的是因材施策的特徵工程：連續特徵標準化、類別特徵合理編碼、再做交互特徵，通常最有機會提升表現，因此答案是 C。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>特徵工程</b>：分析師把原始資料整理、轉換、合成出能夠讓AI更好理解且更有預測力的新表格欄位。</li><li><b>特徵縮放</b>：把數值大小差別很大的各種欄位，轉換壓縮到差不多的數值範圍，避免模型大小眼。</li></ul>"
+    ],
+    "memoryTip": "混合型資料要分開處理：連續縮放、類別編碼，再做交互。",
+    "mnemonic": "連續縮放類別編碼",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 29,
+    "answer": "B",
+    "question": "某 AI 開發團隊為提升模型開發效率及品質控制，計畫實施持續整合（CI）流程。下列哪一項做法最符合 CI 的核心實踐？",
+    "options": {
+      "A": "在主分支每日固定時間手動合併並執行完整測試流程",
+      "B": "每次程式碼提交後自動觸發建置、單元測試及靜態程式碼分析",
+      "C": "於模型訓練完成後，定期安排開發團隊回顧並合併程式碼",
+      "D": "透過自動化部署腳本，將模型在特定時間點批次釋出到測試環境"
+    },
+    "explanation": "CI 的核心就是「每次提交後快速自動驗證」，因此答案是 B。它的目的在於及早發現整合問題，而不是定時人工合併。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>持續整合</b>：工程師一提交程式碼，系統就自動幫忙建置與執行各種測試，及早發現錯誤（多用於軟體開發）。</li></ul>"
+    ],
+    "memoryTip": "CI 的核心是每次提交都自動 build、test、lint。",
+    "mnemonic": "提交即驗證",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 30,
+    "answer": "A",
+    "question": "某銀行計劃將 AI 詐欺偵測模組整合至核心交易系統，主管機關要求全流程必須符合金融監管對不可否認性的資訊安全規範。下列哪一項措施最能確保此要求的落實？",
+    "options": {
+      "A": "為每筆 AI 模型推論記錄其輸入與輸出結果的加密雜湊值，並簽署數位簽章以確保不可竄改性",
+      "B": "優化模型效能以降低平均推論延遲至 100ms 以下",
+      "C": "增加主機備援數量，以確保系統在故障時持續可用",
+      "D": "將模型推論請求導入負載平衡器，避免單點壅塞導致服務延遲"
+    },
+    "explanation": "不可否認性的重點是事後可證明資料與行為未被竄改，且行為可歸屬，因此加密雜湊與數位簽章最符合要求，答案是 A。",
+    "notes": [],
+    "memoryTip": "不可否認性靠雜湊加數位簽章，不靠效能或備援。",
+    "mnemonic": "雜湊加簽章",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "選項背景知識"
+  },
+  {
+    "no": 31,
+    "answer": "B",
+    "question": "某 AI 服務系統每次推論請求需約 1 秒完成，且必須支撐高達 10,000 次請求每秒的流量。為確保系統具備高可用性且能穩定應付流量峰值，下列哪一種架構方案最為合適？",
+    "options": {
+      "A": "依賴單台超高效能伺服器進行垂直擴展，提升硬體規格",
+      "B": "採用容器化部署並水平擴展服務實例，結合自動彈性伸縮機制",
+      "C": "限制最大併發連線數，以避免系統過載",
+      "D": "增加批次處理大小，一次同時處理上千筆請求"
+    },
+    "explanation": "面對高 RPS 與流量峰值，最實務的方案是容器化 + 水平擴展 + Auto Scaling，因此答案是 B。這能兼顧可用性與彈性。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>水平擴展</b>：在流量大時自動幫系統臨時增加多台伺服器，流量小再慢慢縮減，彈性調配雲端資源。</li></ul>"
+    ],
+    "memoryTip": "高流量 AI 服務要靠水平擴展與自動伸縮，不靠單機硬撐。",
+    "mnemonic": "高流量靠橫擴",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 32,
+    "answer": "D",
+    "question": "某企業已將 AI 模型部署於生產環境，為確保系統持續穩定運作，並能提前偵測模型效能可能衰退，技術團隊希望透過監控指標進行預警。下列哪一項監控指標最具預測效力？",
+    "options": {
+      "A": "系統 CPU 與記憶體使用率波動幅度",
+      "B": "模型推論結果的置信度分佈變化趨勢",
+      "C": "API 平均回應時間與延遲百分位數變化",
+      "D": "輸入特徵與訓練資料分布差異的 PSI 指數"
+    },
+    "explanation": "若目標是提早發現模型效能下滑，最直接的前兆常是輸入資料分布偏移，因此 PSI 這類 drift 指標最有預測效力，答案是 D。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>PSI</b>：一種衡量「當初模型訓練抓到的特性分布」跟「實際上線後進來的特性分布」到底漂移了多遠的分數。</li></ul>"
+    ],
+    "memoryTip": "要提早發現模型衰退，優先盯輸入分布漂移指標。",
+    "mnemonic": "先盯漂移 PSI",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 33,
+    "answer": "C",
+    "question": "企業團隊在使用 Word2Vec 模型訓練客服文本語料時，若訓練資料量龐大且希望模型能更有效捕捉罕見詞的語意關聯，下列哪一種訓練策略最為適合？",
+    "options": {
+      "A": "採用 Skip-gram 模型，但以隨機初始化權重加快高頻詞的訓練收斂",
+      "B": "採用 CBOW 模型並結合 TF-IDF 權重以強化低頻詞表示",
+      "C": "採用 Skip-gram 模型，利用中心詞預測周圍詞語，能更有效學習低頻詞關係",
+      "D": "採用 CBOW 模型，利用周圍詞預測中心詞，能提升罕見詞的語意穩定度"
+    },
+    "explanation": "Skip-gram 對低頻詞的學習通常優於 CBOW，因此在大量語料且重視罕見詞語意時，答案是 C。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>Word2Vec</b>：把詞轉換成向量的經典技術，主要透過「猜前後文」來學習詞意，讓電腦知道意思相近的詞在向量空間裡距離很近。</li><li><b>Skip-gram 模型</b>：Word2Vec 的一種訓練方式。做法是「用中心詞去預測它旁邊的詞」。優點是對罕見/低頻詞的學習效果特別好，因為每次只靠一個詞去猜，所以即使那個詞很少出現，模型也有足夠多的預測機會去學它。</li><li><b>CBOW 模型</b>：Word2Vec 的另一種訓練方式，做法相反，是「用周圍的詞去預測中心詞」。因為同時看多個前後文，訓練速度更快、高頻詞效果好，但對罕見詞的學習效果不如 Skip-gram。</li><li><b>TF-IDF</b>：用來找出文章關鍵字的統計法。常出現的字通常分數高，但在所有文章都出現的字分數會被壓低。</li></ul>"
+    ],
+    "memoryTip": "Word2Vec 想學低頻詞，Skip-gram 往往比 CBOW 更有利。",
+    "mnemonic": "低頻用 Skip-gram",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 34,
+    "answer": "D",
+    "question": "在自駕車影像辨識系統中，希望模型能同時辨識每個像素所屬的物件類別，又能區分出同類物件的不同個體。此時最適合採用下列哪一項電腦視覺技術？",
+    "options": {
+      "A": "語義分割（Semantic Segmentation）",
+      "B": "物件偵測（Object Detection）",
+      "C": "實例分割（Instance Segmentation）",
+      "D": "全景分割（Panoptic Segmentation）"
+    },
+    "explanation": "題目同時要求像素級類別辨識與實例區分。全景分割結合語義分割與實例分割的優點，因此答案是 D。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>語義分割</b>：AI判斷圖片中「每一個像素」是屬於哪個類別（天空、車子），但不會區分不同的車。</li><li><b>實例分割</b>：除判斷特定類別外，還能把同類物件一個個區分出來（這是第一輛車、第二輛車）。</li><li><b>全景分割</b>：語義分割 + 實例分割的終極版。背景（天空馬路）都塗色，同時也把個別物件（人車）一物一物區分開。</li></ul>"
+    ],
+    "memoryTip": "要同時分像素類別又分個體，就選全景分割。",
+    "mnemonic": "類別個體全都分",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 35,
+    "answer": "A",
+    "question": "某媒體公司計畫導入 CLIP 模型，以協助大量影像自動標註與搜尋，並希望在無需新增標訓資料的情況下，僅透過文字提示即可識別影像內容。請問此情境中，CLIP 能夠達成的關鍵技術特性為何？",
+    "options": {
+      "A": "透過圖文對比式學習將影像與文字映射至共同嵌入空間，可直接以語意相似度進行零樣本分類",
+      "B": "透過影像增強與特徵擴散降低標訓資料需求",
+      "C": "以監督式學習結合多層感知器進行影像特徵分類",
+      "D": "以自迴歸生成模型逐步生成文字標籤描述影像內容"
+    },
+    "explanation": "CLIP 的核心就是把圖像與文字映射到共享嵌入空間，利用相似度做 zero-shot classification，因此答案是 A。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>CLIP 模型</b>：OpenAI 開發的跨模態模型。它同時學習大量的「圖片＋文字說明」配對，讓 AI 理解圖文之間的對應關係。之後只需給它一段文字描述，它就能在從未見過的圖片中找到最相符的，完全不需要重新標註訓練資料。</li><li><b>零樣本分類</b>：AI 事先完全沒用過該類別的照片訓練，但只要靠文字描述，它就能認出圖片內容。就像你沒見過「狐獴」，但聽了描述就能在圖片中認出它。</li><li><b>嵌入空間（Embedding Space）</b>：一個抽象的數學空間，AI 把文字和圖片都轉換成這個空間裡的座標點，意思相近或對應的圖文，座標就會靠在一起。</li></ul>"
+    ],
+    "memoryTip": "CLIP 的關鍵是把圖和文拉到同一嵌入空間做零樣本辨識。",
+    "mnemonic": "圖文同空間",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 36,
+    "answer": "B",
+    "question": "某資料科學團隊在開發預測模型時，針對多種模型設定進行系統化測試，希望找出在驗證資料上表現最穩定的組合。此過程最可能採用下列哪一種方法？",
+    "options": {
+      "A": "使用交叉驗證反覆評估模型以降低過擬合風險",
+      "B": "透過網格搜尋（Grid Search）在多組超參數設定中進行系統化搜尋與評估",
+      "C": "以隨機搜尋快速探索部分參數空間以提升搜尋效率",
+      "D": "採用貝葉斯優化根據歷次結果動態調整搜尋方向"
+    },
+    "explanation": "題目關鍵詞是「系統化測試多種設定」，最符合的就是 Grid Search，因此答案是 B。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>交叉驗證</b>：把資料切塊，輪流拿一塊當考卷、其他當練習題，藉此反覆測試模型真實實力的方法。</li><li><b>網格搜尋</b>：將所有想要嘗試的模型參數組成一張表，AI乖乖地把每一種組合全部試過一遍找最優解。</li><li><b>隨機搜尋</b>：不照表全試，而是在參數範圍內「隨機」抽樣測試，通常在參數維度很高時能更快找到不錯的結果。</li><li><b>過擬合</b>：模型把練習題（訓練資料）死背下來，考得極高分，但在沒看過的題目（測試資料）上慘敗。</li></ul>"
+    ],
+    "memoryTip": "題目強調系統化測試多組參數時，通常就是 Grid Search。",
+    "mnemonic": "系統化就網格",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 37,
+    "answer": "B",
+    "question": "某公司正在訓練一個大型語音合成模型，使用多台 GPU 進行訓練，但經常出現 GPU 記憶體不足問題。由於模型架構已固定且無法更換硬體，下列哪一種方法最有效降低單張 GPU 的記憶體壓力？",
+    "options": {
+      "A": "減少訓練資料量以降低記憶體使用",
+      "B": "採用較小的批次大小並搭配資料分片分散訓練負載",
+      "C": "增加學習率以加快收斂速度",
+      "D": "改用測試資料集進行部分訓練以節省空間"
+    },
+    "explanation": "最直接有效的做法是減少每卡 batch size，並透過資料分片分散負載，因此答案是 B。這能在不改模型架構下緩解顯存壓力。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>批次大小</b>：AI在訓練時，每次「看多少筆資料」才去更新一次它的權重公式。</li></ul>"
+    ],
+    "memoryTip": "顯存不夠時，先想縮小 batch 並把負載分散。",
+    "mnemonic": "顯存爆先縮批",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 38,
+    "answer": "B",
+    "question": "某影像設計團隊在使用 Stable Diffusion 生成 4K 級產品圖時，若僅能在生成階段進行調整，希望提升畫面清晰度與紋理層次，同時避免過度平滑，下列哪一項作法最適合？",
+    "options": {
+      "A": "降低取樣步數，以縮短生成時間",
+      "B": "增加取樣步數並選擇高品質取樣器，以強化細節還原度",
+      "C": "提高 CFG 值，使生成結果更具創意與多樣性",
+      "D": "改用低解析度輸入以降低計算成本"
+    },
+    "explanation": "Stable Diffusion 的生成過程是：先在一張全是雜訊的圖片上，一步一步把雜訊「去掉」，最後還原出清晰圖片。Steps（取樣步數）越多，每次去雜訊的動作就越細膩，最終細節越豐富；Sampler（採樣器）則決定每一步怎麼走最有效率、最精確。在只能調整生成階段的前提下，增加 sampling steps 並選高品質 sampler 是提升畫質最直接的方式，因此答案是 B。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>Stable Diffusion</b>：目前最具代表性的 AI 圖像生成開源模型。它的核心概念是「擴散過程」——訓練時把圖片一層一層加上雜訊直到全白，生成時再反過來一步步把雜訊去掉，像雕刻一樣還原出圖片。</li><li><b>Sampling Steps（取樣步數）</b>：生成圖片時「去雜訊」要走幾步。步數越多，每一步修正越細膩，圖片紋理與細節越豐富，但同時花的時間也越長。步數太少則圖片可能模糊或結構不完整。</li><li><b>Sampler（採樣器）</b>：決定每一步「去雜訊」要怎麼走的演算法。不同 Sampler 有不同的精確度與速度取捨，例如 DPM++ 系列的 Sampler 通常在較少步數內就能產出高品質圖片。</li><li><b>CFG 值</b>：文字生圖的服從度參數。調越高，AI 越死板地遵守你的提示詞；調越低，AI 越有創意但可能偏離描述。注意：CFG 高並不等於畫質細膩，它影響的是「符合提示詞程度」而非「細節豐富度」。</li></ul>"
+    ],
+    "memoryTip": "Stable Diffusion 想要更細緻，多半先加步數與換好 sampler。",
+    "mnemonic": "清晰加步數",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 39,
+    "answer": "C",
+    "question": "某企業的資料科學團隊利用 ARIMA 模型預測每週產品銷售量。模型建立完成後，分析人員發現預測誤差隨時間呈現週期性波動，且 ACF 顯示殘差在多個時滯上仍顯著不為零。根據上述現象，最合理的模型診斷結論為何？",
+    "options": {
+      "A": "模型殘差符合白噪音假設，預測表現穩定",
+      "B": "模型殘差雖有輕微異常，但可視為隨機誤差忽略不計",
+      "C": "模型存在配適不足問題，需重新調整 p 或 q 參數以捕捉時間依賴性",
+      "D": "殘差特性不影響預測結果，無須進一步修正"
+    },
+    "explanation": "若殘差仍有自相關且呈現結構性波動，代表模型尚未捕捉完整時序依賴，屬於配適不足，因此答案是 C。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>ARIMA 模型</b>：一種專門用來預測「時間序列」資料（如銷售量、股價）的統計模型。名稱包含三個概念：AR（自迴歸，用過去的值預測未來）、I（差分，把資料轉成平穩）、MA（移動平均，消除短期雜訊）。調整 p、d、q 三個參數可改變模型的捕捉能力。</li><li><b>ACF（自相關函數）</b>：衡量一個時間序列跟它自己「過去某個時間點」的相關性。若殘差的 ACF 在多個時滯（lag）上顯著不為零，代表模型沒有完整學到時間規律，仍有規律性的「誤差剩餘」沒被模型抓走。</li><li><b>殘差</b>：觀測結果的真實數字，減去模型預測出來的數字，所剩下的那段不能被模型完美解釋的「差距」。好的模型殘差應該像白噪音，毫無規律；若殘差有週期性波動，代表模型還沒學完整。</li><li><b>白噪音（White Noise）</b>：完全隨機、沒有任何規律可預測的訊號。殘差若符合白噪音，代表模型已抓走所有可解釋的訊息，不需要再改模型了。</li></ul>"
+    ],
+    "memoryTip": "ARIMA 殘差還有自相關，代表模型還沒抓完時序結構。",
+    "mnemonic": "殘差不白要重調",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 40,
+    "answer": "A",
+    "question": "下列哪一項最正確地描述了 VAE、GAN 與擴散模型在多模態潛在空間對齊與生成策略上的根本差異？",
+    "options": {
+      "A": "VAE 透過顯式潛在變數建模實現跨模態對齊；GAN 透過對抗損失學習分佈映射；擴散模型則以條件化去雜訊方式實現高保真跨模態生成",
+      "B": "VAE 與 Diffusion Model 均屬隱式生成架構，主要依賴對抗式訓練；GAN 則以顯式後驗估計方式提升樣本一致性",
+      "C": "VAE 與 GAN 均使用馬爾可夫鏈進行跨模態轉換；Diffusion Model 則透過 KL 散度最小化學習語意對應",
+      "D": "三者在多模態應用中皆依賴同一潛在表徵空間，僅在解碼器結構不同而已"
+    },
+    "explanation": "A 正確總結了三者的典型生成機制：VAE 顯式潛在變數、GAN 對抗學習、Diffusion 去雜訊生成。其他選項混淆了模型本質。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>解碼器</b>：生成式AI的「輸出端」，負責把學到的特徵轉換成人類看懂的文字或圖片。</li><li><b>GAN</b>：由兩個神經網路（一個造假、一個抓假）互相博弈，藉此訓練出能產出逼真資料的生成模型。</li><li><b>擴散模型</b>：這類生成模型是藉由「先一步步把圖片變雜訊，再學習怎麼一步步去雜訊還原圖片」的方式來運作。</li><li><b>VAE</b>：把資料壓縮轉換成潛在空間裡的一種「機率分布」，需要時再從這個分布裡隨機抽樣，還原生成出新資料。</li></ul>"
+    ],
+    "memoryTip": "VAE、GAN、Diffusion 三者差別重點在生成機制，不只是解碼器。",
+    "mnemonic": "三模三機制",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 41,
+    "answer": "A",
+    "question": "在進行超參數調校時，若直接在 K-Fold 交叉驗證的資料上同時調整模型參數並評估效能，最可能導致下列哪一種問題？",
+    "options": {
+      "A": "模型的交叉驗證結果出現過度樂觀偏差，因測試摺資料間接參與參數選擇，造成資料洩漏",
+      "B": "模型會在每一摺內反覆調整參數，導致訓練不穩與過度正則化",
+      "C": "因交叉驗證資料被重複使用，造成效能方差增大，無法獲得穩定估計",
+      "D": "K-Fold 交叉驗證的假設與超參數搜尋相衝突，導致驗證過程失效"
+    },
+    "explanation": "若同一份交叉驗證資料既用來選參又用來報告效果，會產生資訊洩漏與過度樂觀偏差，因此答案是 A。更嚴謹時應使用 nested CV。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>交叉驗證</b>：把資料切塊，輪流拿一塊當考卷、其他當練習題，藉此反覆測試模型真實實力的方法。</li><li><b>k-Fold</b>：把資料切塊，輪流挑一塊當作驗證、其他作訓練，如此能減少單次切分帶來的運氣誤差。</li></ul>"
+    ],
+    "memoryTip": "同一份交叉驗證資料又拿來選參又拿來報分，會太樂觀。",
+    "mnemonic": "選參評估要分開",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 42,
+    "answer": "D",
+    "question": "若部署一個深度學習模型至金融風控系統，上線後模型對新樣本的分類錯誤率顯著上升，且輸入資料分佈已與原訓練集明顯不同。針對此情形，下列哪一種應對策略最為適合？",
+    "options": {
+      "A": "改用生成對抗網路生成新樣本並混入訓練集",
+      "B": "改用邏輯迴歸模型以提升穩定性",
+      "C": "增加模型容量，以學習更多樣本差異",
+      "D": "使用變分自編碼器（VAE）監控潛在空間分佈，偵測輸入資料偏移"
+    },
+    "explanation": "題幹核心是「輸入分布變了」。在這種情況下，優先要做的是偵測與監控偏移；VAE 可用於學習正常資料潛在分布並做偏移偵測，因此答案是 D。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>GAN</b>：由兩個神經網路（一個造假、一個抓假）互相博弈，藉此訓練出能產出逼真資料的生成模型。</li><li><b>VAE</b>：把資料壓縮轉換成潛在空間裡的一種「機率分布」，需要時再從這個分布裡隨機抽樣，還原生成出新資料。</li></ul>"
+    ],
+    "memoryTip": "新資料分布變了，先做 drift detection，不是先亂加模型容量。",
+    "mnemonic": "分布變先偵測",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 43,
+    "answer": "B",
+    "question": "某金融科技公司欲導入 AI 模型協助客服郵件自動分類。若團隊希望公平比較生成式路徑與鑑別式路徑的資料利用效率與泛化能力，下列哪一種實驗設計最能突顯兩者的本質差異？",
+    "options": {
+      "A": "在完整資料集上分別訓練兩者，並比較其分類準確率與推論時間",
+      "B": "在低資源情境下，逐步減少標註比例（100%、50%、10%），比較其 F1-score",
+      "C": "使用 GAN 自動生成文本樣本補足資料，觀察兩模型在資料增強後的 Precision 差異",
+      "D": "在相同訓練資料上固定輸入維度，僅調整模型參數量，比較其對過擬合的敏感度"
+    },
+    "explanation": "【白話翻譯題目】：這題說的是——公司想用 AI 幫客服郵件自動分類，然後想比較兩種不同路線的 AI（生成式 vs. 鑑別式）誰更會「用少量資料學好」。要怎麼設計實驗才能看出差別？答案是 B：刻意減少標註資料的比例（100%→50%→10%），看在標數據越來越少的情況下，誰的 F1 分數掉得少、撐得住，就是「資料利用效率」更高的那一個。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>生成式路徑（Generative）</b>：AI 學的是「這類資料長什麼樣子」，先建立每個類別的分佈模型，再靠機率判斷輸入屬於哪類。例如生成式分類器、語言模型。</li><li><b>鑑別式路徑（Discriminative）</b>：AI 直接學習「怎麼分辨 A 和 B 的邊界」，不管每類內部長什麼樣，只管能不能劃出正確的分界線。例如 SVM、Logistic Regression、BERT fine-tuning。</li><li><b>資料利用效率</b>：在「標註資料很少」的情況下，模型還能不能表現良好。效率高的模型即使只有少量標記，也能學得很像樣。</li><li><b>F1分數</b>：綜合考量「精確率」和「召回率」的調和平均，常在正負樣本不平衡時用來評估模型好壞。</li><li><b>GAN</b>：由兩個神經網路（一個造假、一個抓假）互相博弈，藉此訓練出能產出逼真資料的生成模型。</li><li><b>資料增強</b>：把原有的資料稍微修改（如圖片旋轉、放大），人為創造出更多訓練樣本的方法。</li><li><b>過擬合</b>：模型把練習題（訓練資料）死背下來，考得極高分，但在沒看過的題目（測試資料）上慘敗。</li></ul>"
+    ],
+    "memoryTip": "要比資料利用效率，就看不同標註比例下誰掉分較少。",
+    "mnemonic": "少標註比真功",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 44,
+    "answer": "C",
+    "question": "某電信公司希望建立一個模型來預測顧客是否即將流失，並進一步模擬不同促銷或服務策略下顧客的行為變化，以生成多樣化的虛擬樣本資料進行 A/B 測試與行銷策略評估。若要同時兼顧預測與資料生成的需求，最適合採用下列哪一種方法？",
+    "options": {
+      "A": "使用傳統隨機森林",
+      "B": "使用邏輯迴歸模型",
+      "C": "使用變分自編碼器（VAE）或生成對抗網路（GAN）",
+      "D": "使用強化學習代理"
+    },
+    "explanation": "題目明確要求「資料生成」能力，因此生成模型如 VAE 或 GAN 最符合需求，答案是 C。傳統分類模型只擅長預測，不擅長模擬生成樣本。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>強化學習</b>：讓AI從錯誤中學習的策略（做對給獎勵、做錯給懲罰）。</li><li><b>GAN</b>：由兩個神經網路（一個造假、一個抓假）互相博弈，藉此訓練出能產出逼真資料的生成模型。</li><li><b>VAE</b>：把資料壓縮轉換成潛在空間裡的一種「機率分布」，需要時再從這個分布裡隨機抽樣，還原生成出新資料。</li></ul>"
+    ],
+    "memoryTip": "同時要預測又要生成虛擬樣本，就要上生成模型。",
+    "mnemonic": "要生成選 VAE/GAN",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 45,
+    "answer": "D",
+    "question": "進行影像分類任務時，研究團隊嘗試利用 PCA 將輸入特徵從 1024 維降至 100 維，並將降維後的資料輸入 SVM 模型進行訓練。關於此作法，下列哪一項描述最為合理？",
+    "options": {
+      "A": "PCA 保留的主成分必然能提升 SVM 的分類準確率",
+      "B": "使用原始高維資料通常更能保留資訊，因此 PCA 沒有實際意義",
+      "C": "PCA 可讓 SVM 自動適用於非線性資料集",
+      "D": "降維後可降低訓練時間並減少過擬合風險"
+    },
+    "explanation": "PCA 不保證準確率一定提高，但常能降低維度、縮短訓練時間並減少噪聲與過擬合風險，因此答案是 D。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>PCA</b>：把原本很多、很雜的資料特徵，濃縮轉換成幾個互不干擾、且能保留最大資訊量的「主成分」。</li><li><b>SVM</b>：演算法試圖在不同類別的資料群中，劃出一條「最寬的界線（邊界最大化）」來分隔它們。</li><li><b>過擬合</b>：模型把練習題（訓練資料）死背下來，考得極高分，但在沒看過的題目（測試資料）上慘敗。</li></ul>"
+    ],
+    "memoryTip": "PCA 不保證更準，但常能加速訓練並降低過擬合。",
+    "mnemonic": "降維省時降噪",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 46,
+    "answer": "A",
+    "question": "某企業的 AI 模型已部署於線上服務環境中，用於即時預測顧客流失機率。近期團隊注意到模型預測準確率逐漸下降，且近期輸入資料的分布與模型訓練資料相比出現顯著偏移。若要在 MLOps 流程中主動偵測並預警此類問題，最應採用下列哪項措施？",
+    "options": {
+      "A": "建立即時的資料漂移與概念漂移監測機制",
+      "B": "將模型轉換為量化版本以降低延遲",
+      "C": "增加模型超參數調整次數以強化適應性",
+      "D": "使用固定隨機種子確保訓練穩定"
+    },
+    "explanation": "題目就是典型的上線後 drift 監測情境，因此最應建立即時的資料漂移與概念漂移監測，答案是 A。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>MLOps</b>：一套讓AI從開發訓練、上線部署到持續監控，都能像自動化流水線順暢運作的管理方式。</li><li><b>資料漂移</b>：模型上線後，使用者輸入的新資料特性漸漸偏離當初訓練用的資料，導致預測準確率下滑。</li><li><b>概念漂移</b>：資料本身沒什麼變，但是「應有的正確答案」定義改變了，導致舊模型預測失效。</li></ul>"
+    ],
+    "memoryTip": "MLOps 對 drift 要做持續監測，而不是等準確率掉了才補救。",
+    "mnemonic": "漂移即時監測",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 47,
+    "answer": "C",
+    "question": "某金融科技公司導入多任務學習架構，讓單一 Transformer 模型同時執行文檔分類以及命名實體辨識任務。部署初期發現當 NER 準確率提升時，文檔分類準確率反而下降。若模型架構正確且資料品質良好，下列哪一項最可能是造成此現象的原因？",
+    "options": {
+      "A": "模型架構無法同時支援文字分類與序列標註任務",
+      "B": "文檔分類任務不需要語意化表徵",
+      "C": "損失函數未進行權重平衡，導致任務間競爭",
+      "D": "所使用的 BERT 模型無法支援多任務輸出頭"
+    },
+    "explanation": "多任務學習中常見問題是不同任務的 loss 彼此競爭，若未做權重平衡，某一任務變好時另一任務可能變差，因此答案是 C。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>NER（命名實體辨識）</b>：AI 自動在文章中找出「人名、地名、公司名、日期、金額」等有意義的特定名詞，並加上標籤。例如看到「台積電昨天宣布…」，NER 會標出「台積電＝公司名」、「昨天＝時間」。</li><li><b>NER 準確率</b>：模型在命名實體辨識任務上答對的比例。NER 準確率提升，代表它辨識人名地名的能力變強了。</li><li><b>多任務學習</b>：教一個 AI 同時做多件事（如又分類文件又做 NER），讓不同任務的知識互相幫助以節省資源。但當兩個任務「搶資源」時，幫一個可能害另一個。</li><li><b>損失函數（Loss）</b>：AI 訓練時衡量「預測結果和正確答案差多遠」的計算公式。損失越小代表預測越準。若兩個任務的 Loss 沒有平衡，模型會只顧著降低其中一個任務的 Loss，忽略另一個。</li><li><b>Transformer</b>：一款基於「注意力機制」的 AI 模型架構，擅長處理長篇文字，是 ChatGPT 的底層基礎。</li><li><b>BERT</b>：一種 Google 開發的語言模型，強項是能「雙向」看完整句話的前後文來理解詞意，可加裝多個「輸出頭」同時做分類和 NER。</li></ul>"
+    ],
+    "memoryTip": "多任務互相拉扯時，常是 loss 權重沒平衡。",
+    "mnemonic": "多任務平 loss",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 48,
+    "answer": "B",
+    "question": "某數據工程師使用 DBSCAN 演算法對一份數百萬筆的高維顧客資料進行聚類分析，但發現程式執行速度極慢，甚至出現記憶體不足的情況。若要在不改變演算法核心邏輯的前提下，最有效提升其運算效率的作法為何？",
+    "options": {
+      "A": "改用以平均連結為基礎的階層式群集法",
+      "B": "採用高效率的距離索引結構，例如 KD-Tree 或 Ball Tree",
+      "C": "將 ε 參數調得極小，以減少鄰近點的數量",
+      "D": "在資料前處理時增加標準化後的特徵維度數"
+    },
+    "explanation": "若不改演算法核心邏輯，最佳優化方式是加速鄰近點搜尋，因此答案是 B。KD-Tree、Ball Tree 都是常見距離索引結構。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>DBSCAN</b>：一種 AI 分群演算法，只要資料密集就圈成一群，而且能自動把孤立的點當作「雜訊」忽略。它的瓶頸在於每個點都要查詢鄰近點，資料量大時非常慢。</li><li><b>KD-Tree（K維樹）</b>：把多維空間的資料，用「切平面」的方式一刀一刀分割建成一棵樹。查詢鄰近點時，能快速跳過「不可能在這個範圍內」的區塊，大幅減少計算量。適合維度較低（例如 2～20 維）的資料。</li><li><b>Ball Tree（球樹）</b>：和 KD-Tree 類似，但不是用平面切割空間，而是把資料包進一個個「超球體」（Hyper-sphere）裡分層建樹。在高維度資料上通常比 KD-Tree 更有效率，因為超球體比超矩形更貼合資料的真實分佈。</li><li><b>距離索引結構</b>：預先把資料整理成有組織的空間結構，這樣在搜尋「誰離我最近」時，不用一筆一筆全部算，只需查相關的分支，速度大幅提升。</li><li><b>特徵縮放</b>：把數值大小差別很大的各種欄位，轉換壓縮到差不多的數值範圍，避免模型大小眼。對距離計算類演算法（如 DBSCAN）尤其重要。</li></ul>"
+    ],
+    "memoryTip": "DBSCAN 慢通常卡在鄰近點搜尋，可用 KD-Tree 或 Ball Tree。",
+    "mnemonic": "分群慢先索引",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 49,
+    "answer": "A",
+    "question": "某電商平台導入 AI 情感分析模型，用以自動偵測顧客評論中的負面情緒並觸發客服機制。然而模型在面對不同語言或族群書寫風格的評論時表現不一致。若從技術與資料治理的角度分析，下列哪一項描述不正確？",
+    "options": {
+      "A": "模型未啟用詞嵌入正規化可能造成語意距離不穩定，導致預測誤差",
+      "B": "訓練語料若偏向特定文化或語氣特徵，可能使模型產生內隱偏誤",
+      "C": "模型若訓練資料來源不平衡，容易導致對不同語言或族群風格的情緒判斷不準確",
+      "D": "Transformer 架構能捕捉上下文語意，但若訓練資料偏差仍存在，模型仍可能學習到偏誤判斷"
+    },
+    "explanation": "這題問不正確。真正造成偏差的主因通常是訓練資料偏誤與代表性不足，而不是是否做 embedding normalization，因此 A 最不恰當。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>Transformer</b>：一款基於「注意力機制」的AI模型架構，擅長處理長篇文字，是ChatGPT的底層基礎。</li><li><b>情感分析</b>：AI判斷一段文字帶有正向、負向或中立情緒的技術。</li></ul>"
+    ],
+    "memoryTip": "跨語言與族群偏差，多半是資料代表性問題，不是靠 embedding 正規化解決。",
+    "mnemonic": "偏差多半在資料",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  },
+  {
+    "no": 50,
+    "answer": "C",
+    "question": "某設計師使用公司內部建置的生成式 AI 工具製作行銷素材，系統能正確生成主要主題與場景，但輸出的圖像中，品牌標誌顏色常有誤差，或人物手部姿勢顯得不自然。若從多模態生成模型的技術機制分析，此現象最可能是下列哪一項原因所造成？",
+    "options": {
+      "A": "擴散式生成模型的去雜訊過程出現隨機梯度漂移，導致影像像素錯誤",
+      "B": "提示語過長造成 Transformer 的位置編碼超出上下文限制，導致生成混亂",
+      "C": "CLIP 模型中的文字編碼器與影像編碼器在語意嵌入空間未充分對齊，導致跨模態理解偏差",
+      "D": "模型未採用對比學習損失函數，無法建立多模態語意關聯"
+    },
+    "explanation": "主體與場景能對上，但細節和精準屬性錯誤，常反映跨模態語意對齊還不夠細緻，因此答案是 C。這類問題在品牌色、手部細節、局部約束上尤其常見。",
+    "notes": [
+      "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>Transformer</b>：一款基於「注意力機制」的AI模型架構，擅長處理長篇文字，是ChatGPT的底層基礎。</li></ul>"
+    ],
+    "memoryTip": "主題對但細節錯，常是圖文嵌入對齊還不夠精準。",
+    "mnemonic": "大意對細節偏",
+    "sourceKey": "subject1-official",
+    "sourceLabel": "第一科正式題",
+    "sectionLabel": "第一科｜正式考題",
+    "notesSummary": "名詞白話解說"
+  }
+];
+    const pageKey = "ipas-subject1-detailed";
+    const filterType = "range";
+
+    const list = document.getElementById('questionList');
+    const resultCount = document.getElementById('resultCount');
+    const searchInput = document.getElementById('searchInput');
+    const extraFilter = document.getElementById('extraFilter');
+    const answerFilter = document.getElementById('answerFilter');
+    const themeToggle = document.getElementById('themeToggle');
+    const answerToggle = document.getElementById('answerToggle');
+    const reviewFilterToggle = document.getElementById('reviewFilterToggle');
+    const navRoot = document.getElementById('quickNavContent');
+
+    const STORAGE = {
+      theme: pageKey + '-theme',
+      review: pageKey + '-review',
+      reviewFilter: pageKey + '-review-filter'
+    };
+
+    const revealedIds = new Set();
+    const markedIds = new Set(JSON.parse(localStorage.getItem(STORAGE.review) || '[]'));
+    let reviewOnlyMode = localStorage.getItem(STORAGE.reviewFilter) === 'true';
+    let allAnswersVisible = false;
+
+    if (localStorage.getItem(STORAGE.theme) === 'dark') {
+      document.body.classList.add('dark-mode');
+    }
+
+    function updateThemeButton() {
+      const dark = document.body.classList.contains('dark-mode');
+      themeToggle.textContent = dark ? '☀️ Light Mode' : '🌙 Dark Mode';
+      themeToggle.classList.toggle('active', dark);
+    }
+
+    function saveMarkedIds() {
+      localStorage.setItem(STORAGE.review, JSON.stringify([...markedIds]));
+    }
+
+    function updateReviewFilterButton() {
+      reviewFilterToggle.textContent = reviewOnlyMode ? '⭐ 顯示全部題目' : '⭐ 只看已標註題';
+      reviewFilterToggle.classList.toggle('active', reviewOnlyMode);
+    }
+
+    function updateAnswerToggleButton() {
+      answerToggle.textContent = allAnswersVisible ? '🙈 隱藏全部答案' : '👁️ 顯示全部答案';
+      answerToggle.classList.toggle('active', allAnswersVisible);
+    }
+
+    function buildQuestionId(item) {
+      return item.sourceKey + '-q-' + item.no;
+    }
+
+    function isVisibleByFilter(item, keyword, extraValue, answerValue) {
+      const haystack = [item.question, item.explanation, item.memoryTip, item.mnemonic, ...Object.values(item.options), ...(item.notes || [])].join(' ').toLowerCase();
+      const matchKeyword = !keyword || haystack.includes(keyword);
+      const matchAnswer = answerValue === 'all' || item.answer === answerValue;
+      let matchExtra = true;
+      if (filterType === 'range' && extraValue !== 'all') {
+        const [start, end] = extraValue.split('-').map(Number);
+        matchExtra = item.no >= start && item.no <= end;
+      }
+      if (filterType === 'source' && extraValue !== 'all') {
+        matchExtra = item.sourceKey === extraValue;
+      }
+      const matchReview = !reviewOnlyMode || markedIds.has(buildQuestionId(item));
+      return matchKeyword && matchAnswer && matchExtra && matchReview;
+    }
+
+    function answerBadgeHtml(item, questionId) {
+      const visible = revealedIds.has(questionId);
+      return '<span class="badge answer ' + (visible ? '' : 'is-hidden') + '" data-question-id="' + questionId + '" aria-pressed="' + (visible ? 'true' : 'false') + '" title="' + (visible ? '點擊隱藏答案' : '點擊顯示答案') + '">' + (visible ? ('答案：' + item.answer) : '點擊顯示答案') + '</span>';
+    }
+
+    function render(items) {
+      list.innerHTML = items.map(item => {
+        const questionId = buildQuestionId(item);
+        const answerVisible = revealedIds.has(questionId);
+        const optionsHtml = Object.entries(item.options).map(([key, value]) => '<li class="' + (item.answer === key ? 'correct' : '') + '"><strong>(' + key + ')</strong>' + value + '</li>').join('');
+        const notesHtml = (item.notes || []).map(note => '<li>' + note + '</li>').join('');
+        return [
+          '<article class="question-card ' + (markedIds.has(questionId) ? 'review-marked ' : '') + (answerVisible ? 'answer-visible' : '') + '" id="' + questionId + '" data-source-key="' + item.sourceKey + '">',
+          '  <div class="card-top">',
+          '    <span class="badge no">第 ' + item.no + ' 題</span>',
+          '    <span class="badge source">' + item.sourceLabel + '</span>',
+          '    ' + answerBadgeHtml(item, questionId),
+          '    <button class="review-button ' + (markedIds.has(questionId) ? 'active' : '') + '" type="button" data-review-id="' + questionId + '">' + (markedIds.has(questionId) ? '⭐ 已標註' : '☆ 標註複習') + '</button>',
+          '  </div>',
+          '  <div class="question-text">' + item.question + '</div>',
+          item.questionMedia ? ('  <figure class="question-media">' + item.questionMedia + '</figure>') : '',
+          '  <div class="choices-block">',
+          '    <div class="choices-title">題目選項</div>',
+          '    <ul class="choices">' + optionsHtml + '</ul>',
+          '  </div>',
+          '  <div class="explanation answer-dependent ' + (answerVisible ? '' : 'is-hidden') + '"><strong>詳解：</strong>' + item.explanation + '</div>',
+          (item.memoryTip || item.mnemonic ? ('<div class="memory-box answer-dependent ' + (answerVisible ? '' : 'is-hidden') + '"><h4>好記版解說</h4><p>' + (item.memoryTip || '') + '</p>' + (item.mnemonic ? ('<div class="mnemonic">口訣：' + item.mnemonic + '</div>') : '') + '</div>') : ''),
+          '  <details>',
+          '    <summary>' + (item.notesSummary || '題目選項相關背景知識') + '</summary>',
+          '    <ul class="notes">' + notesHtml + '</ul>',
+          '  </details>',
+          '</article>'
+        ].join('');
+      }).join('');
+      resultCount.textContent = '目前顯示 ' + items.length + ' 題／共 ' + questions.length + ' 題';
+      wireCardInteractions(items);
+      buildQuickNav(items);
+      syncAnswerToggleState();
+    }
+
+    function setCardAnswerState(questionId, visible) {
+      const card = document.getElementById(questionId);
+      if (!card) return;
+      const badge = card.querySelector('.badge.answer');
+      const item = questions.find(entry => buildQuestionId(entry) === questionId);
+      if (!badge || !item) return;
+      badge.classList.toggle('is-hidden', !visible);
+      badge.textContent = visible ? ('答案：' + item.answer) : '點擊顯示答案';
+      badge.setAttribute('aria-pressed', visible ? 'true' : 'false');
+      badge.title = visible ? '點擊隱藏答案' : '點擊顯示答案';
+      card.classList.toggle('answer-visible', visible);
+      card.querySelectorAll('.answer-dependent').forEach(el => el.classList.toggle('is-hidden', !visible));
+    }
+
+    function wireCardInteractions(items) {
+      document.querySelectorAll('.badge.answer').forEach((badge) => {
+        badge.addEventListener('click', () => {
+          const questionId = badge.dataset.questionId;
+          if (revealedIds.has(questionId)) {
+            revealedIds.delete(questionId);
+            setCardAnswerState(questionId, false);
+          } else {
+            revealedIds.add(questionId);
+            setCardAnswerState(questionId, true);
+          }
+          syncAnswerToggleState();
+        });
+      });
+
+      document.querySelectorAll('.review-button').forEach((button) => {
+        button.addEventListener('click', () => {
+          const questionId = button.dataset.reviewId;
+          if (markedIds.has(questionId)) {
+            markedIds.delete(questionId);
+          } else {
+            markedIds.add(questionId);
+          }
+          saveMarkedIds();
+          filterQuestions();
+        });
+      });
+    }
+
+    function syncAnswerToggleState() {
+      const visibleIds = Array.from(list.querySelectorAll('.question-card')).map(card => card.id);
+      allAnswersVisible = visibleIds.length > 0 && visibleIds.every(id => revealedIds.has(id));
+      updateAnswerToggleButton();
+    }
+
+    function buildQuickNav(items) {
+      const groups = new Map();
+      items.forEach(item => {
+        if (!groups.has(item.sectionLabel)) groups.set(item.sectionLabel, []);
+        groups.get(item.sectionLabel).push(item);
+      });
+      navRoot.innerHTML = Array.from(groups.entries()).map(([label, entries]) => {
+        const links = entries.map(item => {
+          const questionId = buildQuestionId(item);
+          const reviewClass = markedIds.has(questionId) ? 'review-link' : '';
+          return '<a class="' + reviewClass + '" href="#' + questionId + '">' + item.no + '</a>';
+        }).join('');
+        return '<section class="quick-nav-section"><div class="quick-nav-title">' + label + '</div><div class="quick-nav-links">' + links + '</div></section>';
+      }).join('');
+    }
+
+    function filterQuestions() {
+      const keyword = searchInput.value.trim().toLowerCase();
+      const extraValue = extraFilter.value;
+      const answerValue = answerFilter.value;
+      const filtered = questions.filter(item => isVisibleByFilter(item, keyword, extraValue, answerValue));
+      render(filtered);
+      localStorage.setItem(STORAGE.reviewFilter, String(reviewOnlyMode));
+      updateReviewFilterButton();
+    }
+
+    searchInput.addEventListener('input', filterQuestions);
+    extraFilter.addEventListener('change', filterQuestions);
+    answerFilter.addEventListener('change', filterQuestions);
+
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      localStorage.setItem(STORAGE.theme, document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+      updateThemeButton();
+    });
+
+    answerToggle.addEventListener('click', () => {
+      const visibleIds = Array.from(list.querySelectorAll('.question-card')).map(card => card.id);
+      const shouldShow = !allAnswersVisible;
+      visibleIds.forEach((id) => {
+        if (shouldShow) revealedIds.add(id); else revealedIds.delete(id);
+        setCardAnswerState(id, shouldShow);
+      });
+      syncAnswerToggleState();
+    });
+
+    reviewFilterToggle.addEventListener('click', () => {
+      reviewOnlyMode = !reviewOnlyMode;
+      filterQuestions();
+    });
+
+    updateThemeButton();
+    updateReviewFilterButton();
+    filterQuestions();
+  </script>
+</body>
+</html>

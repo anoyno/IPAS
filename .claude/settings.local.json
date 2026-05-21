@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\003863\\\\Downloads\\\\0Tamsin\\\\IPAS\\\\\" -Filter \"*.txt\" | Select-Object Name)",
+      "PowerShell(ls \"c:\\\\Users\\\\003863\\\\Downloads\\\\0Tamsin\\\\IPAS\\\\\" | ForEach-Object { $_.Name })",
+      "PowerShell(ls \"c:\\\\Users\\\\003863\\\\Downloads\\\\0Tamsin\\\\IPAS\\\\txt\\\\\" | ForEach-Object { $_.Name })",
+      "Bash(python3 -c \"from html.parser import HTMLParser; import json; print\\('Python HTML parser available'\\)\")",
+      "Bash(npx prettier *)",
+      "PowerShell(git init)",
+      "PowerShell(git add README.md)",
+      "PowerShell(git commit -m \"first commit\")",
+      "PowerShell(git branch -M main)",
+      "PowerShell(git remote add origin https://github.com/anoyno/IPAS.git)",
+      "PowerShell(git push -u origin main)"
+    ]
+  }
+}

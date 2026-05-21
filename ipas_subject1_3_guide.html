@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>iPAS 科目一與科目三題目詳解</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --panel: #ffffff;
+      --panel-soft: #f8fafc;
+      --text: #1f2937;
+      --muted: #64748b;
+      --line: #dbe4f0;
+      --primary: #2563eb;
+      --primary-soft: #dbeafe;
+      --success: #16a34a;
+      --success-soft: #dcfce7;
+      --warn: #d97706;
+      --warn-soft: #fef3c7;
+      --shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", "Microsoft JhengHei", sans-serif;
+      background: linear-gradient(180deg, #eef4ff 0%, var(--bg) 200px);
+      color: var(--text);
+      line-height: 1.75;
+      transition: background 0.25s ease, color 0.25s ease;
+    }
+
+    body.dark-mode {
+      --bg: #0f172a;
+      --panel: #111827;
+      --panel-soft: #1f2937;
+      --text: #e5eefb;
+      --muted: #94a3b8;
+      --line: #334155;
+      --primary: #60a5fa;
+      --primary-soft: #1e3a8a;
+      --success: #4ade80;
+      --success-soft: #14532d;
+      --warn: #f59e0b;
+      --warn-soft: #3b2b12;
+      --shadow: 0 14px 32px rgba(2, 6, 23, 0.45);
+      background: linear-gradient(180deg, #0b1220 0%, var(--bg) 200px);
+    }
+
+    .container {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 24px 0 48px;
+    }
+
+    .hero {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(219, 228, 240, 0.9);
+      border-radius: 24px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    h1, h2, h3 {
+      margin: 0;
+      line-height: 1.35;
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 3vw, 2.7rem);
+      margin-bottom: 10px;
+    }
+
+    .lead {
+      margin: 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .chips {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .chip {
+      background: var(--primary-soft);
+      color: var(--primary);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    .warning {
+      margin-top: 18px;
+      border-left: 4px solid var(--warn);
+      background: var(--warn-soft);
+      padding: 14px 16px;
+      border-radius: 12px;
+      color: #7c4700;
+    }
+
+    .toc,
+    .subject,
+    .summary-grid {
+      margin-bottom: 22px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .summary-card,
+    .toc,
+    .question-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .summary-card {
+      padding: 18px;
+    }
+
+    .summary-card strong {
+      display: block;
+      font-size: 1.25rem;
+      margin-bottom: 6px;
+    }
+
+    .summary-card span {
+      color: var(--muted);
+    }
+
+    .toc {
+      padding: 18px 20px;
+    }
+
+    .toc ul {
+      margin: 12px 0 0;
+      padding-left: 18px;
+    }
+
+    .toc a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .subject-title {
+      margin-bottom: 16px;
+      padding: 0 4px;
+    }
+
+    .subject-title p {
+      margin: 8px 0 0;
+      color: var(--muted);
+    }
+
+    .question-list {
+      display: grid;
+      gap: 16px;
+    }
+
+    .question-card {
+      padding: 20px;
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    .question-card.review-marked {
+      border-color: #f59e0b;
+      box-shadow: 0 12px 28px rgba(245, 158, 11, 0.18);
+    }
+
+    .meta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .badge.qno {
+      background: var(--panel-soft);
+      border: 1px solid var(--line);
+      color: var(--text);
+    }
+
+    .badge.answer {
+      background: var(--success-soft);
+      color: var(--success);
+      cursor: pointer;
+      user-select: none;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .badge.answer.is-hidden {
+      background: #e2e8f0;
+      color: #475569;
+      border: 1px dashed #cbd5e1;
+    }
+
+    .badge.answer.is-hidden::before {
+      content: "🙈 ";
+    }
+
+    .question-text {
+      font-size: 1.04rem;
+      margin-bottom: 12px;
+    }
+
+    .question-media {
+      margin: 0 0 12px;
+    }
+
+    .question-media img {
+      display: block;
+      width: min(100%, 860px);
+      margin: 0 auto;
+      border: 1px solid #d9e3f0;
+      border-radius: 14px;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+      background: #ffffff;
+    }
+
+    .question-media figcaption {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      text-align: center;
+    }
+
+    .choices-block {
+      background: #f8fbff;
+      border: 1px solid #d7e5f7;
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+
+    .choices-title {
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .choices {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    .choices li {
+      padding: 8px 10px;
+      border-radius: 10px;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+    }
+
+    .choices strong {
+      color: #0f172a;
+      margin-right: 6px;
+    }
+
+    .explanation {
+      background: var(--panel-soft);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+
+    .explanation.is-hidden {
+      display: none;
+    }
+
+    .explanation strong,
+    details strong {
+      color: #0f172a;
+    }
+
+    details {
+      border: 1px dashed #bfd0e8;
+      border-radius: 14px;
+      padding: 12px 14px;
+      background: #fbfdff;
+    }
+
+    details + details {
+      margin-top: 10px;
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    ul.option-notes {
+      margin: 10px 0 0;
+      padding-left: 20px;
+    }
+
+    .footer {
+      margin-top: 28px;
+      padding: 20px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      color: var(--muted);
+      box-shadow: var(--shadow);
+    }
+
+    .tools-bar {
+      margin-top: 18px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .tool-button {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+    }
+
+    .tool-button.active {
+      background: var(--primary-soft);
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .tool-hint {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .review-button {
+      margin-left: auto;
+      appearance: none;
+      border: 1px solid var(--line);
+      background: var(--panel-soft);
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .review-button.active {
+      background: #fff7ed;
+      border-color: #f59e0b;
+      color: #b45309;
+    }
+
+    body.dark-mode .review-button.active {
+      background: #3b2b12;
+      color: #fbbf24;
+      border-color: #f59e0b;
+    }
+
+    .hidden-by-filter {
+      display: none;
+    }
+
+    .quick-nav {
+      position: fixed;
+      top: 24px;
+      right: 20px;
+      width: 220px;
+      max-height: calc(100vh - 48px);
+      overflow: auto;
+      padding: 16px;
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+      z-index: 20;
+    }
+
+    .quick-nav h3 {
+      font-size: 1rem;
+      margin-bottom: 10px;
+    }
+
+    .quick-nav-section + .quick-nav-section {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+    }
+
+    .quick-nav-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .quick-nav-links {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    .quick-nav a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 32px;
+      border-radius: 10px;
+      background: var(--panel-soft);
+      border: 1px solid var(--line);
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    .quick-nav a.review-link {
+      border-color: #f59e0b;
+      color: #b45309;
+      background: #fff7ed;
+    }
+
+    body.dark-mode .quick-nav a.review-link {
+      background: #3b2b12;
+      border-color: #f59e0b;
+      color: #fbbf24;
+      box-shadow: inset 0 0 0 1px rgba(251, 191, 36, 0.12);
+    }
+
+    body.dark-mode .hero,
+    body.dark-mode .quick-nav {
+      background: rgba(17, 24, 39, 0.94);
+      border-color: var(--line);
+    }
+
+    body.dark-mode .summary-card,
+    body.dark-mode .toc,
+    body.dark-mode .question-card,
+    body.dark-mode .footer,
+    body.dark-mode .tool-button {
+      background: var(--panel);
+      border-color: var(--line);
+      color: var(--text);
+    }
+
+    body.dark-mode .choices-block,
+    body.dark-mode .choices li,
+    body.dark-mode details,
+    body.dark-mode .badge.qno {
+      background: var(--panel-soft);
+      border-color: var(--line);
+      color: var(--text);
+    }
+
+    body.dark-mode .choices strong,
+    body.dark-mode .explanation strong,
+    body.dark-mode details strong {
+      color: #f8fafc;
+    }
+
+    body.dark-mode .question-media img {
+      background: #0f172a;
+      border-color: #334155;
+    }
+
+    body.dark-mode .badge.answer.is-hidden {
+      background: #334155;
+      color: #cbd5e1;
+      border-color: #475569;
+    }
+
+    body.dark-mode .explanation {
+      background: #2a2314;
+      border-color: #6b5a2b;
+    }
+
+    body.dark-mode .warning {
+      color: #fed7aa;
+    }
+
+    body.dark-mode .quick-nav a {
+      background: var(--panel-soft);
+      border-color: var(--line);
+      color: var(--text);
+    }
+
+    body.dark-mode .quick-nav a:hover,
+    body.dark-mode .tool-button.active {
+      background: var(--primary-soft);
+      color: #bfdbfe;
+    }
+
+    body.dark-mode .top-link {
+      color: #eff6ff;
+    }
+
+    .quick-nav a:hover {
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
+
+    .top-link {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      background: var(--primary);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-weight: 700;
+      box-shadow: var(--shadow);
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(100% - 20px, 1180px);
+      }
+
+      .hero,
+      .question-card,
+      .toc,
+      .summary-card,
+      .footer {
+        border-radius: 16px;
+      }
+
+      .quick-nav {
+        display: none;
+      }
+    }
+
+    @media (min-width: 1200px) {
+      .container {
+        width: min(1180px, calc(100% - 320px));
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <aside class="quick-nav" aria-label="快速選題">
+    <h3>快速選題</h3>
+    <div id="quickNavContent"></div>
+  </aside>
+  <div class="container" id="top">
+    <header class="hero">
+      <h1>iPAS 科目一與科目三題目詳解整理</h1>
+      <p class="lead">本頁整理 PDF 擷取出的 <strong>科目一：人工智慧技術應用與規劃</strong> 與 <strong>科目三：機器學習技術與應用</strong> 題目，並補上每題的核心詳解、各選項背景知識與易混概念，方便閱讀、複習與後續擴寫。</p>
+      <div class="chips">
+        <span class="chip">科目一 15 題</span>
+        <span class="chip">科目三 15 題</span>
+        <span class="chip">含選項背景知識</span>
+        <span class="chip">可直接瀏覽器開啟</span>
+      </div>
+      <div class="warning">
+        注意：PDF 文字擷取結果中，<strong>科目三第 15 題原始程式碼片段仍不完整</strong>；目前已改放你更正後的題圖到題目區，並補上程式流程說明，若你之後再提供原頁截圖，我可以再把每一行補成更精準的逐行詳解版。
+      </div>
+      <div class="tools-bar">
+        <button class="tool-button" id="themeToggle" type="button">🌙 Dark Mode</button>
+        <button class="tool-button" id="answerToggle" type="button">👁️ 顯示全部答案</button>
+        <button class="tool-button" id="reviewFilterToggle" type="button">⭐ 只看已標註題</button>
+        <span class="tool-hint">可把不熟的題目加星號，之後快速複習。</span>
+      </div>
+    </header>
+
+    <section class="summary-grid">
+      <article class="summary-card">
+        <strong>30 題整理</strong>
+        <span>聚焦科目一與科目三題庫重點。</span>
+      </article>
+      <article class="summary-card">
+        <strong>題解導向</strong>
+        <span>每題先講為什麼答案正確，再補常見誤區。</span>
+      </article>
+      <article class="summary-card">
+        <strong>考點背景</strong>
+        <span>將選項延伸成概念比較，方便建立知識網絡。</span>
+      </article>
+      <article class="summary-card">
+        <strong>易讀版型</strong>
+        <span>詳解常駐，選項補充可展開，不會一頁太擁擠。</span>
+      </article>
+    </section>
+
+    <nav class="toc">
+      <h2>目錄</h2>
+      <ul>
+        <li><a href="#subject1">科目一：人工智慧技術應用與規劃</a></li>
+        <li><a href="#subject3">科目三：機器學習技術與應用</a></li>
+      </ul>
+    </nav>
+
+    <section class="subject" id="subject1">
+      <div class="subject-title">
+        <h2>科目一：人工智慧技術應用與規劃</h2>
+        <p>主軸涵蓋 AI/ML 基本概念、NLP、電腦視覺、多模態、模型部署、資安風險與資料前處理。</p>
+      </div>
+      <div class="question-list">
+        <article class="question-card">
+          <div class="meta"><span class="badge qno">第 1 題</span><span class="badge answer">答案：A</span></div>
+          <div class="question-text">下列何者並未使用人工智慧（AI）或機器學習（ML）技術？</div>
+          <div class="choices-block"><div class="choices-title">題目選項</div><ul class="choices"><li><strong>(A)</strong> 使用一組預定義規則來確定最佳移動做法的象棋遊戲</li><li><strong>(B)</strong> 使用深度神經網路來提高其準確性的語音識別系統</li><li><strong>(C)</strong> 使用感測器和預定義的自動駕駛汽車導航規則</li><li><strong>(D)</strong> 使用自然語言處理算法來理解和反應用戶查詢的聊天機器人</li></ul></div>
+          <div class="explanation"><strong>詳解：</strong>A 是以固定規則運作的象棋程式，重點在人工設計規則與搜尋策略，不一定具備機器學習能力；題目問的是「並未使用 AI 或 ML 技術」，在傳統考題語境中，固定規則系統通常被視為不屬於現代 AI/ML 應用。其餘選項都明確涉及深度學習、NLP 或智慧控制。</div>
+          <details><summary>選項背景知識</summary><ul class="option-notes"><li><strong>(A)</strong> 預定義規則系統屬於傳統規則式程式設計，輸出來自人類事先寫好的邏輯，不會從資料中學習。</li><li><strong>(B)</strong> 語音辨識常使用深度神經網路、Transformer 或 CTC 等方法，屬典型 AI 應用。</li><li><strong>(C)</strong> 自動駕駛若只是固定導航規則較偏控制系統，但實務上多半會結合感知模型與 ML。</li><li><strong>(D)</strong> 聊天機器人透過 NLP 或大型語言模型理解問題並生成回應，是 AI 的代表場景。</li></ul></details>
+        </article>
+
+        <article class="question-card">
+          <div class="meta"><span class="badge qno">第 2 題</span><span class="badge answer">答案：C</span></div>
+          <div class="question-text">在文本資料處理過程中，通常會需要將接續的文本轉換為詞彙單位，以便後續處理。上述所指的是哪一個方法？</div>
+          <div class="choices-block"><div class="choices-title">題目選項</div><ul class="choices"><li><strong>(A)</strong> 詞形還原（Lemmatization）</li><li><strong>(B)</strong> 停用詞移除（Stopword Removal）</li><li><strong>(C)</strong> 斷詞（Tokenization）</li><li><strong>(D)</strong> 詞頻－逆向文件頻率（TF-IDF）</li></ul></div>
+          <div class="explanation"><strong>詳解：</strong>這描述的是 <strong>斷詞（Tokenization）</strong>。它把句子切成詞、子詞或字元等單位，是 NLP 最前面的基礎步驟。未先斷詞，模型通常無法有效統計詞頻、建立向量或做語意分析。</div>
+          <details><summary>選項背景知識</summary><ul class="option-notes"><li><strong>(A)</strong> 詞形還原是把不同詞形還原成基本型，例如 <em>running → run</em>。</li><li><strong>(B)</strong> 停用詞移除是去掉像「的、了、and、the」等資訊量較低的常見詞。</li><li><strong>(C)</strong> 斷詞是把原始文字拆成 token，中文會面臨沒有空白分隔的額外挑戰。</li><li><strong>(D)</strong> TF-IDF 是將詞轉為權重表示的方法，不是切詞步驟本身。</li></ul></details>
+        </article>
+
+        <article class="question-card">
+          <div class="meta"><span class="badge qno">第 3 題</span><span class="badge answer">答案：A</span></div>
+          <div class="question-text">下列何者為自然語言處理（NLP）在機器學習應用中的主要用途？</div>
+          <div class="choices-block"><div class="choices-title">題目選項</div><ul class="choices"><li><strong>(A)</strong> 情緒分析</li><li><strong>(B)</strong> 圖像識別</li><li><strong>(C)</strong> 預測性維護</li><li><strong>(D)</strong> 供應鏈優化</li></ul></div>
+          <div class="explanation"><strong>詳解：</strong>情緒分析直接處理文本內容、判斷正負向與情感極性，是 NLP 非常典型的應用。其他選項主要屬於電腦視覺、工業設備分析或營運管理。</div>
+          <details><summary>選項背景知識</summary><ul class="option-notes"><li><strong>(A)</strong> 情緒分析常用於客服評論、社群貼文、產品回饋等文本場景。</li><li><strong>(B)</strong> 圖像識別是電腦視覺領域的核心任務，不屬 NLP 主用途。</li><li><strong>(C)</strong> 預測性維護多依賴感測器數據、時序訊號與設備狀態資料。</li><li><strong>(D)</strong> 供應鏈優化通常結合預測模型、規劃最佳化與營運研究方法。</li></ul></details>
+        </article>
+
+        <article class="question-card">
+          <div class="meta"><span class="badge qno">第 4 題</span><span class="badge answer">答案：D</span></div>
+          <div class="question-text">關於深度學習模型，下列敘述何者不正確？</div>
+          <div class="choices-block"><div class="choices-title">題目選項</div><ul class="choices"><li><strong>(A)</strong> 卷積神經網路（CNN）適合影像辨識</li><li><strong>(B)</strong> ReLU 比 tanh 和 Sigmoid 好，因為可減緩梯度爆炸與消失現象</li><li><strong>(C)</strong> 遞迴神經網路（RNN）適合處理序列相關資料</li><li><strong>(D)</strong> Elman 神經網路適合處理影像辨識</li></ul></div>
+          <div class="explanation"><strong>詳解：</strong>Elman 神經網路屬於一種早期循環神經網路，適合處理序列或時間依賴資料，並不是影像辨識的代表架構，所以 D 不正確。影像辨識通常會優先想到 CNN、Vision Transformer 等模型。</div>
+          <details><summary>選項背景知識</summary><ul class="option-notes"><li><strong>(A)</strong> CNN 擅長擷取局部空間特徵，廣泛應用在分類、偵測、分割。</li><li><strong>(B)</strong> ReLU 可減緩梯度消失，訓練速度常比 sigmoid、tanh 更穩定；題目敘述雖略簡化，但考試常這樣表述。</li><li><strong>(C)</strong> RNN 適用於文字、語音、時序訊號等有前後關係的資料。</li><li><strong>(D)</strong> Elman Network 為序列模型，不是影像辨識主流架構。</li></ul></details>
+        </article>
+
+        <article class="question-card">
+          <div class="meta"><span class="badge qno">第 5 題</span><span class="badge answer">答案：A</span></div>
+          <div class="question-text">下列何者為機器學習模型在業界部署的主要趨勢？</div>
+          <div class="choices-block"><div class="choices-title">題目選項</div><ul class="choices"><li><strong>(A)</strong> 越來越多地採用自動化機器學習（AutoML）技術</li><li><strong>(B)</strong> 轉向使用更簡單的機器學習算法</li><li><strong>(C)</strong> 基於雲的機器學習平台的使用率下降</li><li><strong>(D)</strong> 依賴手動超參數調整進行模型優化</li></ul></div>
+          <div class="explanation"><strong>詳解：</strong>近年明顯趨勢是導入 <strong>AutoML</strong>、MLOps 與自動化部署流程，以降低特徵工程、模型選擇與超參數調校成本，因此 A 最符合產業現況。<br /><br /><strong>容易記的方式：</strong><br />- <strong>AutoML = 幫你「自動做模型」</strong>：自動幫你試模型、挑特徵、調參數，重點是把「建模」變快。<br />- <strong>MLOps = 幫你「把模型穩定用下去」</strong>：把訓練、部署、監控、更新流程標準化，重點是把「上線後營運」做好。<br /><br /><strong>一個好記口訣：</strong><br />- <strong>AutoML 管做模型，MLOps 管養模型。</strong><br />也就是說，AutoML 偏向「怎麼更快做出模型」，MLOps 偏向「怎麼讓模型持續穩定運作」。</div>
+          <details><summary>選項背景知識</summary><ul class="option-notes"><li><strong>(A)</strong> AutoML 能自動協助做模型搜尋、特徵選擇與部分調參，是近年機器學習落地加速的重要方向；搭配 MLOps，才能把模型穩定部署、監控與持續更新。</li><li><strong>(B)</strong> 業界不是單純回到更簡單的演算法，而是依照效能、成本、解釋性與部署需求做平衡，不代表主流方向就是「越簡單越好」。</li><li><strong>(C)</strong> 雲端機器學習平台通常是上升趨勢，不是下降趨勢；因為雲端在算力彈性、託管服務與協作部署上都很有優勢。</li><li><strong>(D)</strong> 手動超參數調整仍然存在，但業界主流更偏向自動化搜尋、流程標準化與 MLOps 管理，不會把「全靠人工調參」當成主要趨勢。</li></ul></details>
+        </article>
+
+        <article class="question-card">
+          <div class="meta"><span class="badge qno">第 6 題</span><span class="badge answer">答案：D</span></div>
+          <div class="question-text">下列何者最適合使用迴歸（Regression）模型進行預測？</div>
+          <div class="choices-block"><div class="choices-title">題目選項</div><ul class="choices"><li><strong>(A)</strong> 根據顧客的購買行為，預測他最可能加入購物車的商品類別</li><li><strong>(B)</strong> 根據病患的症狀與病史，判斷其可能患有的疾病類別</li><li><strong>(C)</strong> 根據電影的特徵與用戶評分，推薦適合的電影類型</li><li><strong>(D)</strong> 根據歷年銷售數據，預測明年某產品的總銷售額</li></ul></div>
+          <div class="explanation"><strong>詳解：</strong>迴歸模型用來預測連續數值。題目中「明年某產品的總銷售額」屬於連續實數輸出，因此應使用迴歸。其餘選項較偏分類、推薦或其他任務。</div>
+          <details><summary>選項背景知識</summary><ul class="option-notes"><li><strong>(A)</strong> 預測商品類別通常是分類問題，輸出是離散類別。</li><li><strong>(B)</strong> 判斷疾病類別也是分類任務。</li><li><strong>(C)</strong> 推薦系統可用排序、協同過濾或表示學習，不是典型迴歸題型。</li><li><strong>(D)</strong> 銷售額是數值預測，是迴歸的標準案例。</li></ul></details>
+        </article>
+
+        <article class="question-card">
+          <div class="meta"><span class="badge qno">第 7 題</span><span class="badge answer">答案：B</span></div>
+          <div class="question-text">附圖展示電腦視覺辨識技術，何者正確配對了圖中（a）、（b）、（c）、（d）所代表的技術名稱？</div>
+          <div class="choices-block"><div class="choices-title">題目選項</div><ul class="choices"><li><strong>(A)</strong> （a）實例分割、（b）語義分割、（c）物件偵測、（d）圖像分類</li><li><strong>(B)</strong> （a）圖像分類、（b）語義分割、（c）物件偵測、（d）實例分割</li><li><strong>(C)</strong> （a）圖像分類、（b）物件偵測、（c）語義分割、（d）實例分割</li><li><strong>(D)</strong> （a）圖像分類、（b）物件偵測、（c）實例分割、（d）語義分割</li></ul></div>
+          <div class="explanation"><strong>詳解：</strong>答案 B 的排列為：<strong>（a）圖像分類、（b）語義分割、（c）物件偵測、（d）實例分割</strong>。這是電腦視覺入門常見對照：分類只給整張圖標籤；偵測給框；語義分割給每個像素類別；實例分割則進一步區分同類別不同個體。由於 PDF 擷取未包含圖片，本題以題庫答案為準進行整理。</div>
+          <details><summary>選項背景知識</summary><ul class="option-notes"><li><strong>(A)</strong> 這個配對把 <strong>（a）</strong> 誤寫成實例分割、把 <strong>（d）</strong> 寫成圖像分類，等於把最細緻的像素級個體辨識和最粗略的整張圖分類對調了，因此不合理。</li><li><strong>(B)</strong> 這一項正確對應了四種任務：<strong>圖像分類</strong>只給整張圖標籤、<strong>語義分割</strong>做像素分類、<strong>物件偵測</strong>會框出位置、<strong>實例分割</strong>則能把同類不同個體分開。</li><li><strong>(C)</strong> 這個配對把 <strong>（b）</strong> 和 <strong>（c）</strong> 的概念對調了；物件偵測重點是框出物體位置，語義分割重點是每個像素的類別，不是同一件事。</li><li><strong>(D)</strong> 這個配對把 <strong>實例分割</strong> 和 <strong>語義分割</strong> 順序放反了；兩者都做像素分類，但實例分割比語義分割多了「分開不同個體」這一步。</li></ul></details>
+        </article>
+
+        <article class="question-card">
+          <div class="meta"><span class="badge qno">第 8 題</span><span class="badge answer">答案：A</span></div>
+          <div class="question-text">企業在生成式 AI 導入中，可選擇哪一種模型壓縮技術以減少記憶體使用？</div>
+          <div class="choices-block"><div class="choices-title">題目選項</div><ul class="choices"><li><strong>(A)</strong> 參數剪枝</li><li><strong>(B)</strong> 增加訓練數據量</li><li><strong>(C)</strong> 增加模型層數</li><li><strong>(D)</strong> 使用更高維數據</li></ul></div>
+          <div class="explanation"><strong>詳解：</strong>參數剪枝會移除重要性較低的權重或連結，直接降低模型大小與運算量，是常見的模型壓縮方法。其餘選項反而傾向增加模型或資料規模，無法達成節省記憶體的目標。</div>
+          <details><summary>選項背景知識</summary><ul class="option-notes"><li><strong>(A)</strong> 剪枝、量化、知識蒸餾都是常見壓縮手段。</li><li><strong>(B)</strong> 增加訓練資料通常能提升泛化，但不會縮小模型。</li><li><strong>(C)</strong> 增加模型層數常使參數量與記憶體需求上升。</li><li><strong>(D)</strong> 更高維資料多半會提高儲存與運算成本。</li></ul></details>
+        </article>
+
+        <article class="question-card">
+          <div class="meta"><span class="badge qno">第 9 題</span><span class="badge answer">答案：B</span></div>
+          <div class="question-text">供應鏈攻擊如何影響企業內部 AI 系統安全？</div>
+          <div class="choices-block"><div class="choices-title">題目選項</div><ul class="choices"><li><strong>(A)</strong> 供應鏈攻擊的常見狀況，包括員工因釣魚郵件而被盜取帳號密碼</li><li><strong>(B)</strong> AI 系統依賴的第三方開源模型或數據可能被植入惡意內容</li><li><strong>(C)</strong> AI 系統只會受到 DDoS 攻擊影響，不會有供應鏈風險</li><li><strong>(D)</strong> 供應鏈攻擊僅影響硬體層級，不影響 AI 模型</li></ul></div>
+          <div class="explanation"><strong>詳解：</strong>AI 系統高度依賴第三方套件、預訓練模型與資料集，若這些外部資源被植入惡意內容，便可能在訓練、推論或部署階段造成資料外洩、後門或模型污染。因此 B 最貼近 AI 供應鏈攻擊的本質。</div>
+          <details><summary>選項背景知識</summary><ul class="option-notes"><li><strong>(A)</strong> 釣魚屬社交工程攻擊，但不是供應鏈攻擊的核心定義。</li><li><strong>(B)</strong> 惡意模型權重、受污染資料集或第三方套件都可能成為入口。</li><li><strong>(C)</strong> DDoS 只是服務阻斷，不代表不存在供應鏈風險。</li><li><strong>(D)</strong> 供應鏈攻擊會影響軟體、模型與資料，不限於硬體層。</li></ul></details>
+        </article>
+
+        <article class="question-card">
+          <div class="meta"><span class="badge qno">第 10 題</span><span class="badge answer">答案：B</span></div>
+          <div class="question-text">下列何者為 NLP 中的詞嵌入技術，能將文字轉換為向量以利機器學習處理？</div>
+          <div class="choices-block"><div class="choices-title">題目選項</div><ul class="choices"><li><strong>(A)</strong> TF-IDF</li><li><strong>(B)</strong> Word2Vec</li><li><strong>(C)</strong> Stop Words</li><li><strong>(D)</strong> Bag-of-Words</li></ul></div>
+          <div class="explanation"><strong>詳解：</strong><strong>Word2Vec</strong> 會把詞映射到向量空間，讓語意相近的詞在向量空間中更接近，是經典的詞嵌入方法。其餘選項不是詞嵌入模型。</div>
+          <details><summary>選項背景知識</summary><ul class="option-notes"><li><strong>(A)</strong> TF-IDF 是「統計這個詞在這篇文有多重要」的做法，產生的是稀疏權重表，不是真的語意向量。<strong>好記法：</strong>TF-IDF 比較像在做「關鍵字打分數」，不是在學詞義。</li><li><strong>(B)</strong> Word2Vec 才是真正的詞嵌入方法，會把詞放進向量空間；常見訓練方式有 <strong>CBOW</strong>（看上下文猜中心詞）與 <strong>Skip-gram</strong>（看中心詞猜周圍詞）。<strong>好記法：</strong>「CBOW 猜中間，Skip-gram 猜旁邊」。</li><li><strong>(C)</strong> Stop Words 是像「的、了、是、the、and」這類常見但資訊量低的停用詞，通常是前處理時拿掉，避免雜訊太多。<strong>好記法：</strong>它是「要不要保留的詞」，不是「怎麼變向量的技術」。</li><li><strong>(D)</strong> Bag-of-Words 是把一篇文章看成一袋詞，只管「有沒有出現、出現幾次」，通常不看詞序，也抓不到「語意距離」。<strong>好記法：</strong>BoW 只會數詞，不會懂意思。</li></ul></details>
+        </article>
+
+        <article class="question-card">
+          <div class="meta"><span class="badge qno">第 11 題</span><span class="badge answer">答案：B</span></div>
+          <div class="question-text">在多模態學習中，早期融合（Early Fusion）方法的主要特徵為何？</div>
+          <div class="choices-block"><div class="choices-title">題目選項</div><ul class="choices"><li><strong>(A)</strong> 將不同模態資料的輸出結果進行決策合併</li><li><strong>(B)</strong> 在模型輸入階段或特徵提取階段整合不同模態資料</li><li><strong>(C)</strong> 僅處理單一來源的資料輸入</li><li><strong>(D)</strong> 利用注意力機制在深層隱藏層進行語意比對與融合</li></ul></div>
+          <div class="explanation"><strong>詳解：</strong>早期融合是把不同模態的資料在輸入端或特徵抽取初期就先整合，再送入後續模型共同學習，因此答案是 B。相對地，晚期融合則較偏向先各自建模，再整合結果。</div>
+          <details><summary>選項背景知識</summary><ul class="option-notes"><li><strong>(A)</strong> 先各自輸出結果再合併，比較接近晚期融合（Late Fusion）。</li><li><strong>(B)</strong> 早期融合的重點是早期特徵層級整合。</li><li><strong>(C)</strong> 僅處理單一模態就不是多模態學習。</li><li><strong>(D)</strong> 注意力機制可用於融合，但不是早期融合的定義本身。</li></ul></details>
+        </article>
+
+        <article class="question-card">
+          <div class="meta"><span class="badge qno">第 12 題</span><span class="badge answer">答案：D</span></div>
+          <div class="question-text">哪項技術最有助於強化醫療多模態 AI 系統在處理影像與文本數據時的整合能力？</div>
+          <div class="choices-block"><div class="choices-title">題目選項</div><ul class="choices"><li><strong>(A)</strong> 利用預先定義的規則產生診斷結果</li><li><strong>(B)</strong> 僅使用 CNN 架構同時處理影像與文字資訊</li><li><strong>(C)</strong> 利用單一模態資料建立通用醫療模型</li><li><strong>(D)</strong> 採用 Transformer 架構整合醫療影像與臨床文本資訊</li></ul></div>
+          <div class="explanation"><strong>詳解：</strong>Transformer 擅長處理長距依賴與跨模態對齊，目前在影像、文本與多模態醫療模型中十分常見，因此 D 最合理。它能更有效整合醫療影像與臨床文本資訊。</div>
+          <details><summary>選項背景知識</summary><ul class="option-notes"><li><strong>(A)</strong> 規則式系統雖可作為輔助，但泛化與彈性有限。</li><li><strong>(B)</strong> CNN 長於影像，不適合直接作為文字建模主架構。</li><li><strong>(C)</strong> 單一模態無法完整表達影像與文本的互補訊息。</li><li><strong>(D)</strong> Transformer 能透過注意力機制建立跨模態關聯。</li></ul></details>
+        </article>
+
+        <article class="question-card">
+          <div class="meta"><span class="badge qno">第 13 題</span><span class="badge answer">答案：C</span></div>
+          <div class="question-text">某線上音樂平台希望根據用戶的聽歌與查詢行為，將用戶劃分為不同類型；若事前沒有定義用戶類型，最適合哪一種模型？</div>
+          <div class="choices-block"><div class="choices-title">題目選項</div><ul class="choices"><li><strong>(A)</strong> 邏輯迴歸（Logistic Regression）</li><li><strong>(B)</strong> 決策樹（Decision Tree）</li><li><strong>(C)</strong> 基於密度之含噪空間聚類法（DBSCAN）</li><li><strong>(D)</strong> 線性迴歸（Linear Regression）</li></ul></div>
+          <div class="explanation"><strong>詳解：</strong>事前沒有標籤，表示這是非監督式學習問題。DBSCAN 屬於聚類方法，可根據資料密度找出群集並辨識噪聲點，因此 C 最符合題意。</div>
+          <details><summary>選項背景知識</summary><ul class="option-notes"><li><strong>(A)</strong> 邏輯迴歸是有監督分類模型，需要已知標籤。</li><li><strong>(B)</strong> 決策樹若作分類，也需要標註好的類別資料。</li><li><strong>(C)</strong> DBSCAN 不需事先指定群數，對不規則形狀群集很有用。</li><li><strong>(D)</strong> 線性迴歸用來預測連續值，不是分群工具。</li></ul></details>
+        </article>
+
+        <article class="question-card">
+          <div class="meta"><span class="badge qno">第 14 題</span><span class="badge answer">答案：B</span></div>
+          <div class="question-text">特徵尺度差異極大時，哪一種預處理方式最能有效提升模型效能與穩定性？</div>
+          <div class="choices-block"><div class="choices-title">題目選項</div><ul class="choices"><li><strong>(A)</strong> 移除尺度較小的欄位以避免對模型影響過低</li><li><strong>(B)</strong> 對所有特徵進行 Z-score 標準化（Standardization）</li><li><strong>(C)</strong> 將特徵縮放至 0–1 區間進行最小－最大正規化（Min-Max Normalization）</li><li><strong>(D)</strong> 對所有數值欄位加上常數使其不為零</li></ul></div>
+          <div class="explanation"><strong>詳解：</strong>答案給的是 <strong>Z-score 標準化</strong>，其目的在於讓各特徵轉成平均數 0、標準差 1 的分布，避免某些尺度過大的欄位主導模型學習。雖然 Min-Max 正規化也能縮放數值，但標準化在許多模型與統計假設下更常作為首選。</div>
+          <details><summary>選項背景知識</summary><ul class="option-notes"><li><strong>(A)</strong> 直接移除小尺度欄位會丟失資訊，不是正規作法。</li><li><strong>(B)</strong> Standardization 常用於線性模型、SVM、KNN、神經網路等。</li><li><strong>(C)</strong> Min-Max 會把數值壓到固定區間，但較容易受極端值影響。</li><li><strong>(D)</strong> 單純加常數不能消除尺度差異。</li></ul></details>
+        </article>
+
+        <article class="question-card">
+          <div class="meta"><span class="badge qno">第 15 題</span><span class="badge answer">答案：B</span></div>
+          <div class="question-text">企業部署 AI 模型至現有營運系統並進入系統整合測試階段，哪項驗證最應優先執行？</div>
+          <div class="choices-block"><div class="choices-title">題目選項</div><ul class="choices"><li><strong>(A)</strong> 確認模型在開發機上訓練集表現是否達標</li><li><strong>(B)</strong> 驗證模型服務與資料平台、前後端介面協同是否正常，資料格式與流程一致性是否維持</li><li><strong>(C)</strong> 檢查開發團隊提交程式碼時是否有依照 Git commit message 規範</li><li><strong>(D)</strong> 審閱模型報告與 API 文件的格式是否符合交付標準</li></ul></div>
+          <div class="explanation"><strong>詳解：</strong>系統整合測試的核心不是看模型單獨表現，而是確認模型服務能否與資料平台、前後端介面、資料格式與流程完整銜接，因此 B 最重要。部署成敗往往發生在整合層，而不是模型本身。</div>
+          <details><summary>選項背景知識</summary><ul class="option-notes"><li><strong>(A)</strong> 訓練集表現只說明模型是否記住資料，不代表可順利上線。</li><li><strong>(B)</strong> API 串接、資料 schema、一致性與流程正確性是整測重點。</li><li><strong>(C)</strong> Commit message 規範屬於開發流程品質，不是整測優先事項。</li><li><strong>(D)</strong> 文件格式重要，但先決條件仍是系統實際可運作。</li></ul></details>
+        </article>
+      </div>
+    </section>
+
+    <section class="subject" id="subject3">
+      <div class="subject-title">
+        <h2>科目三：機器學習技術與應用</h2>
+        <p>主軸涵蓋 MapReduce、CNN 架構、模型評估、過擬合、損失函數、資料保護與學習前處理等機器學習核心考點。</p>
+      </div>
+      <div class="question-list">
+        <article class="question-card">
+          <div class="meta"><span class="badge qno">第 1 題</span><span class="badge answer">答案：A</span></div>
+          <div class="question-text">在 MapReduce 計算框架中，關於 Map 和 Reduce 所負責處理資料的問題，下列敘述何者正確？</div>
+          <div class="choices-block"><div class="choices-title">題目選項</div><ul class="choices"><li><strong>(A)</strong> Map：一組資料映射成另一組資料；Reduce：統合與歸納資料</li><li><strong>(B)</strong> Map：地圖式的搜索資料；Reduce：統合與歸納資料</li><li><strong>(C)</strong> Map：一組資料映射成另一組資料；Reduce：過濾不符合的資料</li><li><strong>(D)</strong> Map：一組資料映射成另一組資料；Reduce：生成更多的資料</li></ul></div>
+          <div class="explanation"><strong>詳解：</strong>Map 會把輸入資料映射成中介鍵值對，Reduce 則負責彙整、歸納具有相同 key 的結果，因此 A 正確。這是大規模分散式資料處理的基本設計精神。<br /><br /><strong>MapReduce 是什麼？</strong><br />它是一種把「超大資料」拆開來分散處理的框架：<br />- <strong>Map</strong>：先把資料切開、轉換，變成可整理的 key-value 形式。<br />- <strong>Reduce</strong>：再把相同 key 的結果合併、統計、歸納。<br /><br /><strong>好記口訣：</strong><br />- <strong>Map 負責拆與轉，Reduce 負責收與總。</strong></div>
+          <details><summary>選項背景知識</summary><ul class="option-notes"><li><strong>(A)</strong> 正確描述了 MapReduce 的兩個核心階段。<strong>好記法：</strong>Map 先分派工作，Reduce 再把答案收回來統整。</li><li><strong>(B)</strong> Map 與地圖搜尋無關，這是名稱上的誤解；這裡的 Map 比較像「映射、轉換」。</li><li><strong>(C)</strong> Reduce 不是單純過濾資料，而是把同類結果做聚合、統計、歸納，例如加總、計數、分類整理。</li><li><strong>(D)</strong> Reduce 的目的是壓縮與統整，不是生成更多資料。它更像總結員，不是擴寫員。</li></ul></details>
+        </article>
+
+        <article class="question-card">
+          <div class="meta"><span class="badge qno">第 2 題</span><span class="badge answer">答案：B</span></div>
+          <div class="question-text">下列何種卷積神經網路是將卷積層加寬而非加深？</div>
+          <div class="choices-block"><div class="choices-title">題目選項</div><ul class="choices"><li><strong>(A)</strong> R-CNN</li><li><strong>(B)</strong> Inception</li><li><strong>(C)</strong> ResNet</li><li><strong>(D)</strong> VGG19</li></ul></div>
+          <div class="explanation"><strong>詳解：</strong>Inception 的特色是在<strong>同一層同時開很多條路</strong>，用不同大小的卷積核並行抽特徵，所以它考的是「加寬」而不是單純「加深」。因此答案是 B。<br /><br /><strong>好記法：</strong>Inception 像一層裡面開很多視角一起看，想到「多路並排」就比較容易聯想到<strong>加寬</strong>。</div>
+          <details><summary>選項背景知識</summary><ul class="option-notes"><li><strong>(A)</strong> R-CNN 是物件偵測系列方法，不是以加寬為主軸。</li><li><strong>(B)</strong> Inception 透過多路徑卷積模組增加表徵能力。</li><li><strong>(C)</strong> ResNet 核心是殘差連接，幫助建更深的網路。</li><li><strong>(D)</strong> VGG19 以規律堆疊深層卷積聞名，屬加深路線。</li></ul></details>
+        </article>
+
+        <article class="question-card">
+          <div class="meta"><span class="badge qno">第 3 題</span><span class="badge answer">答案：B</span></div>
+          <div class="question-text">當模型的訓練誤差（Training Error）低、但測試誤差（Test Error）很大時，這通常是在訓練過程中產生下列哪一種情況？</div>
+          <div class="choices-block"><div class="choices-title">題目選項</div><ul class="choices"><li><strong>(A)</strong> 模型的泛化能力強</li><li><strong>(B)</strong> 模型出現過度擬合（Overfitting）</li><li><strong>(C)</strong> 模型出現欠擬合（Underfitting）</li><li><strong>(D)</strong> 訓練資料和測試資料之間沒有相關性</li></ul></div>
+          <div class="explanation"><strong>詳解：</strong>這是典型的 <strong>過度擬合（Overfitting）</strong>。白話來說，就是模型把訓練資料「背得太熟」，連雜訊都記住了，所以一換到沒看過的測試資料，成績就掉下來。因此答案是 B。<br /><br /><strong>好記法：</strong><strong>訓練很好、測試很差 = 背題型，不會應用</strong>，這就是過擬合最常見的判斷訊號。</div>
+          <details><summary>選項背景知識</summary><ul class="option-notes"><li><strong>(A)</strong> 泛化能力強應該表現在測試集也維持良好成績。</li><li><strong>(B)</strong> 過擬合常透過正則化、早停、資料增強等方法改善。</li><li><strong>(C)</strong> 欠擬合通常會連訓練集表現都不好。</li><li><strong>(D)</strong> 資料完全無關聯不是本題重點；此題描述的是泛化失敗。</li></ul></details>
+        </article>
+
+        <article class="question-card">
+          <div class="meta"><span class="badge qno">第 4 題</span><span class="badge answer">答案：A</span></div>
+          <div class="question-text">下列哪一種指標通常用於評估迴歸模型的效能？</div>
+          <div class="choices-block"><div class="choices-title">題目選項</div><ul class="choices"><li><strong>(A)</strong> R²</li><li><strong>(B)</strong> F1-分數</li><li><strong>(C)</strong> 曲線下面積（AUC）</li><li><strong>(D)</strong> Precision</li></ul></div>
+          <div class="explanation"><strong>詳解：</strong><strong>R²</strong>（決定係數）常用來看迴歸模型「有多能解釋資料變化」，所以答案是 A。它是在看模型對連續數值的擬合程度；反過來說，F1、AUC、Precision 這些比較常出現在分類題。<br /><br /><strong>好記法：</strong><strong>R² 的 R 可以先聯想到 Regression</strong>，考迴歸指標時先優先想到它。</div>
+          <details><summary>選項背景知識</summary><ul class="option-notes"><li><strong>(A)</strong> R² 越接近 1，通常代表模型越能解釋目標變異。</li><li><strong>(B)</strong> F1 分數兼顧 Precision 與 Recall，用在分類。</li><li><strong>(C)</strong> AUC 主要衡量分類模型區分正負類能力。</li><li><strong>(D)</strong> Precision 著重被判為正類中有多少是真的正類。</li></ul></details>
+        </article>
+
+        <article class="question-card">
+          <div class="meta"><span class="badge qno">第 5 題</span><span class="badge answer">答案：A</span></div>
+          <div class="question-text">近年來，深度學習研究與應用蓬勃發展，但數據本身可能存在什麼潛在問題？</div>
+          <div class="choices-block"><div class="choices-title">題目選項</div><ul class="choices"><li><strong>(A)</strong> 數據標註品質鮮少被討論，但它卻直接影響模型性能</li><li><strong>(B)</strong> 數據品質是完美可信賴的</li><li><strong>(C)</strong> 大部分情況下，數據不存在類別不平衡問題</li><li><strong>(D)</strong> 數據不需要領域知識的輔助</li></ul></div>
+          <div class="explanation"><strong>詳解：</strong>資料標註品質會直接決定模型到底學到什麼。假如標註本身就錯、亂或不一致，模型再強也只是在學錯的答案，所以 A 正確。這題其實是在提醒你：<strong>很多時候不是模型不夠厲害，而是資料本身就有問題。</strong><br /><br /><strong>好記法：</strong><strong>資料錯，模型就跟著錯</strong>，也就是常說的 Garbage in, garbage out。</div>
+          <details><summary>選項背景知識</summary><ul class="option-notes"><li><strong>(A)</strong> 垃圾進、垃圾出（Garbage in, garbage out）是機器學習核心原則。</li><li><strong>(B)</strong> 真實世界資料很少完美，常有偏差、遺漏、噪聲與標註不一致。</li><li><strong>(C)</strong> 類別不平衡其實非常常見，尤其在醫療、風控、異常偵測。</li><li><strong>(D)</strong> 領域知識能幫助標註、特徵理解與錯誤判讀，非常重要。</li></ul></details>
+        </article>
+
+        <article class="question-card">
+          <div class="meta"><span class="badge qno">第 6 題</span><span class="badge answer">答案：C</span></div>
+          <div class="question-text">在分類任務中，深度學習模型通常搭配哪一種輸出函數？</div>
+          <div class="choices-block"><div class="choices-title">題目選項</div><ul class="choices"><li><strong>(A)</strong> Tanh</li><li><strong>(B)</strong> ReLU</li><li><strong>(C)</strong> Sigmoid 或 Softmax</li><li><strong>(D)</strong> Dropout</li></ul></div>
+          <div class="explanation"><strong>詳解：</strong>二元分類常用 <strong>Sigmoid</strong>，多類別單選分類常用 <strong>Softmax</strong>，因此答案是 C。它們都能把輸出轉成可解讀的機率形式。<br /><br /><strong>容易記的方式：</strong><br />- <strong>Sigmoid / Softmax</strong> 是在最後一層「把答案吐出來」的。<br />- <strong>Dropout</strong> 不是拿來輸出答案，而是訓練時「隨機關掉一些神經元」，避免模型太依賴少數節點、降低過擬合。<br /><br /><strong>好記口訣：</strong><br />- <strong>輸出看 Sigmoid/Softmax，防過擬合想到 Dropout。</strong></div>
+          <details><summary>選項背景知識</summary><ul class="option-notes"><li><strong>(A)</strong> Tanh 常作為隱藏層活化函數，不是分類輸出層主流；它比較像中間層在做特徵轉換，不是最後報答案。</li><li><strong>(B)</strong> ReLU 常見於隱藏層，用來增加非線性，特色是簡單、訓練快；你可以把它想成中間層常用的「開關型活化函數」。</li><li><strong>(C)</strong> Sigmoid 適用於二元或多標籤；Softmax 適用於互斥多類別。<strong>好記法：</strong>一個答案選 Sigmoid，多選一群機率分配看 Softmax。</li><li><strong>(D)</strong> Dropout 是正則化技巧，不是輸出函數。它會在訓練時暫時關掉部分神經元，避免模型「死背」某些固定路徑。<strong>好記法：</strong>Dropout 在訓練時抽人下場，不是最後出來報分數的人。</li></ul></details>
+        </article>
+
+        <article class="question-card">
+          <div class="meta"><span class="badge qno">第 7 題</span><span class="badge answer">答案：C</span></div>
+          <div class="question-text">下列哪一種學習任務不適合使用監督式學習方法處理？</div>
+          <div class="choices-block"><div class="choices-title">題目選項</div><ul class="choices"><li><strong>(A)</strong> 客戶信用風險分類</li><li><strong>(B)</strong> 預測未來銷售額</li><li><strong>(C)</strong> 找出資料中的潛在群集</li><li><strong>(D)</strong> 判斷影像是否為貓或狗</li></ul></div>
+          <div class="explanation"><strong>詳解：</strong>「找出潛在群集」的重點是<strong>事先沒有標籤</strong>，只是想看看資料自己會不會自然分成幾群，所以它屬於非監督式學習，答案是 C。監督式學習則一定要先有正確答案可學。<br /><br /><strong>好記法：</strong><strong>有標籤才叫監督，沒標籤自己分群就是非監督。</strong></div>
+          <details><summary>選項背景知識</summary><ul class="option-notes"><li><strong>(A)</strong> 信用風險分類通常有歷史違約標籤，可用監督式學習。</li><li><strong>(B)</strong> 預測銷售額多半屬監督式迴歸。</li><li><strong>(C)</strong> 分群是非監督式學習的經典任務。</li><li><strong>(D)</strong> 貓狗分類有標籤時是標準監督式分類問題。</li></ul></details>
+        </article>
+
+        <article class="question-card">
+          <div class="meta"><span class="badge qno">第 8 題</span><span class="badge answer">答案：B</span></div>
+          <div class="question-text">在神經網路中，前向傳播（Forward Propagation）主要依賴哪一種數學操作？</div>
+          <div class="choices-block"><div class="choices-title">題目選項</div><ul class="choices"><li><strong>(A)</strong> 機率積分</li><li><strong>(B)</strong> 矩陣乘法與向量內積</li><li><strong>(C)</strong> 對數變換</li><li><strong>(D)</strong> 條件機率推論</li></ul></div>
+          <div class="explanation"><strong>詳解：</strong>前向傳播的核心是每層做 <strong>矩陣乘法與向量內積</strong>，再加上偏置與活化函數，把輸入一路轉換到輸出。因此 B 正確。<br /><br /><strong>再多解釋一點：</strong><br />你可以把前向傳播想成「資料一層一層往前走」。每到一層，模型都會先算：<strong>輸入 × 權重 + 偏置</strong>，再丟進活化函數，變成下一層的輸入。這個流程會一路重複，直到最後得到預測結果。<br /><br /><strong>好記口訣：</strong><br />- <strong>先乘權重，再加偏置，最後過活化。</strong><br />- 或記成：<strong>乘、加、轉，往前傳。</strong></div>
+          <details><summary>選項背景知識</summary><ul class="option-notes"><li><strong>(A)</strong> 機率積分不是神經網路前向傳播的核心計算；前向傳播比較像代數運算一路往前推，不是在做積分求面積。</li><li><strong>(B)</strong> 權重矩陣乘上輸入向量，是全連接層運作的數學基礎。若把神經網路想成一條加工線，矩陣乘法就是每站最核心的加工動作。</li><li><strong>(C)</strong> 對數變換可能出現在特定損失函數中，不是前向傳播主體；它通常在算誤差時比較常見，不是每層都一定會做。</li><li><strong>(D)</strong> 條件機率常見於機率模型，並非神經網路每層的主要運算。神經網路前向傳播主軸還是線性組合加活化函數。</li></ul></details>
+        </article>
+
+        <article class="question-card">
+          <div class="meta"><span class="badge qno">第 9 題</span><span class="badge answer">答案：B</span></div>
+          <div class="question-text">特徵縮放（Feature Scaling）中，下列何者為標準化（Standardization）的主要作用？</div>
+          <div class="choices-block"><div class="choices-title">題目選項</div><ul class="choices"><li><strong>(A)</strong> 將數據範圍限制在 0 到 1 且標準差 -1</li><li><strong>(B)</strong> 使數據平均值為 0 且標準差為 1</li><li><strong>(C)</strong> 移除數據中的異常值</li><li><strong>(D)</strong> 增加特徵間的相關性</li></ul></div>
+          <div class="explanation"><strong>詳解：</strong>標準化（Standardization）就是把特徵重新調整成<strong>平均值 0、標準差 1</strong> 的尺度，讓不同單位、不同大小的欄位能放在比較公平的起跑點上，因此答案是 B。<br /><br /><strong>好記法：</strong><strong>標準化 = 0 和 1</strong>，也就是「平均拉到 0，散布拉到 1」。</div>
+          <details><summary>選項背景知識</summary><ul class="option-notes"><li><strong>(A)</strong> 0 到 1 區間比較接近 Min-Max Normalization，不是 Standardization。</li><li><strong>(B)</strong> 這是 Z-score 標準化的定義。</li><li><strong>(C)</strong> 標準化不會直接移除異常值，只是重新縮放資料。</li><li><strong>(D)</strong> 縮放的目標不是增加相關性，而是消除尺度偏差。</li></ul></details>
+        </article>
+
+        <article class="question-card">
+          <div class="meta"><span class="badge qno">第 10 題</span><span class="badge answer">答案：B</span></div>
+          <div class="question-text">關於準確率（Accuracy）的計算方式，下列何者正確？</div>
+          <div class="choices-block"><div class="choices-title">題目選項</div><ul class="choices"><li><strong>(A)</strong> TP /（TP + FP）</li><li><strong>(B)</strong> （TP + TN）/（TP + FP + TN + FN）</li><li><strong>(C)</strong> TN /（TN + FP）</li><li><strong>(D)</strong> TP /（TP + FN）</li></ul></div>
+          <div class="explanation"><strong>詳解：</strong>準確率表示整體預測中有多少比例正確，因此公式為 <strong>(TP + TN) / (TP + FP + TN + FN)</strong>，答案是 B。<br /><br /><strong>更容易記的方法：</strong><br />Accuracy 看的是「全部裡面答對多少」，所以分子一定是<strong>答對的兩種</strong>：TP 與 TN。分母則是<strong>所有情況全加總</strong>。<br /><br /><strong>好記口訣：</strong><br />- <strong>Accuracy 看整體，對的放上面。</strong><br />- 也可以用比較法記：<strong>Precision 看判正有多準；Recall 看真的有抓到多少；Accuracy 看整體有多常答對。</strong></div>
+          <details><summary>選項背景知識</summary><ul class="option-notes"><li><strong>(A)</strong> TP / (TP + FP) 是 Precision，重點是「你判成正的那些裡面，有多少是真的正」。<strong>好記法：</strong>判正要準，看 Precision。</li><li><strong>(B)</strong> Accuracy 是整體正確預測比例，所以同時把答對的正類與答對的負類都算進去。<strong>好記法：</strong>Accuracy 最像總平均成績。</li><li><strong>(C)</strong> TN / (TN + FP) 是 Specificity，重點是「真的負類有多少被正確排除」。這常用在想看模型多會避開誤報時。</li><li><strong>(D)</strong> TP / (TP + FN) 是 Recall，重點是「真的正類你抓回來多少」。<strong>好記法：</strong>真陽性有沒有被找回來，看 Recall。</li></ul></details>
+        </article>
+
+        <article class="question-card">
+          <div class="meta"><span class="badge qno">第 11 題</span><span class="badge answer">答案：D</span></div>
+          <div class="question-text">關於損失函數（Loss Function）的主要功能，下列何者正確？</div>
+          <div class="choices-block"><div class="choices-title">題目選項</div><ul class="choices"><li><strong>(A)</strong> 記錄模型預測歷史</li><li><strong>(B)</strong> 計算模型結構複雜度</li><li><strong>(C)</strong> 控制模型的學習率</li><li><strong>(D)</strong> 衡量模型預測與真實值之間的誤差</li></ul></div>
+          <div class="explanation"><strong>詳解：</strong>損失函數的工作很單純：<strong>告訴模型你現在錯多大</strong>。模型會根據這個誤差做反向傳播並更新參數，所以答案是 D。它不是在記錄歷史，也不是直接控制學習率，而是扮演「打分數」的角色。<br /><br /><strong>好記法：</strong><strong>Loss = 錯多少</strong>，錯越大，模型就越知道自己要往哪裡調整。</div>
+          <details><summary>選項背景知識</summary><ul class="option-notes"><li><strong>(A)</strong> 預測歷史可被記錄，但不是損失函數的主要任務。</li><li><strong>(B)</strong> 模型複雜度可由參數量或正則化項反映，不是損失函數本質。</li><li><strong>(C)</strong> 學習率由優化器或訓練設定控制。</li><li><strong>(D)</strong> 常見損失包含 MSE、Cross-Entropy、MAE 等。</li></ul></details>
+        </article>
+
+        <article class="question-card">
+          <div class="meta"><span class="badge qno">第 12 題</span><span class="badge answer">答案：B</span></div>
+          <div class="question-text">關於歐盟 GDPR，所謂的被遺忘權（Right to be Forgotten）主要賦予資料主體哪一項權利？</div>
+          <div class="choices-block"><div class="choices-title">題目選項</div><ul class="choices"><li><strong>(A)</strong> 要求平台永久備份其個資以防遺失</li><li><strong>(B)</strong> 在符合條件下請求刪除其個人資料</li><li><strong>(C)</strong> 將個人資料轉換為匿名格式保存</li><li><strong>(D)</strong> 限制企業將資料輸出至境外伺服器</li></ul></div>
+          <div class="explanation"><strong>詳解：</strong>被遺忘權的核心就是：在符合法律條件下，個人可以要求資料控制者<strong>刪除自己的個人資料</strong>，所以答案是 B。這題不是在考備份、匿名化或跨境傳輸，而是在考「我可不可以要求你把我的資料拿掉」。<br /><br /><strong>好記法：</strong><strong>被遺忘 = 可以請求被刪除</strong>，抓住「刪資料」這個核心就不容易選錯。</div>
+          <details><summary>選項背景知識</summary><ul class="option-notes"><li><strong>(A)</strong> GDPR 並不是要求平台永久保存個資。</li><li><strong>(B)</strong> 刪除請求需符合特定條件，例如資料不再必要或撤回同意。</li><li><strong>(C)</strong> 匿名化可能是處理方式之一，但不是被遺忘權定義。</li><li><strong>(D)</strong> 跨境傳輸另有資料移轉規範，不等同被遺忘權。</li></ul></details>
+        </article>
+
+        <article class="question-card">
+          <div class="meta"><span class="badge qno">第 13 題</span><span class="badge answer">答案：A</span></div>
+          <div class="question-text">在進行模型訓練前，若針對資料中不同群體（例如分類標籤）之間樣本數量不平衡的情況進行比例調整，此方法通常屬於下列哪一種技術？</div>
+          <div class="choices-block"><div class="choices-title">題目選項</div><ul class="choices"><li><strong>(A)</strong> 資料重抽樣</li><li><strong>(B)</strong> 特徵選擇</li><li><strong>(C)</strong> 模型正則化</li><li><strong>(D)</strong> 超參數調整</li></ul></div>
+          <div class="explanation"><strong>詳解：</strong>當類別不平衡時，最直接的做法就是把資料比例重新調整，例如<strong>過抽樣、欠抽樣</strong>或用合成方法補少數類，這些都屬於 <strong>資料重抽樣</strong>，所以答案是 A。<br /><br /><strong>好記法：</strong>這題重點不是改模型，而是<strong>先動資料比例</strong>，看到「樣本不平衡」就先想到 resampling。</div>
+          <details><summary>選項背景知識</summary><ul class="option-notes"><li><strong>(A)</strong> Resampling 可降低模型偏向多數類的風險。</li><li><strong>(B)</strong> 特徵選擇是挑重要欄位，不是調整類別比例。</li><li><strong>(C)</strong> 正則化是控制模型複雜度，與資料比例不平衡不同。</li><li><strong>(D)</strong> 超參數調整會影響訓練表現，但不是比例重平衡的主方法。</li></ul></details>
+        </article>
+
+        <article class="question-card">
+          <div class="meta"><span class="badge qno">第 14 題</span><span class="badge answer">答案：B</span></div>
+          <div class="question-text">在優化器中，哪一個方法會自動調整每個參數的學習率，特別適用於稀疏資料？</div>
+          <div class="choices-block"><div class="choices-title">題目選項</div><ul class="choices"><li><strong>(A)</strong> Momentum</li><li><strong>(B)</strong> Adagrad</li><li><strong>(C)</strong> Adam</li><li><strong>(D)</strong> SGD</li></ul></div>
+          <div class="explanation"><strong>詳解：</strong><strong>Adagrad</strong> 會替不同參數自動調整學習率，對那些<strong>不是每次都出現、更新次數較少</strong>的稀疏特徵特別有幫助，所以答案是 B。考題只要看到「自動調整每個參數學習率」加上「稀疏資料」，通常就是在指 Adagrad。<br /><br /><strong>好記法：</strong><strong>稀疏特徵出場少，Adagrad 會特別照顧。</strong></div>
+          <details><summary>選項背景知識</summary><ul class="option-notes"><li><strong>(A)</strong> Momentum 主要是加速梯度下降並減少震盪。你可以把它想成「幫梯度加慣性」，讓更新方向不要每一步都左右亂晃，特別適合在狹長谷地中加快前進。</li><li><strong>(B)</strong> Adagrad 對較少更新到的參數會保留較大的學習率，因此碰到稀疏資料時特別有感。因為稀疏特徵不是每次都出現，Adagrad 會讓這些少出現的參數仍有機會被好好學到。<strong>好記法：</strong>少出現的，Adagrad 會多照顧。</li><li><strong>(C)</strong> Adam 綜合 Momentum 與自適應學習率，也很常見，實務上幾乎是萬用選手；但題目特別點出「稀疏資料」時，考試常先想到 Adagrad。你可以把 Adam 想成「又穩又聰明的綜合版」。</li><li><strong>(D)</strong> SGD 使用固定或外部排程調整的學習率，不是每參數自動調整。它最基本、最直觀，但也最仰賴人工挑選學習率與訓練技巧。</li></ul></details>
+        </article>
+
+        <article class="question-card">
+          <div class="meta"><span class="badge qno">第 15 題</span><span class="badge answer">答案：A</span></div>
+          <div class="question-text">某零售公司希望利用顧客的年齡與每月消費金額，預測顧客是否為高價值顧客。題目要求將程式碼片段依正確順序排序，以完成模型建立與預測。</div>
+          <figure class="question-media"><img src="assets/sample_subject3_q15_code_order.svg" alt="樣題科目三第 15 題程式碼排序題圖，顯示 a、b、c、d 四個程式片段與正確流程" /><figcaption>題圖重製重點：先讀資料與切出 X、y，再切訓練測試集，接著訓練模型，最後做預測。</figcaption></figure>
+          <div class="choices-block"><div class="choices-title">題目選項</div><ul class="choices"><li><strong>(A)</strong> c → a → b → d</li><li><strong>(B)</strong> a → c → b → d</li><li><strong>(C)</strong> c → b → a → d</li><li><strong>(D)</strong> b → a → c → d</li></ul></div>
+          <div class="explanation"><strong>詳解：</strong>正確順序是 <strong>A：c → a → b → d</strong>。<strong>c</strong> 片段先把 CSV 資料讀進來，並切出特徵 <strong>X</strong>（年齡、每月消費金額）和標籤 <strong>y</strong>（是否為高價值顧客）；沒有這一步，後面就不知道要拿什麼資料訓練。接著 <strong>a</strong> 用 <strong>train_test_split</strong> 把資料分成訓練集與測試集，這是建立模型前的標準準備步驟。然後 <strong>b</strong> 建立 <strong>LogisticRegression</strong> 模型並用 <strong>fit(X_train, y_train)</strong> 進行訓練。最後 <strong>d</strong> 才能用 <strong>model.predict(X_test)</strong> 做預測並輸出結果。<br /><br /><strong>好記版：</strong>先有資料，才能切資料；切完資料，才能訓練模型；模型訓練好後，最後才做預測，所以順序自然就是 <strong>c → a → b → d</strong>。</div>
+          <details><summary>選項背景知識</summary><ul class="option-notes"><li><strong>(A)</strong> <strong>c → a → b → d</strong> 才符合標準流程：先讀資料並切出 <strong>X、y</strong>，再做 <strong>train_test_split</strong>，接著用訓練集 <strong>fit</strong> 模型，最後才用測試集 <strong>predict</strong>。</li><li><strong>(B)</strong> <strong>a → c → b → d</strong> 的問題是先切資料、後定義 <strong>X、y</strong>，順序顛倒；還沒準備好特徵與標籤，就無法合理做資料切分。</li><li><strong>(C)</strong> <strong>c → b → a → d</strong> 的問題是先訓練再切訓練集/測試集，會把模型建立順序弄反；正常一定要先把資料切好，才知道哪些資料拿來訓練、哪些留著驗證。</li><li><strong>(D)</strong> <strong>b → a → c → d</strong> 更不合理，因為一開始就建模訓練，但連資料都還沒載入、也還沒準備特徵與標籤，所以這種順序在程式流程上根本接不起來。</li></ul></details>
+        </article>
+      </div>
+    </section>
+
+    <section class="footer">
+      <h3>使用建議</h3>
+      <p>這份 HTML 適合先快速讀「詳解」，再視需要展開「選項背景知識」。如果你下一步想把它擴充成 <strong>科目二也同樣格式</strong>、加入 <strong>錯題標記</strong>、或轉成 <strong>可列印版 / 題庫搜尋版</strong>，我可以直接接著幫你完成。</p>
+    </section>
+  </div>
+
+  <a class="top-link" href="#top">回到頂部</a>
+
+  <script>
+    (function () {
+      const themeToggle = document.getElementById('themeToggle');
+      const answerToggle = document.getElementById('answerToggle');
+      const reviewFilterToggle = document.getElementById('reviewFilterToggle');
+      const subjects = document.querySelectorAll('.subject');
+      const navRoot = document.getElementById('quickNavContent');
+      const STORAGE_KEYS = {
+        theme: 'ipas-theme-mode',
+        review: 'ipas-review-marked',
+        reviewFilter: 'ipas-review-filter'
+      };
+
+      if (!subjects.length || !navRoot) {
+        return;
+      }
+
+      const savedTheme = localStorage.getItem(STORAGE_KEYS.theme);
+      const markedIds = new Set(JSON.parse(localStorage.getItem(STORAGE_KEYS.review) || '[]'));
+      let reviewOnlyMode = localStorage.getItem(STORAGE_KEYS.reviewFilter) === 'true';
+      let allAnswersVisible = false;
+
+      if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+      }
+
+      function syncThemeButton() {
+        const dark = document.body.classList.contains('dark-mode');
+        themeToggle.textContent = dark ? '☀️ Light Mode' : '🌙 Dark Mode';
+        themeToggle.classList.toggle('active', dark);
+      }
+
+      function saveMarkedIds() {
+        localStorage.setItem(STORAGE_KEYS.review, JSON.stringify([...markedIds]));
+      }
+
+      function updateReviewFilterButton() {
+        reviewFilterToggle.classList.toggle('active', reviewOnlyMode);
+        reviewFilterToggle.textContent = reviewOnlyMode ? '⭐ 顯示全部題目' : '⭐ 只看已標註題';
+      }
+
+      function setAnswerBadgeState(badge, visible) {
+        const originalText = badge.dataset.answerText || badge.textContent.trim();
+        badge.dataset.answerText = originalText;
+        badge.classList.toggle('is-hidden', !visible);
+        badge.textContent = visible ? originalText : '點擊顯示答案';
+        badge.setAttribute('aria-pressed', visible ? 'true' : 'false');
+        badge.title = visible ? '點擊隱藏答案' : '點擊顯示答案';
+
+        const card = badge.closest('.question-card');
+        const explanation = card ? card.querySelector('.explanation') : null;
+        if (explanation) {
+          explanation.classList.toggle('is-hidden', !visible);
+        }
+      }
+
+      function syncAnswerToggleButton() {
+        answerToggle.classList.toggle('active', allAnswersVisible);
+        answerToggle.textContent = allAnswersVisible ? '🙈 隱藏全部答案' : '👁️ 顯示全部答案';
+      }
+
+      function applyAllAnswersVisibility(visible) {
+        document.querySelectorAll('.badge.answer').forEach((badge) => {
+          setAnswerBadgeState(badge, visible);
+        });
+        allAnswersVisible = visible;
+        syncAnswerToggleButton();
+      }
+
+      function syncAnswerToggleFromCurrentState() {
+        const badges = Array.from(document.querySelectorAll('.badge.answer'));
+        allAnswersVisible = badges.length > 0 && badges.every((badge) => !badge.classList.contains('is-hidden'));
+        syncAnswerToggleButton();
+      }
+
+      function syncQuickNavVisibility() {
+        const links = navRoot.querySelectorAll('a[data-target-id]');
+        links.forEach((link) => {
+          const card = document.getElementById(link.dataset.targetId);
+          link.style.display = card && !card.classList.contains('hidden-by-filter') ? 'inline-flex' : 'none';
+          link.classList.toggle('review-link', card && card.classList.contains('review-marked'));
+        });
+
+        navRoot.querySelectorAll('.quick-nav-section').forEach((section) => {
+          const hasVisible = Array.from(section.querySelectorAll('a[data-target-id]')).some((link) => link.style.display !== 'none');
+          section.style.display = hasVisible ? 'block' : 'none';
+        });
+      }
+
+      function applyReviewFilter() {
+        document.querySelectorAll('.question-card').forEach((card) => {
+          const shouldHide = reviewOnlyMode && !card.classList.contains('review-marked');
+          card.classList.toggle('hidden-by-filter', shouldHide);
+        });
+        localStorage.setItem(STORAGE_KEYS.reviewFilter, String(reviewOnlyMode));
+        updateReviewFilterButton();
+        syncQuickNavVisibility();
+      }
+
+      navRoot.innerHTML = '';
+
+      subjects.forEach((subject, subjectIndex) => {
+        const titleElement = subject.querySelector('.subject-title h2');
+        const title = titleElement ? titleElement.textContent.trim() : `主題 ${subjectIndex + 1}`;
+        const cards = subject.querySelectorAll('.question-card');
+
+        const section = document.createElement('section');
+        section.className = 'quick-nav-section';
+
+        const heading = document.createElement('div');
+        heading.className = 'quick-nav-title';
+        heading.textContent = title.replace('：', '｜');
+        section.appendChild(heading);
+
+        const links = document.createElement('div');
+        links.className = 'quick-nav-links';
+
+        cards.forEach((card, cardIndex) => {
+          const badge = card.querySelector('.badge.qno');
+          const answerBadge = card.querySelector('.badge.answer');
+          const label = badge ? badge.textContent.replace('第 ', '').replace(' 題', '') : String(cardIndex + 1);
+          const id = `subject-${subjectIndex + 1}-q-${cardIndex + 1}`;
+          card.id = id;
+
+          if (answerBadge) {
+            setAnswerBadgeState(answerBadge, false);
+            answerBadge.addEventListener('click', () => {
+              const willShow = answerBadge.classList.contains('is-hidden');
+              setAnswerBadgeState(answerBadge, willShow);
+              syncAnswerToggleFromCurrentState();
+            });
+          }
+
+          const meta = card.querySelector('.meta');
+          if (meta) {
+            const reviewButton = document.createElement('button');
+            reviewButton.type = 'button';
+            reviewButton.className = 'review-button';
+            reviewButton.dataset.targetId = id;
+            reviewButton.textContent = markedIds.has(id) ? '⭐ 已標註' : '☆ 標註複習';
+            reviewButton.classList.toggle('active', markedIds.has(id));
+            if (markedIds.has(id)) {
+              card.classList.add('review-marked');
+            }
+
+            reviewButton.addEventListener('click', () => {
+              const isMarked = markedIds.has(id);
+              if (isMarked) {
+                markedIds.delete(id);
+              } else {
+                markedIds.add(id);
+              }
+              card.classList.toggle('review-marked', !isMarked);
+              reviewButton.classList.toggle('active', !isMarked);
+              reviewButton.textContent = !isMarked ? '⭐ 已標註' : '☆ 標註複習';
+              saveMarkedIds();
+              applyReviewFilter();
+            });
+
+            meta.appendChild(reviewButton);
+          }
+
+          const link = document.createElement('a');
+          link.href = `#${id}`;
+          link.textContent = label;
+          link.title = `${title} 第 ${label} 題`;
+          link.dataset.targetId = id;
+          links.appendChild(link);
+        });
+
+        section.appendChild(links);
+        navRoot.appendChild(section);
+      });
+
+      themeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem(STORAGE_KEYS.theme, document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+        syncThemeButton();
+      });
+
+      answerToggle.addEventListener('click', () => {
+        applyAllAnswersVisibility(!allAnswersVisible);
+      });
+
+      reviewFilterToggle.addEventListener('click', () => {
+        reviewOnlyMode = !reviewOnlyMode;
+        applyReviewFilter();
+      });
+
+      syncThemeButton();
+      syncAnswerToggleButton();
+      applyReviewFilter();
+    })();
+  </script>
+</body>
+</html>

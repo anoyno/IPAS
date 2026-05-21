@@ -1,0 +1,2271 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>114年第二次 AI應用規劃師中級｜第三科詳解整理（好記版）</title>
+    <style>
+      :root {
+        --bg: #f4f7fb;
+        --panel: #ffffff;
+        --soft: #f8fbff;
+        --panel-soft: #f8fbff;
+        --text: #1f2937;
+        --muted: #64748b;
+        --line: #d9e3f0;
+        --primary: #2563eb;
+        --primary-soft: #dbeafe;
+        --success: #15803d;
+        --success-soft: #dcfce7;
+        --warn: #d97706;
+        --warn-soft: #fef3c7;
+        --shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", "Microsoft JhengHei", sans-serif;
+        color: var(--text);
+        background: linear-gradient(180deg, #eaf2ff 0, var(--bg) 220px);
+        line-height: 1.7;
+        transition:
+          background 0.25s ease,
+          color 0.25s ease;
+      }
+      body.dark-mode {
+        --bg: #0f172a;
+        --panel: #111827;
+        --soft: #182235;
+        --panel-soft: #1f2937;
+        --text: #e5eefb;
+        --muted: #94a3b8;
+        --line: #334155;
+        --primary: #60a5fa;
+        --primary-soft: #1e3a8a;
+        --success: #4ade80;
+        --success-soft: #14532d;
+        --warn: #f59e0b;
+        --warn-soft: #3b2b12;
+        --shadow: 0 14px 32px rgba(2, 6, 23, 0.45);
+        background: linear-gradient(180deg, #0b1220 0, var(--bg) 220px);
+      }
+      .container {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 24px 0 56px;
+      }
+      .hero,
+      .toolbar,
+      .question-card,
+      .footer,
+      .quick-nav {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        box-shadow: var(--shadow);
+      }
+      .hero {
+        padding: 28px;
+        margin-bottom: 18px;
+      }
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+      }
+      h1 {
+        font-size: clamp(1.8rem, 3vw, 2.6rem);
+        margin-bottom: 10px;
+      }
+      .lead {
+        color: var(--muted);
+        margin: 0;
+      }
+      .chips {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 16px;
+      }
+      .chip {
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: var(--primary-soft);
+        color: var(--primary);
+        font-size: 0.92rem;
+        font-weight: 700;
+      }
+      .toolbar {
+        padding: 16px 18px;
+        margin-bottom: 18px;
+        display: grid;
+        gap: 12px;
+      }
+      .toolbar-grid {
+        display: grid;
+        grid-template-columns: minmax(240px, 1.7fr) repeat(
+            2,
+            minmax(150px, 0.9fr)
+          );
+        gap: 12px;
+      }
+      .toolbar-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+      input,
+      select {
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 12px;
+        border: 1px solid var(--line);
+        background: #fff;
+        font-size: 0.98rem;
+        color: #0f172a;
+      }
+      .tool-button,
+      .review-button {
+        appearance: none;
+        border: 1px solid var(--line);
+        background: var(--panel);
+        color: var(--text);
+        border-radius: 999px;
+        padding: 10px 14px;
+        font-size: 0.92rem;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .tool-button.active,
+      .review-button.active {
+        background: var(--primary-soft);
+        color: var(--primary);
+        border-color: var(--primary);
+      }
+      .meta-text {
+        color: var(--muted);
+        font-size: 0.95rem;
+      }
+      .layout {
+        position: relative;
+      }
+      .question-list {
+        display: grid;
+        gap: 16px;
+      }
+      .question-card {
+        padding: 20px;
+        transition:
+          transform 0.2s ease,
+          border-color 0.2s ease,
+          background 0.2s ease;
+      }
+      .question-card.review-marked {
+        border-color: #f59e0b;
+        box-shadow: 0 12px 28px rgba(245, 158, 11, 0.18);
+      }
+      .card-top {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-bottom: 12px;
+        align-items: center;
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 12px;
+        border-radius: 999px;
+        font-size: 0.9rem;
+        font-weight: 700;
+      }
+      .badge.no {
+        background: #f8fafc;
+        border: 1px solid var(--line);
+        color: var(--text);
+      }
+      .badge.answer {
+        background: var(--success-soft);
+        color: var(--success);
+        cursor: pointer;
+        user-select: none;
+      }
+      .badge.answer.is-hidden {
+        background: #e2e8f0;
+        color: #475569;
+        border: 1px dashed #cbd5e1;
+      }
+      .badge.answer.is-hidden::before {
+        content: "🙈 ";
+      }
+      .badge.source {
+        background: var(--primary-soft);
+        color: var(--primary);
+      }
+      .question-text {
+        font-size: 1.05rem;
+        margin-bottom: 12px;
+      }
+      .question-media {
+        margin: 0 0 12px;
+      }
+      .question-media img {
+        display: block;
+        width: min(100%, 860px);
+        margin: 0 auto;
+        border: 1px solid #d9e3f0;
+        border-radius: 14px;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+        background: #fff;
+      }
+      .question-media figcaption {
+        margin-top: 8px;
+        color: var(--muted);
+        font-size: 0.92rem;
+        text-align: center;
+      }
+      .choices-block,
+      .explanation,
+      .memory-box,
+      details {
+        border-radius: 14px;
+        padding: 14px 16px;
+        margin-bottom: 12px;
+      }
+      .choices-block {
+        background: var(--soft);
+        border: 1px solid #d7e5f7;
+      }
+      .choices-title {
+        color: var(--primary);
+        font-weight: 700;
+        margin-bottom: 8px;
+      }
+      .choices {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: grid;
+        gap: 8px;
+      }
+      .choices li {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 8px 10px;
+      }
+      .choices strong {
+        color: #0f172a;
+        margin-right: 6px;
+      }
+      .explanation {
+        background: #fffdf6;
+        border: 1px solid #f3dfb2;
+      }
+      .memory-box {
+        background: #eefaf3;
+        border: 1px solid #c8efd6;
+      }
+      .memory-box h4 {
+        margin: 0 0 8px;
+        font-size: 0.95rem;
+        color: #0f6b36;
+      }
+      .memory-box p {
+        margin: 0;
+      }
+      .mnemonic {
+        margin-top: 8px;
+        font-weight: 800;
+        color: #0f6b36;
+      }
+      .answer-dependent.is-hidden {
+        display: none;
+      }
+      details {
+        background: #fbfdff;
+        border: 1px dashed #bfd0e8;
+      }
+      summary {
+        cursor: pointer;
+        color: var(--primary);
+        font-weight: 700;
+      }
+      .notes {
+        margin: 10px 0 0;
+        padding-left: 20px;
+      }
+      .code-block {
+        background: #f5f5f5;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 12px;
+        margin: 12px 0;
+        overflow-x: auto;
+      }
+      .code-block pre {
+        margin: 0;
+        font-family: Consolas, Monaco, "Courier New", monospace;
+        font-size: 0.9rem;
+      }
+      .code-block code {
+        color: #0f172a;
+      }
+      body.dark-mode .code-block {
+        background: #1e2936;
+        border-color: #374151;
+      }
+      body.dark-mode .code-block code {
+        color: #e5eefb;
+      }
+      code[style*="display:block"] {
+        background: #f5f5f5 !important;
+        color: #0f172a !important;
+      }
+      body.dark-mode code[style*="display:block"] {
+        background: #1e2936 !important;
+        color: #e5eefb !important;
+        border-color: #374151 !important;
+      }
+      .preamble {
+        background: var(--soft);
+        border-left: 4px solid var(--primary);
+        padding: 16px;
+        margin-bottom: 12px;
+        border-radius: 8px;
+        font-size: 0.98rem;
+        line-height: 1.6;
+      }
+      .preamble p {
+        margin: 0 0 8px 0;
+      }
+      body.dark-mode .preamble {
+        background: var(--panel-soft);
+        border-left-color: var(--primary);
+      }
+      .instruction-block {
+        background: var(--soft);
+        border-left: 6px solid #4f46e5;
+        border-radius: 8px;
+        padding: 24px;
+        margin: 20px 0;
+      }
+      .instruction-title {
+        color: #4f46e5;
+        font-size: 1.4rem;
+        margin: 0 0 16px 0;
+        font-weight: 700;
+      }
+      .instruction-content {
+        color: var(--text);
+      }
+      .instruction-notes {
+        margin-top: 12px;
+        margin-bottom: 12px;
+        color: var(--text);
+      }
+      body.dark-mode .instruction-block {
+        background: var(--panel);
+        border-left-color: #6366f1;
+      }
+      body.dark-mode .instruction-title {
+        color: #a5b4fc;
+      }
+      body.dark-mode .instruction-notes {
+        background: var(--panel-soft);
+        border-color: var(--line);
+      }
+      .footer {
+        margin-top: 22px;
+        padding: 20px;
+        color: var(--muted);
+      }
+      .quick-nav {
+        position: fixed;
+        top: 24px;
+        right: 20px;
+        width: 220px;
+        max-height: calc(100vh - 48px);
+        overflow: hidden;
+        padding: 0;
+        z-index: 20;
+        transition: width 0.25s ease;
+      }
+      .quick-nav-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 16px;
+        cursor: pointer;
+        user-select: none;
+        border-radius: 22px;
+      }
+      .quick-nav.collapsed .quick-nav-header {
+        border-radius: 22px;
+      }
+      .quick-nav h3 {
+        font-size: 1rem;
+        margin: 0;
+      }
+      .quick-nav-toggle {
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: var(--primary);
+        font-size: 1.1rem;
+        padding: 2px 4px;
+        border-radius: 6px;
+        line-height: 1;
+        transition: transform 0.25s ease;
+      }
+      .quick-nav-toggle:hover {
+        background: var(--primary-soft);
+      }
+      .quick-nav.collapsed .quick-nav-toggle {
+        transform: rotate(180deg);
+      }
+      .quick-nav-body {
+        padding: 0 16px 16px;
+        overflow-y: auto;
+        max-height: calc(100vh - 100px);
+        transition:
+          max-height 0.3s ease,
+          opacity 0.25s ease,
+          padding 0.25s ease;
+      }
+      .quick-nav.collapsed .quick-nav-body {
+        max-height: 0;
+        opacity: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        pointer-events: none;
+      }
+      .quick-nav-section + .quick-nav-section {
+        margin-top: 14px;
+        padding-top: 12px;
+        border-top: 1px solid var(--line);
+      }
+      .quick-nav-title {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 8px;
+      }
+      .quick-nav-links {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 6px;
+      }
+      .quick-nav a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 32px;
+        border-radius: 10px;
+        background: var(--panel-soft);
+        border: 1px solid var(--line);
+        color: var(--text);
+        text-decoration: none;
+        font-size: 0.88rem;
+        font-weight: 700;
+      }
+      .quick-nav a.review-link {
+        border-color: #f59e0b;
+        color: #b45309;
+        background: #fff7ed;
+      }
+      .quick-nav a:hover {
+        background: var(--primary-soft);
+        color: var(--primary);
+      }
+      .top-link {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        background: var(--primary);
+        color: #fff;
+        text-decoration: none;
+        border-radius: 999px;
+        padding: 10px 14px;
+        font-weight: 700;
+        box-shadow: var(--shadow);
+      }
+      .hidden {
+        display: none !important;
+      }
+      body.dark-mode .hero,
+      body.dark-mode .toolbar,
+      body.dark-mode .question-card,
+      body.dark-mode .footer,
+      body.dark-mode .quick-nav,
+      body.dark-mode .tool-button,
+      body.dark-mode .review-button {
+        background: var(--panel);
+        border-color: var(--line);
+        color: var(--text);
+      }
+      body.dark-mode input,
+      body.dark-mode select,
+      body.dark-mode .choices li,
+      body.dark-mode details,
+      body.dark-mode .choices-block,
+      body.dark-mode .badge.no {
+        background: var(--panel-soft);
+        border-color: var(--line);
+        color: var(--text);
+      }
+      body.dark-mode .choices strong,
+      body.dark-mode .explanation strong,
+      body.dark-mode details strong,
+      body.dark-mode .memory-box strong {
+        color: #f8fafc;
+      }
+      body.dark-mode .question-media img {
+        background: #0f172a;
+        border-color: #334155;
+      }
+      body.dark-mode .badge.answer.is-hidden {
+        background: #334155;
+        color: #cbd5e1;
+        border-color: #475569;
+      }
+      body.dark-mode .explanation {
+        background: #2a2314;
+        border-color: #6b5a2b;
+      }
+      body.dark-mode .memory-box {
+        background: #142b22;
+        border-color: #28543f;
+      }
+      body.dark-mode .memory-box h4,
+      body.dark-mode .mnemonic {
+        color: #86efac;
+      }
+      body.dark-mode .quick-nav a {
+        background: var(--panel-soft);
+        border-color: var(--line);
+        color: var(--text);
+      }
+      body.dark-mode .quick-nav a.review-link {
+        background: #3b2b12;
+        border-color: #f59e0b;
+        color: #fbbf24;
+      }
+      body.dark-mode .quick-nav-toggle {
+        color: var(--primary);
+      }
+      body.dark-mode .top-link {
+        color: #eff6ff;
+      }
+      @media (max-width: 880px) {
+        .toolbar-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 720px) {
+        .container {
+          width: min(100% - 20px, 1180px);
+        }
+        .hero,
+        .toolbar,
+        .question-card,
+        .footer {
+          border-radius: 16px;
+        }
+        .quick-nav {
+          display: none;
+        }
+      }
+      @media (min-width: 1200px) {
+        .container {
+          width: min(1180px, calc(100% - 320px));
+          margin-left: auto;
+          margin-right: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <aside class="quick-nav" id="quickNav" aria-label="快速選題">
+      <div class="quick-nav-header" id="quickNavToggle" title="展開／收合">
+        <h3>快速選題</h3>
+        <button class="quick-nav-toggle" aria-label="收合導覽" type="button">
+          ▲
+        </button>
+      </div>
+      <div class="quick-nav-body">
+        <div id="quickNavContent"></div>
+      </div>
+    </aside>
+    <div class="container" id="top">
+      <header class="hero">
+        <h1>114年第二次 AI應用規劃師中級｜第三科詳解整理（好記版）</h1>
+        <p class="lead">
+          依據第三科正式試題整理 50
+          題題幹、四個選項、正確答案、詳解、背景知識，並補上好記版解說與口訣型記憶版。
+        </p>
+        <div class="chips">
+          <span class="chip">第三科：機器學習技術與應用</span
+          ><span class="chip">共 50 題</span
+          ><span class="chip">含口訣型記憶版</span
+          ><span class="chip">可搜尋 / 快速選題 / 標註複習</span>
+        </div>
+      </header>
+
+      <section class="toolbar">
+        <div class="toolbar-grid">
+          <input
+            id="searchInput"
+            type="text"
+            placeholder="搜尋題目、詳解、關鍵字、口訣，例如：Transformer、LASSO、交叉驗證"
+          />
+          <select id="extraFilter">
+            <option value="all">全部題號</option>
+            <option value="1-10">1-10</option>
+            <option value="11-20">11-20</option>
+            <option value="21-30">21-30</option>
+            <option value="31-40">31-40</option>
+            <option value="41-50">41-50</option>
+          </select>
+          <select id="answerFilter">
+            <option value="all">全部答案</option>
+            <option value="A">答案 A</option>
+            <option value="B">答案 B</option>
+            <option value="C">答案 C</option>
+            <option value="D">答案 D</option>
+          </select>
+        </div>
+        <div class="toolbar-actions">
+          <button class="tool-button" id="themeToggle" type="button">
+            🌙 Dark Mode
+          </button>
+          <button class="tool-button" id="answerToggle" type="button">
+            👁️ 顯示全部答案
+          </button>
+          <button class="tool-button" id="reviewFilterToggle" type="button">
+            ⭐ 只看已標註題
+          </button>
+        </div>
+        <div class="meta-text" id="resultCount">共 50 題</div>
+      </section>
+
+      <section class="question-list" id="questionList"></section>
+    </div>
+
+    <a class="top-link" href="#top">回到頂部</a>
+
+    <script>
+      const questions = [
+        {
+          no: 1,
+          answer: "B",
+          question:
+            "某零售企業建立一個銷售預測模型，希望評估該模型在不同月份的新資料上，是否仍能維持穩定的預測表現。資料科學團隊計畫利用統計方法檢驗模型對未觀察資料的適應能力與泛化效果。下列哪一種方法最適合用於此目的？",
+          options: {
+            A: "F檢定（F-test）",
+            B: "交叉驗證（Cross-Validation）",
+            C: "配對樣本t檢定（Paired-sample t-test）",
+            D: "卡方檢定（Chi-square Test）",
+          },
+          explanation:
+            "【答案：B — 交叉驗證（Cross-Validation）】<br><br>題目核心需求是「評估模型對<b>未觀察資料</b>的泛化能力，並在<b>不同月份</b>維持穩定表現」，這正是交叉驗證的設計目的。<br><br><b>▍為什麼選 B？</b><br>交叉驗證將資料集切分成 k 份（k-fold），每次以其中一份作為驗證集、其餘作為訓練集，共訓練 k 次後取平均分數，能有效衡量模型在未見資料上的穩定表現，避免單次切分造成的偶然誤差。對於「不同月份新資料」的情境，也可採用 <b>Time-Series Split</b>（按時間序列劃分），確保訓練集永遠在驗證集之前，符合現實情境。<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>A — F 檢定：</b>用來比較兩組以上樣本的<b>變異數</b>，或用於 ANOVA 中判斷各組均值是否有顯著差異，屬於假設檢定，與模型泛化評估無關。</li><li><b>C — 配對樣本 t 檢定：</b>用來檢驗<b>同一組受試者在兩種條件下</b>的平均差異是否顯著（如前測／後測），不適用於模型穩定性評估。</li><li><b>D — 卡方檢定：</b>用來檢驗兩個<b>類別型變數</b>之間的獨立性，例如性別與購買行為是否相關，不用於預測模型評估。</li></ul><b>▍一句話記憶：</b>「要看模型在新資料上是否穩定 → 交叉驗證；要做假設檢定 → 才用 t / F / 卡方」。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>泛化能力</b>：預測模型除了在訓練背熟答案外，真正在「面對沒看過的新資料」時也能給出準確預測的能力。</li><li><b>交叉驗證</b>：把資料切塊，輪流拿一塊當考卷、其他當練習題，藉此反覆測試模型真實實力的方法。</li><li><b>T檢定</b>：用來檢驗兩組樣本的「平均值」之間有沒有統計上的顯著差異。</li><li><b>卡方檢定</b>：用來檢驗兩個「類別型變數」（例如科系與性別）之間是不是有顯著的關聯性。</li></ul>",
+          ],
+          memoryTip: "看到「泛化能力、未觀察資料、穩定表現」就先想到交叉驗證。",
+          mnemonic: "泛化先交叉",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 2,
+          answer: "C",
+          question:
+            "在建立迴歸或分類模型時，若希望避免模型過度擬合（Overfitting），可透過加入正則化項以限制模型的複雜度。其中，L1正則化（Lasso）的主要效果為何？",
+          options: {
+            A: "增加模型參數的數量，以提升表現靈活度",
+            B: "強化梯度穩定性，避免參數更新過度震盪",
+            C: "產生稀疏模型（Sparse Model），使部分參數權重收斂為零",
+            D: "提高學習率（Learning Rate），加速模型收斂速度",
+          },
+          explanation:
+            "【答案：C — 產生稀疏模型，使部分參數權重收斂為零】<br><br>L1 正則化（又稱 Lasso）在損失函數中加入所有係數<b>絕對值的總和</b>作為懲罰項（λΣ|wᵢ|）。這種懲罰的數學特性會把「不重要的特徵」的係數直接<b>壓到恰好等於 0</b>，形成稀疏模型（Sparse Model）。<br><br><b>▍為什麼選 C？</b><br>稀疏化意味著模型自動篩掉無關特徵，同時達到兩個目的：① 降低過擬合風險；② 兼做<b>特徵選擇（Feature Selection）</b>。L1 的幾何意義是「以菱形為限制區域」，最優解常落在菱形的頂角，使某些維度恰好為零。<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>A — 增加參數數量：</b>正則化的目的是<b>限制</b>複雜度，絕不是增加參數。</li><li><b>B — 強化梯度穩定性：</b>這是 Batch Normalization 或 Gradient Clipping 的工作，不是 L1 的特性。</li><li><b>D — 提高學習率：</b>學習率是訓練超參數，與正則化無關。</li></ul><b>▍L1 vs L2 快速比較：</b><br>L1（Lasso）→ 係數歸零 → 稀疏模型 → 選特徵；L2（Ridge）→ 係數縮小但不為零 → 平滑模型 → 保留所有特徵。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>LASSO</b>：透過數學懲罰，強迫模型把不重要特徵的係數直接變成零，自動幫你做到「特徵篩選」。</li><li><b>過擬合</b>：模型把練習題（訓練資料）死背下來，考得極高分，但在沒看過的題目（測試資料）上慘敗。</li></ul>",
+          ],
+          memoryTip: "L1 最好記的關鍵字就是「稀疏、歸零、選特徵」。",
+          mnemonic: "L1 會歸零",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 3,
+          answer: "C",
+          question:
+            "在訓練非線性模型時，若目標函數為非凸函數（Non-convex Function），演算法在參數更新過程中可能出現多個極值點，導致最佳化結果不穩定。請問此時最可能發生下列哪一種情況？",
+          options: {
+            A: "梯度消失",
+            B: "資料過少",
+            C: "局部最優解",
+            D: "過擬合",
+          },
+          explanation:
+            "【答案：C — 局部最優解（Local Optimum）】<br><br>凸函數（Convex Function）只有一個全域最低點，梯度下降一定能找到它；而<b>非凸函數</b>有多個「山谷」（局部極小值）與「山峰」（局部極大值），梯度下降可能在任何一個山谷停下，永遠找不到全域最低點。<br><br><b>▍為什麼選 C？</b><br>題目明確說「多個極值點、最佳化結果不穩定」，正是局部最優解的典型描述。最佳化演算法一旦落入局部極小值，梯度幾乎為零，更新停止，就再也爬不出去。<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>A — 梯度消失：</b>是深度網路<b>反向傳播</b>中梯度指數縮小的問題，與非凸損失面無直接關係。</li><li><b>B — 資料過少：</b>是樣本量的問題，不是最佳化面的問題。</li><li><b>D — 過擬合：</b>是模型太複雜記住雜訊的問題，與非凸函數導致的最佳化困難無關。</li></ul><b>▍常見解法：</b>使用動量（Momentum）、Adam、隨機初始化多次訓練、模擬退火等方法來協助「跳出」局部最優。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>梯度消失</b>：在很深的神經網路裡，回傳的調整訊號（誤差）越傳越小，導致最前面的層根本學不到東西。</li><li><b>局部最優解</b>：AI在尋求最佳解（找最低谷）時，不小心卡在一個半山腰的小坑洞，誤以為已經到底了。</li><li><b>過擬合</b>：模型把練習題（訓練資料）死背下來，考得極高分，但在沒看過的題目（測試資料）上慘敗。</li></ul>",
+          ],
+          memoryTip: "看到「非凸、多個極值點」就聯想到容易卡在局部最優。",
+          mnemonic: "非凸卡局部",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 4,
+          answer: "B",
+          question:
+            "在執行 DBSCAN（Density-Based Spatial Clustering of Applications with Noise）群集分析時，若某資料點鄰域內的樣本數不足以形成核心點（Core Point），且該點未被任何核心點的鄰域所包含，也未與其他群集形成密度可達關係（Density Reachability），此資料點最終將被歸類為哪一種類型？",
+          options: {
+            A: "鄰近點（Neighbor Point）",
+            B: "雜訊點（Noise Point）",
+            C: "邊界點（Border Point）",
+            D: "潛在點（Potential Point）",
+          },
+          explanation:
+            "【答案：B — 雜訊點（Noise Point）】<br><br>DBSCAN 將每個資料點分成三種角色：<b>核心點（Core Point）</b>—鄰域內樣本數 ≥ MinPts；<b>邊界點（Border Point）</b>—自己不夠格當核心點，但落在某核心點的鄰域內；<b>雜訊點（Noise Point）</b>—既不是核心點，也沒有落在任何核心點的鄰域，孤立無群。<br><br><b>▍為什麼選 B？</b><br>題目直接描述「樣本數不足以形成核心點、未被任何核心點的鄰域包含、未形成密度可達關係」，三個條件都符合，就是雜訊點（即離群點）。DBSCAN 的最大特色之一就是能<b>自動標記離群點</b>，不強迫把它們分到任何群。<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>A — 鄰近點（Neighbor Point）：</b>這不是 DBSCAN 的標準術語，是干擾選項。</li><li><b>C — 邊界點：</b>邊界點雖然自己不是核心點，但<b>必須在某個核心點的鄰域內</b>，題目特別說「未被包含」，所以排除。</li><li><b>D — 潛在點（Potential Point）：</b>同樣不是 DBSCAN 標準術語，是干擾選項。</li></ul><b>▍記憶口訣：</b>「核心帶邊界，孤立是雜訊」。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>DBSCAN</b>：一種AI分群演算法，只要資料密集就圈成一群，而且能自動把孤立的點當作「雜訊」。</li><li><b>離群點</b>：和其他正常資料差異極大的點（比如說一堆10歲的小孩中混進一個100歲的老人）。</li></ul>",
+          ],
+          memoryTip: "DBSCAN 中「不成群、不可達」通常就是雜訊。",
+          mnemonic: "不成群即雜訊",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 5,
+          answer: "A",
+          question:
+            "某智慧製造公司開發一套影像辨識系統，用於自動檢測生產線上的瑕疵產品。系統採用卷積神經網路（Convolutional Neural Network, CNN）作為主要模型架構，其中第一層卷積層（Convolutional Layer）主要負責的功能為下列何者？",
+          options: {
+            A: "自動提取輸入影像中的局部特徵",
+            B: "降低影像維度以加速運算效率",
+            C: "增加神經元與參數數量以提升模型容量",
+            D: "整合所有特徵並輸出最終分類結果",
+          },
+          explanation:
+            "【答案：A — 自動提取輸入影像中的局部特徵】<br><br>CNN 卷積層的核心機制是用一個小型的<b>卷積核（Filter / Kernel）</b>在影像上滑動，對每一個局部區域計算內積，提取出局部視覺特徵。<b>第一層卷積層</b>通常學到的是最基礎的低階特徵，例如邊緣（Edge）、角點（Corner）、顏色梯度等。<br><br><b>▍為什麼選 A？</b><br>卷積操作的設計本質就是「局部感知（Local Receptive Field）」——每次只看影像的一小塊，自動抽取局部模式，不需要人工定義特徵。這是 CNN 相較傳統電腦視覺的核心突破。<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>B — 降低影像維度：</b>降維是<b>池化層（Pooling Layer）</b>的主要職責，不是卷積層。</li><li><b>C — 增加神經元與參數數量：</b>卷積層反而透過參數共享<b>減少</b>參數量，與全連接層相反。</li><li><b>D — 整合特徵輸出分類：</b>這是<b>全連接層（Fully Connected Layer）</b>在網路末端的工作。</li></ul><b>▍CNN 各層分工口訣：</b>「卷積抓特徵、池化壓尺寸、全連接做分類」。",
+          notes: [],
+          memoryTip: "卷積層先看局部，小範圍抓特徵。",
+          mnemonic: "卷積抓局部",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "選項背景知識",
+        },
+        {
+          no: 6,
+          answer: "C",
+          question:
+            "某智慧城市團隊開發一套交通監控系統，用於即時辨識路口監視器影像中的車輛與行人。團隊比較後發現，卷積神經網路（Convolutional Neural Network, CNN）在訓練與推論效率上，明顯優於傳統的全連接神經網路（Fully Connected Neural Network, FCNN）。請問下列何者為主要原因？",
+          options: {
+            A: "CNN 能自動學習影像的旋轉與比例不變性",
+            B: "CNN 可直接跳過人工特徵提取步驟進行分類",
+            C: "CNN 透過區域感知（Local Receptive Field）與參數共享（Parameter Sharing）機制，降低模型參數量與運算複雜度",
+            D: "CNN 捨棄激勵函數（Activation Function），以加快運算速度",
+          },
+          explanation:
+            "【答案：C — 區域感知與參數共享，降低模型參數量與運算複雜度】<br><br>傳統全連接神經網路（FCNN）中，每個神經元都與上一層所有神經元相連，參數量隨影像尺寸呈<b>平方級爆炸</b>。例如一張 224×224×3 的 RGB 影像攤平後有 15 萬個輸入，若接 1000 個神經元，光第一層就有 1.5 億個參數。<br><br><b>▍為什麼選 C？</b><br>CNN 的兩大核心設計解決了這個問題：<br>① <b>局部感受野（Local Receptive Field）</b>：每個卷積核只看影像的一小塊（如 3×3），不連接整張圖，大幅降低連接數。<br>② <b>參數共享（Parameter Sharing）</b>：同一個卷積核在整張影像上<b>共用同一組權重</b>滑動掃描，使參數量從數億壓縮到數千。這兩個機制合力，讓 CNN 在處理高維影像時遠比 FCNN 更高效。<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>A — 旋轉與比例不變性：</b>這是 CNN 學出來的<b>能力副產品</b>，不是效率優於 FCNN 的原因。</li><li><b>B — 跳過人工特徵提取：</b>這是 CNN vs 傳統機器學習的優勢，不是 CNN vs FCNN 效率差異的主因。</li><li><b>D — 捨棄激活函數：</b>完全錯誤，CNN 仍然使用 ReLU 等激活函數，捨棄激活函數反而會使網路退化成線性模型。</li></ul>",
+          notes: [],
+          memoryTip: "影像任務選 CNN，常因局部感知加參數共享。",
+          mnemonic: "局部共享省參數",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "選項背景知識",
+        },
+        {
+          no: 7,
+          answer: "A",
+          question:
+            "下列哪一種應用最適合採用長短期記憶網路（Long Short-Term Memory, LSTM）模型？",
+          options: {
+            A: "預測未來七天的電力需求變化趨勢",
+            B: "辨識監視影像中不同類別的物件",
+            C: "將大量顧客資料依相似特徵自動分群",
+            D: "將高維度的感測器資料壓縮成低維表示",
+          },
+          explanation:
+            "【答案：A — 預測未來七天的電力需求變化趨勢】<br><br>LSTM（長短期記憶網路）是 RNN（循環神經網路）的改良版，核心設計是三道「閘門」：<b>遺忘閘（Forget Gate）</b>、<b>輸入閘（Input Gate）</b>、<b>輸出閘（Output Gate）</b>，讓模型能有選擇地記住或遺忘不同時間步的資訊，擅長捕捉<b>長距離時間依賴（Long-term Dependencies）</b>。<br><br><b>▍為什麼選 A？</b><br>電力需求預測具有明顯的時間序列特性：每小時、每天的用電量受前幾天甚至前幾週的趨勢影響。LSTM 正是為這類「輸入是時間序列、輸出是未來數值」的任務量身打造，是最適合的架構。<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>B — 辨識影像中的物件：</b>這是空間特徵提取問題，最適合 <b>CNN</b>，LSTM 不擅長處理靜態影像。</li><li><b>C — 顧客資料自動分群：</b>這是<b>非監督式學習 / 分群（Clustering）</b>問題，適合 K-means、DBSCAN 等，不是 LSTM 的應用場景。</li><li><b>D — 高維資料壓縮為低維：</b>這是<b>降維（Dimensionality Reduction）</b>問題，適合 PCA 或 Autoencoder，不是 LSTM 的用途。</li></ul><b>▍LSTM 應用關鍵字：</b>時間序列、序列預測、自然語言、語音識別、股票預測。",
+          notes: [],
+          memoryTip: "看到「未來趨勢、時序預測」就優先聯想到 LSTM。",
+          mnemonic: "時序找 LSTM",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "選項背景知識",
+        },
+        {
+          no: 8,
+          answer: "D",
+          question:
+            "資訊增益（Information Gain）常用於衡量特徵對分類結果的不確定性貢獻程度，並據以進行特徵選擇。此方法主要應用於下列哪一類模型架構中？",
+          options: {
+            A: "使用 L1 正則化進行特徵篩選的線性模型",
+            B: "利用激活函數（Activation Function）進行特徵擷取的深度神經網路",
+            C: "透過核函數（Kernel Function）將特徵映射至高維空間的分類模型",
+            D: "透過遞迴分裂方式建立分類規則的決策樹模型",
+          },
+          explanation:
+            "【答案：D — 透過遞迴分裂方式建立分類規則的決策樹模型】<br><br>資訊增益（Information Gain）定義為：分裂前的<b>熵（Entropy）</b>減去分裂後各子節點的加權平均熵。熵代表不確定性，資訊增益越高，代表這個特徵分裂後讓資料「更純」，越適合作為分裂節點。<br><br><b>▍為什麼選 D？</b><br>決策樹（如 ID3、C4.5 演算法）在每個節點都需要選一個特徵來分裂，選擇標準就是<b>資訊增益最大</b>的特徵。這是資訊增益最直接、最核心的應用場景。CART 演算法則使用 Gini Impurity，但邏輯相同。<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>A — L1 正則化線性模型（Lasso）：</b>Lasso 靠懲罰絕對值做特徵選擇，不使用資訊增益的概念。</li><li><b>B — 深度神經網路：</b>DNN 靠反向傳播與梯度更新學習特徵，不使用資訊增益。</li><li><b>C — 核函數 SVM：</b>SVM 靠最大化支撐向量間隔（Margin）做分類，不使用資訊增益。</li></ul><b>▍延伸知識：</b>隨機森林（Random Forest）與 XGBoost 都是基於決策樹的集成方法，也間接使用類似的不純度指標來選特徵。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>決策樹</b>：讓AI像玩「猜猜看」一樣，根據條件(是或否)一層一層往下問，最後得出分類或數值結果。</li></ul>",
+          ],
+          memoryTip: "只要看到資訊增益，通常就是在想決策樹怎麼分裂。",
+          mnemonic: "資訊增益選樹枝",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 9,
+          answer: "A",
+          question:
+            "在建構以距離為基礎的機器學習模型（如KNN、SVM）時，下列哪一項資料前處理方式最為關鍵？",
+          options: {
+            A: "進行特徵縮放（Feature Scaling），使各特徵變數具有相似的數值範圍",
+            B: "將連續型特徵變數轉換為類別型變數",
+            C: "以平均值或中位數進行缺失值補齊",
+            D: "進行隨機抽樣以平衡資料筆數",
+          },
+          explanation:
+            "【答案：A — 進行特徵縮放（Feature Scaling）】<br><br>KNN 和 SVM 都依賴樣本之間的<b>距離</b>（歐式距離、曼哈頓距離）或<b>內積</b>來做決策。若某欄位的數值範圍是 0–10,000（例如薪資），另一欄位是 0–1（例如評分），前者會主導整個距離計算，後者幾乎沒有影響力，導致模型偏頗。<br><br><b>▍為什麼選 A？</b><br>特徵縮放讓所有特徵都壓縮在相近的數值範圍，常見方法：<br>① <b>Min-Max Normalization</b>：將值縮放到 [0, 1]；<br>② <b>Z-score Standardization</b>：將值轉換為均值 0、標準差 1 的分佈。<br>這樣每個特徵在距離計算中貢獻相等，模型才能公平判斷。<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>B — 連續型轉類別型：</b>這會損失資訊，且與距離型模型的需求完全相反。</li><li><b>C — 缺失值補齊：</b>補值是基本清洗步驟，對所有模型都重要，但對距離型模型不是「最關鍵」的前處理。</li><li><b>D — 隨機抽樣平衡資料：</b>這是處理類別不平衡的方法，與距離計算的偏差無關。</li></ul><b>▍哪些模型需要縮放：</b>KNN、SVM、K-means、PCA、邏輯迴歸（建議）。<b>哪些不需要：</b>決策樹、隨機森林、XGBoost（基於分裂點，不受尺度影響）。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>SVM</b>：演算法試圖在不同類別的資料群中，劃出一條「最寬的界線（邊界最大化）」來分隔它們。</li><li><b>特徵縮放</b>：把數值大小差別很大的各種欄位，轉換壓縮到差不多的數值範圍，避免模型大小眼。</li></ul>",
+          ],
+          memoryTip: "凡是「距離型模型」，先想縮放再想建模。",
+          mnemonic: "距離先縮放",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 10,
+          answer: "C",
+          question: "下列哪一種應用情境最適合導入AutoML，以提升模型開發效率？",
+          options: {
+            A: "公司已有完整的MLOps平台與資深資料科學團隊，模型更新採固定流程",
+            B: "製造部門的生產良率模型已長期穩定運作，只需定期調整參數",
+            C: "行銷部門希望在短時間內比較多種顧客流失預測模型，缺乏專職工程師與時間進行手動建模",
+            D: "財務部門正在開發高度客製化的信用風險評估模型，需要精細控制特徵工程與演算法細節",
+          },
+          explanation:
+            "【答案：C — 行銷部門希望快速比較多種模型，缺乏專職工程師】<br><br>AutoML（Automated Machine Learning）的設計初衷是讓<b>非專業工程師</b>或資源有限的團隊，也能在短時間內自動完成：特徵工程、模型選擇（Model Selection）、超參數調整（HPO）、模型評估等流程，大幅降低建模門檻與時間成本。<br><br><b>▍為什麼選 C？</b><br>「行銷部門 + 無專職工程師 + 短時間 + 多模型比較」完美符合 AutoML 的使用場景——需求緊迫、人力受限、目標是快速找到「夠好」的模型，不要求極致客製化。<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>A — 已有完整 MLOps 與資深團隊：</b>這種情況已有成熟流程，AutoML 的附加價值有限，反而可能與現有平台衝突。</li><li><b>B — 長期穩定運作只需定期調參：</b>模型已上線穩定，只需微調，不需要重新跑 AutoML 流程。</li><li><b>D — 高度客製化信用風險模型：</b>需要精細控制特徵工程與演算法細節，AutoML 的黑箱自動化反而是阻礙，這種場景需要<b>手動建模</b>。</li></ul><b>▍AutoML 最佳使用時機：</b>快速 Prototype、資源有限、需要 Baseline 模型、非核心業務場景。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>MLOps</b>：一套讓AI從開發訓練、上線部署到持續監控，都能像自動化流水線順暢運作的管理方式。</li><li><b>特徵工程</b>：分析師把原始資料整理、轉換、合成出能夠讓AI更好理解且更有預測力的新表格欄位。</li><li><b>AutoML</b>：丟入資料後，系統能全自動從特徵處理、選演算法到調整超參數一手包辦的懶人包技術。</li></ul>",
+          ],
+          memoryTip: "沒時間、沒專職工程師、要快比模型，AutoML 最有價值。",
+          mnemonic: "快比模型用 AutoML",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 11,
+          answer: "D",
+          question:
+            "相較於Grid Search，Random Search在超參數調整上具備哪一項主要優勢？",
+          options: {
+            A: "可自動產生模型架構",
+            B: "可使用更大的訓練集",
+            C: "避免模型過擬合",
+            D: "能更有效率搜尋高維參數空間",
+          },
+          explanation:
+            "【答案：D — 能更有效率搜尋高維參數空間】<br><br>Grid Search（網格搜尋）對每一個參數組合都逐一嘗試，若有 5 個超參數各有 10 個候選值，就需要嘗試 10⁵ = 100,000 次，計算成本隨維度<b>指數爆炸</b>。<br><br><b>▍為什麼選 D？</b><br>Random Search 在每個超參數的範圍內<b>隨機抽樣</b>組合測試，研究指出（Bergstra & Bengio, 2012）：在同樣的計算預算下，Random Search 通常能找到比 Grid Search 更好或相當的結果。原因是：實際上多數超參數對效能的影響並不均等，某些維度幾乎不敏感，Random Search 不會在這些維度上浪費算力，而是把計算集中在真正有影響的維度上。<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>A — 自動產生模型架構：</b>這是 Neural Architecture Search（NAS）做的事，不是 Random Search。</li><li><b>B — 使用更大的訓練集：</b>搜尋策略與訓練集大小無關。</li><li><b>C — 避免模型過擬合：</b>過擬合由正則化、Dropout、資料增強等方法處理，與超參數搜尋策略無直接關係。</li></ul><b>▍延伸：Bayesian Optimization</b>更進一步，根據歷史嘗試結果智慧選擇下一個候選點，比 Random Search 更高效，是目前 AutoML 常用的主流策略。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>網格搜尋</b>：將所有想要嘗試的模型參數組成一張表，AI乖乖地把每一種組合全部試過一遍找最優解。</li><li><b>隨機搜尋</b>：不照表全試，而是在參數範圍內「隨機」抽樣測試，通常在參數維度很高時能更快找到不錯的結果。</li><li><b>過擬合</b>：模型把練習題（訓練資料）死背下來，考得極高分，但在沒看過的題目（測試資料）上慘敗。</li></ul>",
+          ],
+          memoryTip: "參數維度一多，隨機搜尋通常比網格更省。",
+          mnemonic: "高維用隨機",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 12,
+          answer: "C",
+          question:
+            "某智慧製造公司開發一套設備故障預測系統，利用感測器資料訓練深度神經網路（Deep Neural Network, DNN）模型，以提前偵測異常運作跡象。在訓練過程中，團隊發現模型收斂速度不穩定：有時過快導致過擬合，有時又遲遲無法達到最佳準確率。開發團隊可以藉由調整下列哪一項超參數（Hyperparameter）以改善此問題？",
+          options: {
+            A: "每個神經元的輸出結果",
+            B: "損失函數（Loss Function）在訓練過程中的梯度變化值（Gradient）",
+            C: "學習率（Learning Rate），控制模型權重更新的速度",
+            D: "模型在訓練後產生的權重值",
+          },
+          explanation:
+            "【答案：C — 學習率（Learning Rate），控制模型權重更新的速度】<br><br>學習率（η）決定每次梯度下降時參數更新的步伐大小：<b>更新量 = η × 梯度</b>。它直接控制模型收斂的快慢與穩定性。<br><br><b>▍為什麼選 C？</b><br><ul><li><b>學習率太大（η 過高）</b>：每步跨越太大，可能跳過最低點來回震盪，甚至發散，或快速貼合訓練資料造成過擬合。</li><li><b>學習率太小（η 過低）</b>：每步太微小，收斂極慢，在有限 epoch 內無法達到最佳準確率。</li></ul>這與題目描述「有時過快過擬合、有時遲遲無法收斂」完全吻合，調整學習率是最直接的解法。<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>A — 神經元的輸出結果：</b>輸出值是前向傳播的結果，不是可調整的超參數。</li><li><b>B — 梯度變化值：</b>梯度是反向傳播計算出來的中間值，不是人工設定的超參數。</li><li><b>D — 訓練後的權重值：</b>權重是模型學習後的結果（模型參數），不是超參數，不能預先調整。</li></ul><b>▍超參數 vs 模型參數口訣：</b>「訓練前設定的叫超參數（如 η、batch size、層數）；訓練後學出來的叫模型參數（如權重 w、偏置 b）」。<br><br><b>▍實務補充：</b>常見做法是使用 Learning Rate Scheduler（如 Cosine Annealing、Warm-up）動態調整學習率，兼顧收斂速度與穩定性。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>過擬合</b>：模型把練習題（訓練資料）死背下來，考得極高分，但在沒看過的題目（測試資料）上慘敗。</li></ul>",
+          ],
+          memoryTip: "收斂快慢不穩，先查 learning rate。",
+          mnemonic: "快慢看學習率",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 13,
+          answer: "B",
+          question: "標籤偏差(Label Bias)通常是因為什麼原因造成？",
+          options: {
+            A: "訓練資料量過大",
+            B: "標記資料本身帶有主觀偏見",
+            C: "模型結構設計不當",
+            D: "特徵數量設定過多",
+          },
+          explanation:
+            "【答案：B — 標記資料本身帶有主觀偏見】<br><br>標籤偏差（Label Bias）指的是訓練資料的<b>標籤本身</b>就已經帶有偏差或錯誤，而非模型結構或資料量的問題。常見來源包括：標注人員的主觀偏見、文化背景差異、標注標準不一致，或歷史性的歧視性判斷。<br><br><b>▍為什麼選 B？</b><br>機器學習的核心原則是「垃圾進、垃圾出（Garbage In, Garbage Out）」。若訓練標籤從一開始就帶有偏見，模型只會把這些偏差學得更精準、更穩定地輸出，且完全不會自行察覺或糾正。例如：若歷史招聘資料中女性被錄取的比例較低，訓練出來的 HR 模型就會「學會歧視女性」。<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>A — 訓練資料量過大：</b>資料量多不會造成標籤偏差，反而更多資料通常有助於提升模型表現。</li><li><b>C — 模型結構設計不當：</b>這會影響模型的表達能力與過擬合，但不是標籤偏差的成因。</li><li><b>D — 特徵數量過多：</b>特徵太多可能造成維度詛咒或過擬合，但與標籤是否帶有偏見無關。</li></ul><b>▍相關概念比較：</b><br>• <b>標籤偏差（Label Bias）</b>：標籤本身含主觀偏見；<br>• <b>選樣偏差（Sampling Bias）</b>：訓練資料不具代表性；<br>• <b>確認偏差（Confirmation Bias）</b>：標注者傾向標記符合既有認知的答案。",
+          notes: [],
+          memoryTip: "Label bias 先想「人怎麼標、標的人有沒有偏見」。",
+          mnemonic: "標籤偏在人",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "選項背景知識",
+        },
+        {
+          no: 14,
+          answer: "C",
+          question:
+            "下列哪一種AI應用情境中，模型的可解釋性（Explainability）最為關鍵？",
+          options: {
+            A: "電商平台利用深度學習模型預測用戶的下一次購買時間，以優化推播行銷策略",
+            B: "新創公司使用機器學習演算法自動調整廣告出價策略，以提升點擊轉換率",
+            C: "醫院導入AI模型分析病患影像並給出腫瘤惡性可能性，作為臨床醫師診斷依據",
+            D: "銀行導入AI模型預測客戶流失率，並自動推薦留客優惠方案",
+          },
+          explanation:
+            "【答案：C — 醫院導入AI模型分析病患影像並給出腫瘤惡性可能性】<br><br>模型可解釋性（Explainability）的重要程度與<b>決策後果的嚴重性</b>及<b>問責需求</b>成正比。當模型的輸出直接影響人身安全、法律責任或重大資源分配時，必須能夠說明「模型為何做出此判斷」。<br><br><b>▍為什麼選 C？</b><br>醫療診斷涉及三個高標準需求：<br>① <b>生命安全</b>：誤判腫瘤惡性可能導致漏治或過度治療，後果不可逆；<br>② <b>臨床責任</b>：醫師需對診斷結論負法律責任，不能以「AI說的」作為唯一依據；<br>③ <b>醫療倫理</b>：EU AI Act、GDPR 等法規要求高風險 AI 應用必須具備可解釋性。醫師需理解模型是依據哪些影像特徵做出判斷，才能決定是否採納。<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>A — 電商推播行銷：</b>預測購買時間的錯誤影響有限（頂多少一次轉換），可解釋性需求較低。</li><li><b>B — 廣告出價策略：</b>出價策略調整是可逆且低風險的商業決策，對可解釋性要求不高。</li><li><b>D — 銀行預測客戶流失：</b>雖有一定重要性，但結果是推薦優惠，非直接影響人命的決策。</li></ul><b>▍常見可解釋性工具：</b>SHAP（各特徵貢獻值）、LIME（局部近似解釋）、Grad-CAM（CNN 熱力圖）。",
+          notes: [],
+          memoryTip: "只要牽涉人命或重大風險，就把 explainability 權重拉高。",
+          mnemonic: "高風險重解釋",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "選項背景知識",
+        },
+        {
+          no: 15,
+          answer: "B",
+          question: "在線性迴歸模型中，若R²值為0.85，其意義為何？",
+          options: {
+            A: "模型準確率為85%",
+            B: "85%的變異可被模型解釋",
+            C: "預測誤差為15%",
+            D: "模型有85%的信心水準",
+          },
+          explanation:
+            "【答案：B — 85% 的變異可被模型解釋】<br><br>R²（決定係數，Coefficient of Determination）的定義為：<br><b>R² = 1 − (殘差平方和 SS_res) / (總變異平方和 SS_tot)</b><br>它代表模型能解釋目標變數 Y 總變異的比例。<br><br><b>▍為什麼選 B？</b><br>R² = 0.85 表示「Y 的變異中有 85% 可由模型的自變數 X 解釋」，剩下 15% 是模型無法解釋的隨機誤差或遺漏變數。這是 R² 唯一正確的詮釋方式。<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>A — 模型準確率為 85%：</b>準確率（Accuracy）是分類模型的指標，R² 是迴歸模型的指標，兩者不可混用。R² = 0.85 ≠ 85% 預測正確。</li><li><b>C — 預測誤差為 15%：</b>15% 是「無法解釋的變異比例」，不等於預測誤差百分比。誤差應以 MAE、RMSE 等單位量化。</li><li><b>D — 85% 的信心水準：</b>信心水準（Confidence Level）是統計推論中的概念（通常用 95%、99%），與 R² 完全無關。</li></ul><b>▍R² 的範圍與解讀：</b><br>• R² = 1：模型完美解釋所有變異（通常代表過擬合）；<br>• R² = 0：模型與直接用均值預測一樣差；<br>• R² &lt; 0：模型比用均值預測還糟（極差的模型）。",
+          notes: [],
+          memoryTip: "R² 的關鍵字就是「解釋變異比例」。",
+          mnemonic: "R平方解變異",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "選項背景知識",
+        },
+        {
+          no: 16,
+          answer: "A",
+          question:
+            "在二元分類問題中，若精確率（Precision）為0.8，召回率（Recall）為0.6，則F1分數（F1 Score）為何？",
+          options: {
+            A: "0.686",
+            B: "0.700",
+            C: "0.720",
+            D: "0.750",
+          },
+          explanation:
+            "【答案：A — 0.686】<br><br>F1 Score 是 Precision（精確率）與 Recall（召回率）的<b>調和平均數（Harmonic Mean）</b>，公式為：<br><br><b>F1 = 2 × P × R / (P + R)</b><br><br><b>▍計算過程：</b><br>代入 P = 0.8，R = 0.6：<br>F1 = 2 × 0.8 × 0.6 / (0.8 + 0.6)<br>= 2 × 0.48 / 1.4<br>= 0.96 / 1.4<br>= <b>0.6857 ≈ 0.686</b><br><br><b>▍為什麼不是算術平均 (0.8+0.6)/2 = 0.700？</b><br>調和平均對「兩值差距大」的情況懲罰更重。若 P = 1.0、R = 0.01，算術平均是 0.505（看起來還不錯），但調和平均是 0.020（揭露模型幾乎找不到正樣本的真相）。F1 選用調和平均，正是為了<b>迫使 Precision 與 Recall 同時都高</b>，而不是靠其中一個拉高整體分數。<br><br><b>▍Precision vs Recall 取捨：</b><br>• 重視「不誤判（Precision）」：垃圾郵件偵測，不想把正常信件誤判為垃圾；<br>• 重視「不漏判（Recall）」：癌症篩檢，寧可多篩也不能漏掉真正的患者；<br>• <b>F1</b>：兩者都重要時的平衡指標。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>召回率</b>：在所有「真正標準答案」中，AI成功挑出抓中幾個。注重的是「不要漏抓」。</li><li><b>F1分數</b>：綜合考量「精確率」和「召回率」的調和平均，常在正負樣本不平衡時用來評估模型好壞。</li><li><b>持續整合</b>：工程師一提交程式碼，系統就自動幫忙建置與執行各種測試，及早發現錯誤（多用於軟體開發）。</li><li><b>精確率</b>：AI判斷為「陽性或有罪」的所有結果中，到底有多少是真的。注重的是減少「誤報/抓錯人」。</li></ul>",
+          ],
+          memoryTip: "F1 公式直接背：2PR 除以 P+R。",
+          mnemonic: "二PR除總和",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 17,
+          answer: "B",
+          question: "下列哪一種優化演算法內建動量（Momentum）的設計機制？",
+          options: {
+            A: "SGD+Momentum",
+            B: "Adam",
+            C: "RMSProp",
+            D: "Adagrad",
+          },
+          explanation:
+            "【答案：B — Adam】<br><br>各主流優化器的動量機制比較：<br><br><b>▍為什麼選 B（Adam）？</b><br>Adam（Adaptive Moment Estimation）同時維護兩個移動平均：<br>① <b>一階矩估計（First Moment / Mean）</b>：梯度的移動平均，即動量（Momentum）；<br>② <b>二階矩估計（Second Moment / Variance）</b>：梯度平方的移動平均，用於自適應學習率。<br>Adam 將動量與自適應學習率融合在同一個演算法中，是「內建動量設計機制」最完整的代表，也是目前深度學習最常用的優化器。<br><br><b>▍各選項比較：</b><br><ul><li><b>A — SGD + Momentum：</b>這是把動量<b>外掛</b>到基礎 SGD 上，是「加上動量」而非「內建動量機制」；且標準 SGD 本身沒有動量。</li><li><b>C — RMSProp：</b>只有二階矩（梯度平方的移動平均），用來自適應調整學習率，<b>沒有一階動量</b>。</li><li><b>D — Adagrad：</b>累積所有歷史梯度平方用於調整學習率，<b>無動量機制</b>，且學習率單調遞減，後期幾乎停止更新。</li></ul><b>▍記憶表格：</b><br>Adam = 動量 ✓ + 自適應學習率 ✓（兩全其美）<br>RMSProp = 動量 ✗ + 自適應學習率 ✓<br>SGD = 動量 ✗（需外掛）+ 自適應學習率 ✗",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>動量</b>：在梯度下降優化中幫模型加上「慣性」，這樣模型滾下山遇到小坑洞也能靠衝力滑過去，加快走向最低谷。</li><li><b>Adam</b>：非常常見的優化演算法，它同時具備了慣性(動量)的優勢，且會「自動」幫每個參數調整適合的學習步幅。</li></ul>",
+          ],
+          memoryTip: "看到「內建動量」最常直覺聯想到 Adam。",
+          mnemonic: "Adam 帶動量",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 18,
+          answer: "A",
+          question:
+            "下列何者最能同時反映XGBoost（eXtreme Gradient Boosting）相較於傳統梯度提升決策樹（Gradient Boosting Decision Tree, GBDT）的主要技術改進？",
+          options: {
+            A: "引入正則化項（Regularization）以抑制過擬合，並支援缺失值自動處理與並行化訓練",
+            B: "改以隨機森林（Random Forest）架構取代樹模型以提升準確率",
+            C: "以類神經網路（Neural Network）取代弱分類器（Weak Learners）",
+            D: "採用批次正規化（Batch Normalization）技術提升模型穩定性",
+          },
+          explanation:
+            "【答案：A — 引入正則化、支援缺失值自動處理與並行化訓練】<br><br>XGBoost（eXtreme Gradient Boosting）是在傳統 GBDT 基礎上，由 Chen & Guestrin (2016) 提出的系統性工程優化版本。<br><br><b>▍XGBoost 相較 GBDT 的三大核心改進：</b><br>① <b>正則化（Regularization）</b>：目標函數中加入 L1/L2 正則化項，直接控制葉節點數量與葉節點權重大小，有效抑制過擬合；傳統 GBDT 沒有這個設計。<br>② <b>缺失值自動處理（Sparsity-Aware Split Finding）</b>：訓練時自動學習缺失值應分到左子樹或右子樹，不需事先填補；GBDT 通常需要手動處理缺失值。<br>③ <b>並行化訓練（Parallelization）</b>：XGBoost 在尋找最佳分裂點時，對特徵進行預排序並支援多核並行計算；傳統 GBDT 是序列式計算，速度較慢。<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>B — 改以隨機森林取代樹模型：</b>XGBoost 仍是 Boosting 架構（串行堆疊弱學習器），與 Bagging 架構的隨機森林完全不同，沒有取代。</li><li><b>C — 以神經網路取代弱分類器：</b>XGBoost 的弱學習器依然是<b>決策樹</b>，從未引入神經網路。</li><li><b>D — Batch Normalization：</b>這是深度學習中用於穩定訓練的技術，與樹模型無關。</li></ul><b>▍口訣：</b>XGBoost = GBDT + 正則化 + 缺值自理 + 並行加速。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>決策樹</b>：讓AI像玩「猜猜看」一樣，根據條件(是或否)一層一層往下問，最後得出分類或數值結果。</li><li><b>持續整合</b>：工程師一提交程式碼，系統就自動幫忙建置與執行各種測試，及早發現錯誤（多用於軟體開發）。</li><li><b>XGBoost</b>：一種極強大的「梯度提升決策樹」框架，靠著一棵樹接著一棵樹修正前者的錯誤，在多數表格式比賽中稱霸。</li><li><b>批次正規化</b>：在網路層與層之間，馬上將傳遞的數字「標準化（均值0標準差1）」，能防止數字爆掉，讓訓練快又穩。</li><li><b>過擬合</b>：模型把練習題（訓練資料）死背下來，考得極高分，但在沒看過的題目（測試資料）上慘敗。</li></ul>",
+          ],
+          memoryTip: "XGBoost 要記「正則化、缺值、並行」三件事。",
+          mnemonic: "正缺並三強",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 19,
+          answer: "C",
+          question:
+            "某醫療機構開發疾病早期偵測模型，正樣本（確診病例）僅佔 3%。在模型訓練與評估過程中，下列哪一種作法最不適合用於提升對少數類病例的預測能力？",
+          options: {
+            A: "使用SMOTE 過採樣",
+            B: "調整類別權重",
+            C: "使用準確率（Accuracy）作為評估指標",
+            D: "欠採樣多數類(Undersampling the majority class)",
+          },
+          explanation:
+            "【答案：C — 使用準確率（Accuracy）作為評估指標（最不適合）】<br><br>題目問的是「<b>最不適合</b>」的做法，當正樣本（確診病例）僅佔 3%，使用 Accuracy 會產生嚴重的誤導。<br><br><b>▍為什麼 C 最不適合？</b><br>極端範例：若模型把<b>所有 1000 筆資料都預測為「未確診（負樣本）」</b>，完全不預測任何確診病例：<br>• Accuracy = 970/1000 = <b>97%</b>（看起來非常好！）<br>• Recall（召回率）= 0/30 = <b>0%</b>（完全沒找到任何真實病例）<br>Accuracy 被多數類（97% 的健康人）主導，掩蓋了模型對少數類的預測完全失敗的真相。在醫療情境，漏診（False Negative）才是最嚴重的錯誤，應重點關注 <b>Recall、F1、PR-AUC、ROC-AUC</b>。<br><br><b>▍為什麼其他選項都是「適合」的做法？</b><br><ul><li><b>A — SMOTE 過採樣：</b>在少數類樣本間合成新樣本，平衡類別分布，有助於模型學習少數類特徵。</li><li><b>B — 調整類別權重：</b>在損失函數中對少數類樣本給予更高懲罰（如 class_weight='balanced'），讓模型更重視少數類。</li><li><b>D — 欠採樣多數類：</b>減少多數類樣本數量，平衡類別比例，是處理不平衡資料的標準方法之一。</li></ul><b>▍類別不平衡處理策略總整理：</b>資料層面：SMOTE 過採樣 / 欠採樣；模型層面：調整 class_weight；評估層面：改用 F1、Recall、PR-AUC。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>召回率</b>：在所有「真正標準答案」中，AI成功挑出抓中幾個。注重的是「不要漏抓」。</li><li><b>SMOTE</b>：當罕見的正樣本太少時，就在資料點之間用演算法「無中生有」插入一些合成的假正樣本，幫模型平衡學習。</li></ul>",
+          ],
+          memoryTip: "少數類問題最怕只看 Accuracy。",
+          mnemonic: "少數別看準確率",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 20,
+          answer: "C",
+          question:
+            "某電子商務公司為開發商品評論情感分析模型，希望模型能捕捉評論中不同特徵之間的關聯影響，例如「商品價格」與「顧客滿意度」的互動效果。下列哪一種特徵工程設計方式最適合用於建立互動特徵（Interaction Features）？",
+          options: {
+            A: "將單一特徵取平方",
+            B: "對所有特徵進行對數轉換",
+            C: "將兩個或多個特徵進行乘積或交互組合",
+            D: "對特徵進行標準化",
+          },
+          explanation:
+            "【答案：C — 將兩個或多個特徵進行乘積或交互組合】<br><br>互動特徵（Interaction Features）的核心目的是捕捉<b>兩個或多個特徵之間的聯合效應</b>——也就是說，A 特徵與 B 特徵同時出現時對目標變數的影響，不等於 A 單獨影響加上 B 單獨影響的總和。<br><br><b>▍為什麼選 C？</b><br>最直接的做法是將兩個特徵相乘（Polynomial Interaction）：<br>例如：<b>互動特徵 = 商品價格 × 顧客滿意度</b><br>這個新特徵代表「高價格且高滿意度」或「低價格但低滿意度」等聯合狀態，使線性模型也能捕捉非線性的交互關係。其他常見做法包括特徵拼接（Concatenation）、比值（A/B）或差值（A−B）。<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>A — 單一特徵取平方（x²）：</b>這是<b>多項式特徵（Polynomial Feature）</b>，只對單一特徵做非線性轉換，無法捕捉兩個特徵之間的互動。</li><li><b>B — 對所有特徵取對數：</b>對數轉換是為了處理偏態分布或壓縮大數值範圍，不是建立特徵交互的方法。</li><li><b>D — 對特徵進行標準化：</b>標準化是數值縮放的前處理步驟，不產生新的互動資訊。</li></ul><b>▍延伸應用：</b>廣告點擊率預測（CTR）中，<b>使用者ID × 廣告ID</b>的交叉特徵（Cross Feature）是深度學習推薦系統（如 Wide & Deep、DeepFM）的核心設計之一。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>情感分析</b>：AI判斷一段文字帶有正向、負向或中立情緒的技術。</li><li><b>特徵工程</b>：分析師把原始資料整理、轉換、合成出能夠讓AI更好理解且更有預測力的新表格欄位。</li><li><b>特徵縮放</b>：把數值大小差別很大的各種欄位，轉換壓縮到差不多的數值範圍，避免模型大小眼。</li></ul>",
+          ],
+          memoryTip: "看到 interaction feature，就想兩個特徵一起作用。",
+          mnemonic: "互動靠交乘",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 21,
+          answer: "C",
+          question:
+            "某語音辨識系統開發團隊採用 Transformer 架構，為了讓模型能同時理解語音片段中的發音特徵、語速變化與語意脈絡等多層次資訊，團隊在設計中導入了多頭注意力（Multi-head Attention）機制。請問下列何者為此機制的主要優點？",
+          options: {
+            A: "減少模型參數量以降低訓練成本",
+            B: "加速整體注意力計算過程",
+            C: "從不同表示子空間（Representation Subspaces）同時捕捉多樣化關聯資訊",
+            D: "避免梯度消失（Gradient Vanishing）問題",
+          },
+          explanation:
+            "【答案：C — 從不同表示子空間同時捕捉多樣化關聯資訊】<br><br>在 Transformer 中，單一注意力頭（Single-head Attention）每次只能從一個角度計算詞語間的關聯。多頭注意力（Multi-head Attention）將查詢（Query）、鍵（Key）、值（Value）各自投影到 h 個不同的子空間，讓每個頭在各自的子空間中獨立執行注意力計算，最後再拼接（Concatenate）合併。<br><br><b>▍為什麼選 C？</b><br>以語音辨識為例：<br>• <b>頭1</b> 可能學到發音層次的音素對齊關係；<br>• <b>頭2</b> 可能學到語速節奏的長距離韻律依賴；<br>• <b>頭3</b> 可能學到語意層次的詞義指代關係。<br>多個頭同時平行運算、各司其職，讓模型能在<b>同一層</b>同時捕捉多種不同類型的特徵關聯，這是 Multi-head 的核心優點。<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>A — 減少模型參數量：</b>Multi-head Attention 因為需要多組投影矩陣，參數量通常<b>不比</b> Single-head 少，且拼接後需再加一個輸出投影，不以減少參數為目的。</li><li><b>B — 加速注意力計算：</b>多頭可並行計算，但這是實作優化的副產品，不是設計的<b>主要優點</b>。</li><li><b>D — 避免梯度消失：</b>Transformer 對抗梯度消失靠的是<b>殘差連接（Residual Connection）</b>與 <b>Layer Normalization</b>，不是 Multi-head Attention。</li></ul><b>▍口訣：</b>「多頭各看一角度，合力解讀全視野」。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>Transformer</b>：一款基於「注意力機制」的AI模型架構，擅長處理長篇文字，是ChatGPT的底層基礎。</li><li><b>梯度消失</b>：在很深的神經網路裡，回傳的調整訊號（誤差）越傳越小，導致最前面的層根本學不到東西。</li></ul>",
+          ],
+          memoryTip: "Multi-head 的關鍵不是多，而是「多角度看關係」。",
+          mnemonic: "多頭多視角",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 22,
+          answer: "B",
+          question:
+            "某電商平台希望預測顧客是否會購買特定商品。系統蒐集顧客的瀏覽紀錄、停留時間、商品類別偏好與過去購買行為，並以此推估「在觀察到這些行為特徵的情況下，該顧客會購買的機率」。若模型採用貝氏定理（Bayes’Theorem）進行推論，下列敘述何者最符合其核心運作機制？",
+          options: {
+            A: "根據歷史樣本自動分群，找出行為相似的顧客群",
+            B: "以條件機率方式計算顧客屬於「會購買」或「不會購買」的分類機率",
+            C: "以最小平方誤差（Mean Squared Error）為損失函數，預測顧客的購買金額",
+            D: "依據回饋信號（Feedback Signal）透過強化學習（Reinforcement Learning）動態調整推薦策略",
+          },
+          explanation:
+            "【答案：B — 以條件機率方式計算顧客屬於「會購買」或「不會購買」的分類機率】<br><br>貝氏定理（Bayes' Theorem）的核心公式為：<br><b>P(類別 | 特徵) = P(特徵 | 類別) × P(類別) / P(特徵)</b><br>即：<b>後驗機率 = 似然度 × 先驗機率 / 邊際機率</b><br><br><b>▍為什麼選 B？</b><br>題目的核心需求是：「在觀察到顧客行為特徵的情況下，估算該顧客會購買的機率」——這正是<b>後驗機率 P(購買 | 特徵)</b> 的計算，完全符合貝氏定理的條件機率更新邏輯。朴素貝氏分類器（Naïve Bayes Classifier）就是此原理的直接應用。<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>A — 根據歷史樣本自動分群：</b>這是<b>非監督式分群（Clustering）</b>的描述，如 K-means，與貝氏定理無關。</li><li><b>C — 以 MSE 為損失函數預測購買金額：</b>MSE 是迴歸問題的損失函數，且「預測購買金額」是迴歸任務，非分類。題目要的是分類機率，不是金額預測。</li><li><b>D — 強化學習動態調整策略：</b>強化學習靠獎懲信號逐步優化決策策略，運作邏輯與貝氏推論完全不同。</li></ul><b>▍貝氏的應用場景：</b>垃圾郵件分類、醫療診斷（在已知症狀下估算患病機率）、文字情感分析、商品推薦等，凡是「已知條件下更新事件機率」都是 Bayes 的主場。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>強化學習</b>：讓AI從錯誤中學習的策略（做對給獎勵、做錯給懲罰）。</li></ul>",
+          ],
+          memoryTip: "Bayes 幾乎都在考「已知條件下的機率更新」。",
+          mnemonic: "貝氏算條件",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 23,
+          answer: "A",
+          question:
+            "一家再生能源公司希望預測未來三個月太陽能發電量的波動範圍。由於氣候條件具有高度隨機性，且輸入變數（如日照時數、雲量、溫度）之間存在不確定關係，工程團隊決定以隨機抽樣方式模擬多種可能情境，以估算整體發電量的機率分佈與風險區間。請問此時所採用的技術最符合下列哪一種方法？",
+          options: {
+            A: "蒙地卡羅方法（Monte Carlo Method）",
+            B: "K-means聚類（K-means Clustering）",
+            C: "支持向量迴歸（Support Vector Regression, SVR）",
+            D: "特徵選取（Feature Selection）",
+          },
+          explanation:
+            "【答案：A — 蒙地卡羅方法（Monte Carlo Method）】<br><br>蒙地卡羅方法的核心思路是：當問題太複雜、無法用解析公式直接求解時，就<b>大量隨機抽樣</b>各種可能的輸入情境，執行模擬，再從大量結果中統計出機率分佈與風險區間。<br><br><b>▍為什麼選 A？</b><br>題目的三個關鍵詞完全對應蒙地卡羅：<br>① <b>「高度隨機性」</b>（氣候具隨機性）→ 蒙地卡羅處理隨機變數；<br>② <b>「隨機抽樣方式模擬多種可能情境」</b>→ 蒙地卡羅的核心操作；<br>③ <b>「估算機率分佈與風險區間」</b>→ 蒙地卡羅的輸出形式。<br>舉例：對日照時數、雲量、溫度各自抽樣 10,000 組數值，代入發電量公式，統計結果分佈，即可得到未來三個月發電量的信賴區間。<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>B — K-means 聚類：</b>非監督分群演算法，目的是將資料分成幾群，不是模擬機率分佈。</li><li><b>C — 支持向量迴歸（SVR）：</b>監督式迴歸模型，用於預測點估計值，不輸出機率分佈或風險區間。</li><li><b>D — 特徵選取：</b>篩選重要特徵的前處理技術，與情境模擬無關。</li></ul><b>▍蒙地卡羅的真實應用：</b>金融衍生品定價（期權 Black-Scholes 模擬）、核反應爐中子擴散模擬、AI 的 MCTS（蒙地卡羅樹搜索）用於棋類遊戲，如 AlphaGo。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>蒙地卡羅方法</b>：遇到很難用公式算出的問題，就用電腦瘋狂丟「幾萬次亂數隨機抽樣」，用大量嘗試結果來估算正確答案。</li></ul>",
+          ],
+          memoryTip: "看到「隨機抽樣模擬很多情境」就想 Monte Carlo。",
+          mnemonic: "抽樣模擬蒙卡",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 24,
+          answer: "C",
+          question:
+            "某房地產公司利用多元迴歸模型（Multiple Regression Model）預測房價，並繪製殘差圖（Residual Plot）檢查模型品質。結果顯示部分資料點的殘差極大，且在高價區樣本中出現系統性彎曲分佈現象。根據此觀察，下列何者為最可能的正確解釋？",
+          options: {
+            A: "模型過度擬合（Overfitting），導致在訓練資料上表現過好、泛化能力不足",
+            B: "模型特徵數量不足，導致欠擬合（Underfitting）",
+            C: "模型存在異常值（Outlier）或非線性關係，違反迴歸假設",
+            D: "殘差圖呈現隨機分佈，表示模型已完全符合所有假設",
+          },
+          explanation:
+            "【答案：C — 模型存在異常值或非線性關係，違反迴歸假設】<br><br>線性迴歸有四大核心假設：① 線性關係、② 殘差常態分布、③ 殘差變異數齊一（Homoscedasticity）、④ 殘差相互獨立。殘差圖是用來<b>診斷這些假設是否成立</b>的標準工具。<br><br><b>▍為什麼選 C？</b><br>題目出現兩個異常訊號：<br>① <b>「部分資料點的殘差極大」</b>→ 典型<b>異常值（Outlier）</b>的表現，這些點對迴歸線有強大的槓桿效應（Leverage），拉偏整條迴歸線；<br>② <b>「高價區出現系統性彎曲分佈」</b>→ 殘差有規律結構，代表模型沒能捕捉到<b>非線性關係</b>，違反線性假設。<br>理想殘差圖應呈<b>水平帶狀隨機散布、無明顯結構</b>。任何規律性（弧形、漏斗形、週期性）都是警訊。<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>A — 過擬合：</b>過擬合的殘差在<b>訓練集</b>上通常很小，不會有「極大殘差」；且過擬合通常是測試集表現差，不是殘差圖有彎曲結構。</li><li><b>B — 特徵不足、欠擬合：</b>欠擬合的殘差圖通常呈現「系統性高估或低估」，但題目描述的是「高價區的彎曲」，更符合非線性問題而非單純欠擬合。</li><li><b>D — 殘差呈隨機分佈：</b>題目明確說有彎曲與極大殘差，根本不是隨機分佈，D 選項是干擾。</li></ul><b>▍修正方向：</b>對目標變數做對數轉換、加入多項式特徵，或改用非線性模型（如隨機森林）；另外需處理離群點（移除或 Winsorize）。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>泛化能力</b>：預測模型除了在訓練背熟答案外，真正在「面對沒看過的新資料」時也能給出準確預測的能力。</li><li><b>殘差</b>：觀測結果的真實數字，減去模型預測出來的數字，所剩下的那段不能被模型完美解釋的「差距」。</li><li><b>欠擬合</b>：模型學得太少，連在練習題（訓練資料）上都考得很差，無法掌握資料規則。</li><li><b>過擬合</b>：模型把練習題（訓練資料）死背下來，考得極高分，但在沒看過的題目（測試資料）上慘敗。</li><li><b>離群點</b>：和其他正常資料差異極大的點（比如說一堆10歲的小孩中混進一個100歲的老人）。</li></ul>",
+          ],
+          memoryTip: "殘差有圖樣，不是好事，常表示模型假設出問題。",
+          mnemonic: "殘差有形就有病",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 25,
+          answer: "A",
+          question:
+            "某金融機構正在建立傳統信用評分卡模型，採用邏輯迴歸（Logistic Regression）作為建模方法，並依循監理機關建議的標準化流程進行模型開發。下列哪一項不是傳統信用評分卡模型開發流程中的常見步驟？",
+          options: {
+            A: "使用生成式模型進行特徵學習",
+            B: "進行特徵選擇與多重共線性（Multicollinearity）分析",
+            C: "進行分箱（Binning）與資訊值（Information Value, IV）檢定",
+            D: "使用樣本穩定性指標（Population Stability Index, PSI）檢驗模型穩定性",
+          },
+          explanation:
+            "【答案：A — 使用生成式模型進行特徵學習（不是傳統評分卡的步驟）】<br><br>題目問的是「<b>不屬於</b>傳統信用評分卡開發流程的步驟」，需要找出那個「外來者」。<br><br><b>▍傳統信用評分卡標準開發流程：</b><br>① 資料清理與缺失值處理；<br>② <b>分箱（Binning）</b>：將連續型變數切分為離散區間，確保單調性；<br>③ <b>資訊值（IV, Information Value）</b>分析：篩選具預測力的特徵（IV > 0.1 才保留）；<br>④ <b>多重共線性（Multicollinearity）</b>檢查：用 VIF 值偵測共線特徵；<br>⑤ 邏輯迴歸建模並計算評分卡分數（Score = 500 + 20×log(Odds) 等標準公式）；<br>⑥ <b>PSI（Population Stability Index）</b>監控模型穩定性，偵測資料分布漂移。<br><br><b>▍為什麼選 A？</b><br>生成式模型（Generative Model，如 GAN、VAE）是深度學習領域用於生成合成資料或學習資料分佈的方法，<b>完全不屬於</b>傳統評分卡的開發框架。傳統評分卡強調<b>可解釋性、監理合規</b>（Basel II/III 要求），使用邏輯迴歸等線性可解釋模型，不會引入黑箱式的生成式模型。<br><br><b>▍為什麼 B、C、D 都是標準步驟？</b><br><ul><li><b>B — 特徵選擇與多重共線性分析：</b>VIF 檢查是評分卡開發的必要步驟。</li><li><b>C — 分箱與 IV 檢定：</b>這是評分卡特有的核心步驟，決定特徵取捨。</li><li><b>D — PSI 檢驗模型穩定性：</b>評分卡上線後的標準監控指標，PSI > 0.25 需重建模型。</li></ul>",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>多重共線性</b>：當你用來預測的多個特徵間高度相關（例如坪數和平方公尺），會讓模型係數計算混亂的問題。</li><li><b>特徵縮放</b>：把數值大小差別很大的各種欄位，轉換壓縮到差不多的數值範圍，避免模型大小眼。</li><li><b>PSI</b>：一種衡量「當初模型訓練抓到的特性分布」跟「實際上線後進來的特性分布」到底漂移了多遠的分數。</li></ul>",
+          ],
+          memoryTip: "評分卡是傳統金融工法，不走生成式花路線。",
+          mnemonic: "評分卡不玩生成",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 26,
+          answer: "D",
+          question:
+            "在防止監督式學習模型過擬合（Overfitting）時，下列哪一種策略不屬於降低模型複雜度或限制學習能力的作法？",
+          options: {
+            A: "採用L1或L2正則化",
+            B: "在訓練過程中使用Dropout 技術",
+            C: "採取早期停止（Early Stopping）機制",
+            D: "擴增輸入特徵變數以提升模型表達能力",
+          },
+          explanation:
+            "【答案：D — 擴增輸入特徵變數以提升模型表達能力（不是防過擬合的做法）】<br><br>題目問的是「<b>不屬於</b>降低模型複雜度或限制學習能力的作法」，同樣要找外來者。<br><br><b>▍為什麼選 D？</b><br>增加輸入特徵（Feature Augmentation）是<b>提升</b>模型的資訊量與表達能力，屬於「加法操作」。特徵越多，模型能學到更複雜的關係，這反而<b>增加過擬合的風險</b>，與防過擬合的方向完全相反。防過擬合的核心思路是「減少模型可以記住的東西」，是減法操作。<br><br><b>▍為什麼 A、B、C 都是防過擬合的做法？</b><br><ul><li><b>A — L1/L2 正則化：</b>在損失函數中加入懲罰項，強制縮小係數，限制模型的複雜度。L1 使係數歸零，L2 使係數縮小。</li><li><b>B — Dropout：</b>每次訓練時隨機丟棄一部分神經元（如 50%），強迫網路不能依賴任何單一神經元，降低記憶訓練資料的能力。</li><li><b>C — Early Stopping：</b>監控驗證集損失，一旦開始上升（過擬合訊號）就提前停止訓練，阻止模型繼續記住訓練雜訊。</li></ul><b>▍防過擬合工具箱總整理：</b><br>正則化（L1/L2）、Dropout、Early Stopping、增加資料量、資料增強（Data Augmentation）、交叉驗證、降低模型複雜度（減少層數/參數）。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>早期停止</b>：AI在訓練過程中，一旦發現「在驗證集」越考越差時，就提早結束訓練以防止過擬合。</li><li><b>L2正則化</b>：透過懲罰，強迫模型所有的特徵係數都盡量縮小變平滑（但不歸零），讓模型預測不易過度波動。</li><li><b>Dropout</b>：神經網路訓練常用絕招，故意在每一次訓練時隨機「關掉」一些神經元，強迫剩下的神經元獨立思考避免死背。</li><li><b>過擬合</b>：模型把練習題（訓練資料）死背下來，考得極高分，但在沒看過的題目（測試資料）上慘敗。</li></ul>",
+          ],
+          memoryTip: "防過擬合在做減法，不是在做加法。",
+          mnemonic: "防過擬合先減法",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 27,
+          answer: "D",
+          question:
+            "某智慧製造團隊在開發瑕疵影像檢測模型時，發現使用線性激活函數（Activation Function）後，模型的訓練準確率長期停滯，懷疑模型無法學習到足夠複雜的特徵表達。若要改善此問題，下列哪一項調整方案最為合適？",
+          options: {
+            A: "增加卷積層（Convolutional Layer）數量，使網路更深以強化特徵提取",
+            B: "將輸入影像先進行灰階化處理，降低運算量",
+            C: "使用Sigmoid 激活函數，以將輸出壓縮至[0,1]範圍",
+            D: "改用ReLU（Rectified Linear Unit）激活函數，以引入非線性並提升模型表達能力",
+          },
+          explanation:
+            "【答案：D — 改用 ReLU 激活函數，引入非線性並提升模型表達能力】<br><br>神經網路的表達能力來自<b>非線性激活函數</b>。若全程使用線性激活函數（f(x) = x），無論網路有多少層，整個網路等效於一個單層線性模型，完全無法學習非線性特徵（例如瑕疵的形狀、紋理變化）。<br><br><b>▍為什麼選 D？</b><br>ReLU（f(x) = max(0, x)）是目前深度學習最主流的激活函數，優點包括：<br>① <b>引入非線性</b>：讓多層網路真正具備非線性表達能力；<br>② <b>緩解梯度消失</b>：對正值梯度恆為 1，不像 Sigmoid 在兩端梯度趨近於 0；<br>③ <b>計算簡單高效</b>：只需判斷正負，遠比 Sigmoid 的指數運算快；<br>④ <b>稀疏激活</b>：負值輸出為 0，使網路具備一定的稀疏性。<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>A — 增加卷積層數量：</b>層數更深確實能強化特徵提取，但根本問題是<b>缺乏非線性</b>，若繼續用線性激活加更多層，仍然是線性模型，無法改善。應先解決激活函數問題。</li><li><b>B — 輸入影像灰階化：</b>降低運算量，但不解決非線性不足的問題，甚至損失色彩資訊，反而可能降低瑕疵識別能力。</li><li><b>C — 改用 Sigmoid：</b>Sigmoid 確實是非線性函數，但在深層網路中容易造成<b>梯度消失</b>（導數最大僅 0.25），訓練準確率停滯問題可能更嚴重，不如 ReLU。</li></ul><b>▍激活函數選用口訣：</b>「隱藏層首選 ReLU；輸出層二分類用 Sigmoid；輸出層多分類用 Softmax」。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>Sigmoid</b>：一種經典啟動函數，特徵是把輸出全部壓縮到「0 到 1」之間，看起來像機率值，但在深層網路容易引發梯度消失。</li><li><b>ReLU</b>：神經網路最受歡迎的啟動函數。遇到負數變0，正數保持不變。這能簡單快速保留訊號特徵並引進非線性。</li></ul>",
+          ],
+          memoryTip: "模型學不到複雜特徵，先檢查有沒有足夠非線性。",
+          mnemonic: "表達不夠換 ReLU",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 28,
+          answer: "C",
+          question:
+            "一家零售電商公司希望建立顧客流失預測模型，用以判斷哪些會員可能在三個月內不再消費。團隊以去年會員資料進行訓練，並僅採用「曾經購買三次以上」的活躍顧客紀錄作為樣本。模型上線後，對整體會員進行預測時，發現模型對於新註冊會員與低消費會員的預測準確率明顯偏低。下列何者為造成此現象最可能的原因？",
+          options: {
+            A: "特徵設計未排除與會員忠誠度高度相關的變數，導致特徵偏差（Feature Bias）",
+            B: "標記（Label）由人工標註，導致標籤偏差（Label Bias）",
+            C: "訓練樣本僅涵蓋高活躍顧客，造成取樣偏差（Sampling Bias）",
+            D: "模型未進行超參數調整，導致過擬合（Overfitting）",
+          },
+          explanation:
+            "【答案：C — 訓練樣本僅涵蓋高活躍顧客，造成取樣偏差（Sampling Bias）】<br><br>取樣偏差（Sampling Bias）指的是訓練資料的<b>樣本不具代表性</b>——訓練集所涵蓋的族群，與模型實際需要預測的目標族群之間存在系統性差異，導致模型無法泛化到未見過的群體。<br><br><b>▍為什麼選 C？</b><br>問題根源非常清晰：<br>• <b>訓練資料</b>：只有「購買三次以上的活躍顧客」；<br>• <b>預測目標</b>：全體會員（包含新註冊會員、低消費會員）。<br>模型從未在訓練中看過新會員或低消費者的行為模式，自然無法對他們做出準確預測。這是典型的取樣偏差——從特定子群體取樣，再強行推廣到全母體。<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>A — 特徵偏差：</b>特徵偏差是指使用了與目標相關但不應使用的特徵（如使用「未來資料」造成資料洩漏），題目沒有描述這類問題。</li><li><b>B — 標籤偏差：</b>題目沒有提到人工標注，也沒有說標籤帶有主觀偏見，排除。</li><li><b>D — 未調超參數導致過擬合：</b>過擬合是模型記住訓練雜訊，通常表現為訓練集準確、測試集差；但題目描述的是對「特定族群（新會員、低消費）」系統性預測失準，這是樣本代表性問題，不是過擬合。</li></ul><b>▍修正方法：</b>重新抽樣，確保訓練集包含各種活躍程度的會員；或使用分層抽樣（Stratified Sampling），讓各族群比例與母體一致。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>過擬合</b>：模型把練習題（訓練資料）死背下來，考得極高分，但在沒看過的題目（測試資料）上慘敗。</li></ul>",
+          ],
+          memoryTip: "訓練樣本只挑特定族群，常直接導向 sampling bias。",
+          mnemonic: "樣本偏，預測偏",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 29,
+          answer: "D",
+          question:
+            "在工業設備故障預測專案中，模型訓練與超參數調整均依賴於一段歷史數據作為驗證集。然而，隨著設備運行環境與工況條件的變化，原有驗證集已無法充分反映現況，導致模型在實際部署後的預測準確率逐漸下降。下列哪一種策略最能有效提升模型在長期運行環境中的穩健性與泛化能力？",
+          options: {
+            A: "固定驗證集內容，並透過模型正則化技巧（如 L2 正則化）強化模型泛化",
+            B: "將全部歷史資料納入訓練，不使用驗證集，依靠早期停止（Early Stopping）控制訓練",
+            C: "簡化模型架構，減少模型參數數量以降低過擬合風險",
+            D: "採用時間序列交叉驗證（Time Series Cross Validation）或滑動視窗驗證（Rolling Window Validation）方法，動態更新驗證資料以適應時間演進",
+          },
+          explanation:
+            "【答案：D — 採用時間序列交叉驗證或滑動視窗驗證，動態更新驗證資料】<br><br>問題核心是：設備運行環境隨時間演進，導致資料分布發生<b>概念漂移（Concept Drift）</b>。固定的驗證集只能反映過去某段時間的特性，無法代表當前環境，因此需要能夠<b>動態適應時間變化</b>的驗證策略。<br><br><b>▍為什麼選 D？</b><br><b>時間序列交叉驗證（Time Series CV）</b>：每一折的訓練集都在驗證集之前（不允許未來資料污染過去），隨著折數推進，訓練視窗逐漸擴大，模擬模型逐步在新資料上更新的過程。<br><b>滑動視窗驗證（Rolling Window）</b>：固定視窗大小，每次向前滑動一段時間，讓驗證集始終代表最近期的資料分布，能有效偵測模型在不同時期的穩定性。<br>兩種方法都確保：訓練集永遠在時間上早於驗證集，且驗證資料隨時間更新，貼近真實部署情境。<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>A — 固定驗證集 + L2 正則化：</b>正則化只能防止過擬合，無法解決驗證集過時（無法反映現況）的問題，根本原因未解決。</li><li><b>B — 全部歷史資料訓練，靠 Early Stopping：</b>沒有驗證集就無法監控模型在當前資料上的表現，且 Early Stopping 仍需要驗證集才能運作，邏輯矛盾。</li><li><b>C — 簡化模型架構：</b>降低模型複雜度可減少過擬合，但無法解決資料分布隨時間演進的核心問題。</li></ul><b>▍延伸：概念漂移應對策略</b>除了滑動視窗驗證，還有：定期重新訓練（Retraining）、線上學習（Online Learning）、模型監控 + PSI 偵測分布偏移。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>泛化能力</b>：預測模型除了在訓練背熟答案外，真正在「面對沒看過的新資料」時也能給出準確預測的能力。</li><li><b>交叉驗證</b>：把資料切塊，輪流拿一塊當考卷、其他當練習題，藉此反覆測試模型真實實力的方法。</li><li><b>早期停止</b>：AI在訓練過程中，一旦發現「在驗證集」越考越差時，就提早結束訓練以防止過擬合。</li><li><b>過擬合</b>：模型把練習題（訓練資料）死背下來，考得極高分，但在沒看過的題目（測試資料）上慘敗。</li></ul>",
+          ],
+          memoryTip: "資料會隨時間變，就要用時間感知的驗證法。",
+          mnemonic: "時間資料用滑窗",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 30,
+          answer: "C",
+          question:
+            "某情感分析模型在英文資料集上取得macro F1-score = 0.91。當該模型部署於西班牙文資料集時，F1-score 驟降至0.58。下列哪一項解釋最合理，且與F1-score 變化相關？",
+          options: {
+            A: "macro F1-score 本身波動性高，建議改用 micro-average F1-score 評估",
+            B: "模型在西班牙文語料上過度擬合，導致評估結果偏高",
+            C: "語言轉移造成召回率（Recall）下降，模型無法正確辨識關鍵情緒詞彙",
+            D: "以均方誤差（MSE）取代 F1-score 評估可獲得更準確的結果",
+          },
+          explanation:
+            "【答案：C — 語言轉移造成召回率下降，模型無法正確辨識關鍵情緒詞彙】<br><br>模型在英文資料上 F1 = 0.91，部署到西班牙文後驟降至 0.58，是典型的<b>語言轉移（Language Transfer）</b>問題，也稱為<b>跨語言泛化失敗</b>。<br><br><b>▍為什麼選 C？</b><br>情感分析模型在英文訓練集中學習到的是英文情緒詞彙的語義表示（如 &ldquo;terrible&rdquo;、&ldquo;amazing&rdquo;）。切換到西班牙文後：<br>① 情緒詞彙完全不同（如 &ldquo;terrible&rdquo; → &ldquo;terrible&rdquo; 雖同形但語境不同，&ldquo;amazing&rdquo; → &ldquo;increíble&rdquo;）；<br>② 語言語法結構不同（西班牙文的否定語序等）；<br>③ 模型大量漏判西班牙文情緒詞 → <b>Recall（召回率）下降</b>。<br>Recall 下降 → F1 = 2PR/(P+R) 分母增大分子縮小 → F1 大幅下滑，完全吻合題目描述。<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>A — macro F1 波動性高，改用 micro-average：</b>這是指標選擇問題。macro F1 對每個類別等權重計算，不偏向多數類，本身沒有「波動性高」的問題。且換成 micro-average F1 不會解決跨語言泛化失敗的根本問題。</li><li><b>B — 在西班牙文語料上過擬合：</b>過擬合需要在西班牙文上訓練過，但模型根本沒有西班牙文訓練資料，此選項邏輯矛盾。</li><li><b>D — 改用 MSE 評估：</b>MSE 是迴歸指標，情感分析是分類任務，用 MSE 完全不合適，且不解決任何問題。</li></ul><b>▍解決語言轉移的方法：</b>多語言預訓練模型（如 mBERT、XLM-R）、遷移學習（Transfer Learning）、加入西班牙文資料微調（Fine-tuning）。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>情感分析</b>：AI判斷一段文字帶有正向、負向或中立情緒的技術。</li><li><b>召回率</b>：在所有「真正標準答案」中，AI成功挑出抓中幾個。注重的是「不要漏抓」。</li><li><b>F1分數</b>：綜合考量「精確率」和「召回率」的調和平均，常在正負樣本不平衡時用來評估模型好壞。</li><li><b>RAG</b>：讓AI回答問題前，先去系統裡「搜尋正確的參考文件」，再根據搜到的內容回答，減少AI亂編。</li><li><b>精確率</b>：AI判斷為「陽性或有罪」的所有結果中，到底有多少是真的。注重的是減少「誤報/抓錯人」。</li><li><b>MSE</b>：把每次預測的「誤差值平方」再全加起來算平均，數值越小代表模型整體猜得越準。</li></ul>",
+          ],
+          memoryTip: "換語言後 F1 大跌，優先想語言轉移與召回下降。",
+          mnemonic: "跨語言掉召回",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 31,
+          answer: "B",
+          question:
+            "某能源公司利用歷史氣象與用電資料，開發長期電力需求預測模型，採用深度神經網路架構進行訓練。在訓練過程中，模型在訓練集上的損失值持續下降，但在驗證集上，損失在第80輪後開始波動，呈現週期性上升與下降。團隊懷疑模型受到季節性資料波動與隨機噪音影響，導致驗證損失難以穩定收斂。若要在此情境下合理運用早期停止法（Early Stopping）以確保模型具最佳泛化能力，下列哪一項策略最為適當？",
+          options: {
+            A: "直接根據訓練集損失最低點停止訓練，以確保模型充分擬合所有樣本",
+            B: "監控驗證集損失並設定適度的耐心值（Patience），在連續多輪未改善後再停止訓練",
+            C: "改以測試集損失作為早停依據，以提升模型最終評估一致性",
+            D: "將所有資料重新合併後訓練至收斂，避免因資料分割導致評估波動",
+          },
+          explanation:
+            "【答案：B — 監控驗證集損失並設定適度的耐心值（Patience）】<br><br>Early Stopping 的本質是：用<b>驗證集</b>的表現當作訓練應停的訊號，而不是訓練集損失。題目描述的驗證損失「週期性波動」，若 patience 設太小（如 1–2 輪），模型可能在暫時波動期就被過早喊停，導致未找到真正最佳點。<br><br><b>▍為什麼選 B？</b><br>正確 Early Stopping 流程：<br>① 每個 epoch 記錄驗證集損失；<br>② 若驗證損失達到新低，儲存當前模型權重（checkpoint）；<br>③ 若連續 <b>patience 輪</b>驗證損失都沒有改善，停止訓練並還原至最佳 checkpoint。<br>對於題目描述的「季節性波動」場景，設定較大的 patience（如 10–20 輪）可讓模型在短暫波動中繼續尋找更低的驗證損失，避免被暫時的局部高點嚇跑。<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>A — 根據訓練集損失最低點停止：</b>訓練集損失會持續下降（甚至過擬合後仍下降），以此為停點會讓模型過擬合。Early Stopping 的核心邏輯就是<b>不能看訓練集</b>。</li><li><b>C — 改以測試集損失作為早停依據：</b>測試集是最終評估用的「考試卷」，訓練過程中絕對不能接觸，否則等同於用考試卷調參，破壞評估的公正性（Data Leakage）。</li><li><b>D — 合併所有資料訓練至收斂：</b>沒有驗證集就無法執行 Early Stopping，且把測試集混入訓練是嚴重的資料洩漏。</li></ul><b>▍口訣：</b>「Early Stopping 盯驗證、用 patience 等待、存最佳 checkpoint、絕不碰測試集」。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>泛化能力</b>：預測模型除了在訓練背熟答案外，真正在「面對沒看過的新資料」時也能給出準確預測的能力。</li><li><b>早期停止</b>：AI在訓練過程中，一旦發現「在驗證集」越考越差時，就提早結束訓練以防止過擬合。</li></ul>",
+          ],
+          memoryTip: "早停一定盯驗證集，不盯訓練集，更不能盯測試集。",
+          mnemonic: "早停看驗證",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 32,
+          answer: "D",
+          question:
+            "某電信公司開發客戶流失預測模型，使用大量顧客行為特徵，例如通話時長、上網頻率、帳單金額、客服聯絡次數等。在訓練過程中，團隊發現部分特徵彼此高度相關，但同時也懷疑有些特徵對流失預測的貢獻度有限。若希望模型在避免過擬合（Overfitting）的同時，能自動篩選出較具代表性的特徵，採用下列哪一種方法最為合適？",
+          options: {
+            A: "使用早期停止法（Early Stopping）控制訓練回合數，避免過擬合（Overfitting）",
+            B: "同時移除多重共線性特徵並採用L2正則化（Ridge），以確保模型穩定收斂",
+            C: "僅使用L2正則化（Ridge），抑制所有權重幅度但保留全部特徵",
+            D: "採用L1正則化（Lasso），透過懲罰項使部分特徵係數縮為0",
+          },
+          explanation:
+            "【答案：D — 採用 L1 正則化（Lasso），使部分特徵係數縮為 0】<br><br>題目有兩個同時存在的需求：① 防止過擬合；② <b>自動篩選特徵</b>（使貢獻有限的特徵自動消失）。只有 L1 正則化能同時滿足這兩點。<br><br><b>▍為什麼選 D？</b><br>L1 正則化在損失函數中加入 λΣ|wᵢ| 懲罰項。其幾何特性使最優解傾向落在稀疏點（部分係數恰好等於 0），等效於自動執行特徵選擇。對於「通話時長、上網頻率、帳單金額、客服次數」這類可能高度相關且貢獻不均的特徵，L1 能自動保留重要特徵、剔除冗余特徵。<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>A — Early Stopping：</b>Early Stopping 控制訓練輪數以防過擬合，但<b>完全不具備特徵選擇功能</b>，所有特徵仍保留在模型中。</li><li><b>B — 移除共線性特徵 + L2：</b>L2（Ridge）只縮小係數但不歸零，無法自動篩選特徵；人工移除共線性特徵雖然有效，但這是手動操作，不是「自動篩選」。</li><li><b>C — 僅用 L2（Ridge）：</b>L2 讓所有特徵係數縮小但保留，不歸零，無法達到自動特徵篩選的目的。</li></ul><b>▍L1 vs L2 一句話：</b>「L1 做手術（切除不重要特徵），L2 做物理治療（讓所有特徵縮小但不除去）」。<br><br><b>▍延伸：Elastic Net</b> = L1 + L2 組合，兼顧稀疏性與穩定性，適合特徵數量極多且存在高度共線性的場景。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>多重共線性</b>：當你用來預測的多個特徵間高度相關（例如坪數和平方公尺），會讓模型係數計算混亂的問題。</li><li><b>早期停止</b>：AI在訓練過程中，一旦發現「在驗證集」越考越差時，就提早結束訓練以防止過擬合。</li><li><b>LASSO</b>：透過數學懲罰，強迫模型把不重要特徵的係數直接變成零，自動幫你做到「特徵篩選」。</li><li><b>L2正則化</b>：透過懲罰，強迫模型所有的特徵係數都盡量縮小變平滑（但不歸零），讓模型預測不易過度波動。</li><li><b>過擬合</b>：模型把練習題（訓練資料）死背下來，考得極高分，但在沒看過的題目（測試資料）上慘敗。</li></ul>",
+          ],
+          memoryTip: "要「自動篩特徵」就優先想到 L1/Lasso。",
+          mnemonic: "要篩特徵選 L1",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 33,
+          answer: "B",
+          question:
+            "某資料科學團隊正在開發一個客戶相似度比對系統，用於計算所有客戶之間的相似度分數。若系統需逐一比對每一位客戶與其他所有客戶的資料組合，此時演算法的時間複雜度最可能為哪一種？其代表意義為何？",
+          options: {
+            A: "O(n) — 執行時間與資料量成線性關係",
+            B: "O(n²) — 執行時間與資料量平方成正比",
+            C: "O(1) — 執行時間固定不變",
+            D: "O(log n) — 執行時間與資料量呈對數成長關係",
+          },
+          explanation:
+            "【答案：B — O(n²)，執行時間與資料量平方成正比】<br><br>若系統有 n 位客戶，且每位客戶都需與「其他所有客戶」各比對一次，總比對次數為 n×(n−1)，即約 n² 次，時間複雜度為 <b>O(n²)</b>。<br><br><b>▍為什麼選 B？</b><br>具體計算：<br>• 100 位客戶 → 約 10,000 次比對；<br>• 1,000 位客戶 → 約 1,000,000 次比對；<br>• 10,000 位客戶 → 約 100,000,000 次比對。<br>客戶數翻 10 倍，計算次數翻 100 倍，這正是 O(n²) 的典型特徵——<b>隨資料量平方級成長</b>，大規模應用時會成為嚴重效能瓶頸。<br><br><b>▍四種常見複雜度比較：</b><br><ul><li><b>O(1) — 常數時間：</b>無論資料多少，執行時間固定（如雜湊表查詢）。</li><li><b>O(log n) — 對數時間：</b>每步縮小一半搜尋範圍（如二分搜尋）。1000 筆資料約需 10 步。</li><li><b>O(n) — 線性時間：</b>執行次數與資料量成正比（如線性搜尋）。資料翻倍，時間翻倍。</li><li><b>O(n²) — 平方時間：</b>兩兩比對、巢狀迴圈（如氣泡排序、本題）。資料翻倍，時間變 4 倍。</li></ul><b>▍實務優化方向：</b>相似度計算常用 LSH（Locality-Sensitive Hashing）或 ANN（Approximate Nearest Neighbors，如 FAISS）將複雜度從 O(n²) 降至接近 O(n log n)，是向量資料庫的核心技術。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>時間複雜度 O\\(n²\\)</b>：代表演算法需要計算「資料量平方」的次數（100筆就要1萬次），只要資料一多就會慢到跑不動。</li></ul>",
+          ],
+          memoryTip: "兩兩全比對，幾乎都先猜平方級。",
+          mnemonic: "兩兩比平方",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 34,
+          answer: "D",
+          question:
+            "某醫療人工智慧團隊正在開發心臟病風險預測模型，資料量僅有150筆，其中陽性個案不到8%。由於樣本數稀少且類別分布極不平衡，團隊希望在有限資料下，仍能準確評估模型在不同資料上的表現穩定性，同時避免訓練資料被過度切分而影響模型效能。若團隊希望在有限樣本下，同時兼顧資料的利用率與各類別在驗證折中的比例一致性，最適合採用下列哪一種交叉驗證方法？",
+          options: {
+            A: "5-Fold交叉驗證（5-Fold Cross Validation）",
+            B: "留一法交叉驗證（Leave-One-Out Cross Validation）",
+            C: "隨機交叉驗證（Random Cross Validation）",
+            D: "分層留一法交叉驗證（Stratified Leave-One-Out Cross Validation）",
+          },
+          explanation:
+            "【答案：D — 分層留一法交叉驗證（Stratified Leave-One-Out Cross Validation）】<br><br>本題有兩個同時存在的限制：① 樣本數極少（150 筆）；② 類別分布嚴重不平衡（陽性僅 8%，約 12 筆）。需要找到一種方法同時滿足「最大化資料利用率」與「各折維持類別比例」。<br><br><b>▍各方法逐一分析：</b><br><ul><li><b>A — 5-Fold CV：</b>每次用 80% 訓練、20% 驗證。樣本只有 150 筆時，驗證集僅 30 筆，其中陽性約 2–3 筆，評估不穩定。且未保證每折的陽性比例一致。</li><li><b>B — Leave-One-Out CV（LOO-CV）：</b>每次留 1 筆做驗證，其餘 149 筆訓練，資料利用率最高。但<b>無分層機制</b>，無法保證每個驗證折都包含陽性樣本比例，12 筆陽性樣本可能集中在某幾折，評估結果偏差。</li><li><b>C — 隨機交叉驗證：</b>非正式的標準方法，亦無保證分層，排除。</li><li><b>D — Stratified LOO-CV：</b>結合 LOO 的<b>最高資料利用率</b>（每次用 149 筆訓練），與分層機制的<b>類別比例保持一致</b>，完全對應題目的兩個核心需求。</li></ul><b>▍關鍵判斷邏輯：</b><br>• 題目說「避免訓練資料被過度切分」→ 要盡量多用訓練資料 → 指向 LOO（而非 5-fold）；<br>• 題目說「各類別在驗證折中的比例一致性」→ 要分層（Stratified）；<br>• 兩者合一 → Stratified LOO-CV。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>交叉驗證</b>：把資料切塊，輪流拿一塊當考卷、其他當練習題，藉此反覆測試模型真實實力的方法。</li></ul>",
+          ],
+          memoryTip: "少樣本又不平衡，要同時想到「分層」和「盡量用滿資料」。",
+          mnemonic: "少又偏，用分層留一",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 35,
+          answer: "A",
+          question:
+            "某公司針對製程感測器資料進行主成分分析（PCA），經標準化與協方差矩陣分解後，得到三個主成分的特徵值如下：λ1=6.0, λ2=3.0, λ3=1.0。若團隊決定僅保留能解釋至少 80% 總變異量的主成分，以進行後續模型建構，下列哪一項敘述最合理且數據解讀正確？",
+          options: {
+            A: "前兩個主成分合計解釋90%的總變異量，因此可安全降維至二維，且仍保留大部分資訊",
+            B: "第一主成分解釋60%的變異量，表示資料結構呈現明顯線性關係，僅保留一維即可避免過擬合",
+            C: "雖然前兩個主成分可解釋超過 80% 變異量，但第二主成分貢獻仍高達30%，不宜捨棄第三主成分",
+            D: "三個特徵值相差不大，顯示各主成分變異均衡，降維可能導致資訊損失",
+          },
+          explanation:
+            "【答案：A — 前兩個主成分合計解釋 90% 的總變異量，可安全降維至二維】<br><br>PCA 的降維依據是各主成分<b>特徵值佔總特徵值的比例</b>，即解釋變異量（Explained Variance Ratio）。<br><br><b>▍計算過程：</b><br>總特徵值 = λ1 + λ2 + λ3 = 6.0 + 3.0 + 1.0 = <b>10.0</b><br>• PC1 解釋率 = 6.0 / 10.0 = <b>60%</b><br>• PC2 解釋率 = 3.0 / 10.0 = <b>30%</b><br>• PC3 解釋率 = 1.0 / 10.0 = <b>10%</b><br>• PC1 + PC2 累積解釋率 = <b>90%</b> ≥ 80%（門檻）<br><br>∴ 保留前兩個主成分即可，降維至二維，損失 10% 的資訊（第三主成分）。<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>B — 第一主成分解釋 60%，僅保留一維即可避免過擬合：</b>門檻是 80%，PC1 只有 60%，不滿足條件；且 PCA 降維的目的是壓縮資訊，不是直接避免過擬合（兩者有關但並非等號）。</li><li><b>C — 第二主成分貢獻 30%，不宜捨棄第三主成分：</b>前兩個主成分已達 90% ≥ 80%，完全滿足門檻，第三主成分只剩 10% 貢獻，捨棄它是合理的。</li><li><b>D — 三個特徵值相差不大，降維可能損失資訊：</b>6.0 : 3.0 : 1.0 差距明顯，並非均衡；且降維必然有資訊損失，關鍵是損失量（10%）是否在可接受範圍內，而非損失與否。</li></ul><b>▍PCA 解題固定流程：</b>① 加總所有特徵值；② 逐一計算各 PC 的解釋率；③ 累積到滿足門檻的 PC 數即為保留維度。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>PCA</b>：把原本很多、很雜的資料特徵，濃縮轉換成幾個互不干擾、且能保留最大資訊量的「主成分」。</li><li><b>特徵縮放</b>：把數值大小差別很大的各種欄位，轉換壓縮到差不多的數值範圍，避免模型大小眼。</li><li><b>過擬合</b>：模型把練習題（訓練資料）死背下來，考得極高分，但在沒看過的題目（測試資料）上慘敗。</li></ul>",
+          ],
+          memoryTip: "PCA 題先把特徵值加總，再算累積比例。",
+          mnemonic: "先總和再累積",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 36,
+          answer: "D",
+          question:
+            "某銀行計畫與多家合作機構共同訓練一個AI信用風險預測模型，為避免客戶交易資料在傳輸與運算過程中外洩，技術團隊評估使用同態加密（Homomorphic Encryption）技術。下列何者最能正確描述同態加密在此應用中的關鍵特性？",
+          options: {
+            A: "系統以隨機雜訊（Noise）干擾輸出，確保統計結果不洩漏個資",
+            B: "各參與銀行透過安全通道交換私鑰，確保模型參數一致",
+            C: "將原始資料壓縮並同時加密，以減少加密後資料量與運算時間",
+            D: "資料在加密狀態下仍可進行數值運算，模型訓練可於未解密資料上完成",
+          },
+          explanation:
+            "【答案：D — 資料在加密狀態下仍可進行數值運算，模型訓練可於未解密資料上完成】<br><br>同態加密（Homomorphic Encryption, HE）是密碼學中的突破性技術，其核心特性為：對加密資料進行的數學運算，其結果解密後<b>等同於對原始明文執行相同運算的結果</b>。<br><br><b>▍為什麼選 D？</b><br>以本題銀行場景為例：<br>• 各銀行將客戶資料加密後上傳至平台；<br>• 平台在<b>不解密任何資料</b>的情況下，對密文執行梯度計算、模型更新等運算；<br>• 運算結果仍為密文，回傳各銀行後解密，得到與明文運算相同的模型參數。<br>全程資料從未暴露給平台，完美滿足「任何時間不得被平台解密」的監管需求。<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>A — 以隨機雜訊干擾輸出：</b>這是<b>差分隱私（Differential Privacy）</b>的機制，在統計輸出中加入校準噪音以防個資被反推，與同態加密的密文運算無關。</li><li><b>B — 透過安全通道交換私鑰：</b>這是<b>金鑰交換協議</b>（如 Diffie-Hellman）或非對稱加密的概念，不是同態加密的特性。</li><li><b>C — 壓縮並加密以減少資料量：</b>描述的是一般的壓縮加密，同態加密反而因為密文結構複雜，資料量通常比明文<b>更大</b>，不以壓縮為目的。</li></ul><b>▍同態加密 vs 差分隱私：</b><br>• 同態加密：密文上直接運算，資料不暴露；<br>• 差分隱私：加噪音讓個人資訊無法被反推；<br>兩者常在聯邦學習（Federated Learning）中搭配使用。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>同態加密</b>：能在「不解密」的狀態下，直接拿加密的資料作數學運算的技術，非常保護隱私。</li></ul>",
+          ],
+          memoryTip: "同態加密最常考的句子就是「密文上可運算」。",
+          mnemonic: "密文也能算",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 37,
+          answer: "B",
+          question:
+            "某跨銀行風控平台希望整合多家銀行的用戶行為資料，用於訓練信用風險預測模型。由於競爭與法規限制，各銀行僅願意提供加密後資料，且資料在任何時間不得被平台解密。同時，平台需建立安全通訊協議以確保資料在傳輸過程未被竄改或重放。下列哪一組技術最能完整對應上述需求？",
+          options: {
+            A: "對稱加密（Symmetric Encryption）＋ 單向雜湊（Hash Function）＋ 非對稱加密（Asymmetric Encryption）＋ 差分隱私（Differential Privacy）",
+            B: "同態加密（Homomorphic Encryption）＋ 非對稱加密（Asymmetric Encryption）＋ 單向雜湊（One-way Hash Function）＋ 對稱加密（Symmetric Encryption）",
+            C: "差分隱私（Differential Privacy）＋ 對稱加密（Symmetric Encryption）＋ 同態加密（Homomorphic Encryption）＋ 數位簽章（Digital Signature）",
+            D: "同態加密（Homomorphic Encryption）＋ 安全多方計算（Secure Multi-party Computation, MPC）＋ 雜湊函數（Hash Function）＋ 對稱加密（Symmetric Encryption）",
+          },
+          explanation:
+            "【答案：B — 同態加密＋非對稱加密＋單向雜湊＋對稱加密】<br><br>本題需求拆解為四個面向，逐一對應正確技術：<br><br><b>① 密文狀態下仍可訓練模型（資料不解密可運算）</b><br>→ <b>同態加密（Homomorphic Encryption）</b>：平台在密文上執行模型訓練，各銀行資料永不暴露。<br><br><b>② 安全傳遞金鑰（確保只有合法方能解密）</b><br>→ <b>非對稱加密（Asymmetric Encryption，如 RSA）</b>：用公鑰加密、私鑰解密，安全完成金鑰交換，不需提前共享秘密。<br><br><b>③ 確保傳輸中資料未被竄改（完整性驗證）</b><br>→ <b>單向雜湊函數（One-way Hash Function，如 SHA-256）</b>：對資料計算雜湊值，傳送方與接收方比對雜湊，若一致則資料未被篡改。<br><br><b>④ 高效加密通訊通道（傳輸效率）</b><br>→ <b>對稱加密（Symmetric Encryption，如 AES）</b>：比非對稱加密速度快得多，適合大量資料傳輸的通道加密，TLS 即採用此混合模式。<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>A：</b>包含差分隱私但缺少同態加密。差分隱私加噪音會影響模型精度，不適合此需求；且沒有同態加密就無法實現密文運算。</li><li><b>C：</b>包含數位簽章但缺少非對稱加密的金鑰交換機制；且差分隱私與同態加密功能重疊，組合冗余。</li><li><b>D：</b>包含安全多方計算（MPC），MPC 與同態加密功能高度重疊，且沒有非對稱加密處理金鑰安全傳遞，通訊安全不完整。</li></ul><b>▍解題口訣：</b>「密文運算找同態，金鑰交換找非對稱，完整性找雜湊，快速通道找對稱」。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>差分隱私</b>：透過加入受控噪音，確保就算公開了總體統計數據，別人也無法反推出你個人的私密資料。</li><li><b>同態加密</b>：能在「不解密」的狀態下，直接拿加密的資料作數學運算的技術，非常保護隱私。</li></ul>",
+          ],
+          memoryTip:
+            "這類組合題先拆需求：密文運算、金鑰交換、完整性、傳輸效率。",
+          mnemonic: "算鑰驗傳四件組",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 38,
+          answer: "B",
+          question: "下列程式碼所計算的是哪一類型的評估指標？",
+          code: "def metric(y_true, y_pred):\n    return sum((y_true - y_pred) ** 2) / len(y_true)",
+          options: {
+            A: "MAE",
+            B: "MSE",
+            C: "RMSE",
+            D: "R²",
+          },
+          explanation:
+            "【答案：B — MSE（均方誤差，Mean Squared Error）】<br><br>逐行拆解程式碼：<br><code style='display:block;background:#f4f7fb;border-radius:8px;padding:10px 14px;margin:10px 0;font-size:0.97em;'>def metric(y_true, y_pred):<br>&nbsp;&nbsp;&nbsp;&nbsp;return sum((y_true - y_pred) ** 2) / len(y_true)</code><br>① <b>(y_true - y_pred)</b>：計算每筆資料的預測誤差（殘差）；<br>② <b>** 2</b>：對每個誤差取平方（消除正負號，並放大大誤差的懲罰）；<br>③ <b>sum(...)</b>：將所有平方誤差加總；<br>④ <b>/ len(y_true)</b>：除以樣本數 n，取平均。<br><br>這正是 MSE 的定義公式：<b>MSE = (1/n) × Σ(yᵢ − ŷᵢ)²</b><br><br><b>▍四大迴歸評估指標比較：</b><br><ul><li><b>MAE（Mean Absolute Error）</b>：sum(|y_true − y_pred|) / n，對誤差取絕對值，不放大極端誤差，對異常值較不敏感。</li><li><b>MSE（Mean Squared Error）</b>：sum((y_true − y_pred)²) / n，對誤差取平方，<b>放大大誤差的懲罰</b>，對異常值較敏感。本題即為此。</li><li><b>RMSE（Root Mean Squared Error）</b>：√MSE，在 MSE 的基礎上多做一步開根號，使誤差單位與目標變數相同（可直觀解讀）。若程式碼最後加一行 <code>** 0.5</code> 或 <code>np.sqrt(...)</code> 才是 RMSE。</li><li><b>R²（決定係數）</b>：1 − SS_res/SS_tot，衡量模型解釋變異的比例，範圍通常為 [0, 1]，公式結構完全不同。</li></ul><b>▍本題判斷關鍵：</b>有平方（** 2）有平均（/ len）→ MSE；若再加開根號 → RMSE；若用絕對值（abs）→ MAE。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>MSE</b>：把每次預測的「誤差值平方」再全加起來算平均，數值越小代表模型整體猜得越準。</li><li><b>RMSE</b>：把 MSE 算好的結果再進行「開根號」，這樣誤差單位的量級就能跟原始要預測的目標單位一樣了。</li></ul>",
+          ],
+          memoryTip: "平方再平均是 MSE；平方、平均、再開根才是 RMSE。",
+          mnemonic: "平方均值是 MSE",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 39,
+          answer: "C",
+          question: "附圖程式碼實現的是哪一種正則化技術？",
+          code: "def forward(x, p, training=True):\n    if training:\n        mask = np.random.binomial(1, p, size=x.shape)\n        return x * mask / p\n    else:\n        return x",
+          options: {
+            A: "L1正則化",
+            B: "L2正則化",
+            C: "Dropout",
+            D: "Batch Normalization",
+          },
+          explanation:
+            "【答案：C — Dropout】<br><br><b>▍逐行拆解程式碼邏輯：</b><br><ul><li><b>def forward(x, p, training=True):</b> 定義前向傳播函數，p 是保留神經元的機率（dropout rate = 1-p）</li><li><b>if training:</b> 區分訓練與推論階段</li><li><b>mask = np.random.binomial(1, p, size=x.shape)</b> 生成伯努利隨機遮罩，每個神經元以機率 p 被保留（mask=1），機率 1-p 被丟棄（mask=0）</li><li><b>return x * mask / p</b> 將輸入與遮罩相乘（丟棄被選中的神經元），再除以 p（稱為 Inverted Dropout，訓練時就調整尺度，推論時無需改動）</li><li><b>else: return x</b> 推論時直接返回原始輸入（因為訓練時已調整尺度）</li></ul><b>▍為什麼排除其他選項？</b><br><ul><li><b>A — L1 正則化（Lasso）：</b>在損失函數中加入 λΣ|w| 懲罰項，直接對權重加罰，程式碼中完全沒有；通常寫作 <code>loss += lambda * sum(abs(params))</code></li><li><b>B — L2 正則化（Ridge）：</b>在損失函數中加入 λΣw² 懲罰項，同樣是對權重加罰；程式碼中也沒有</li><li><b>D — Batch Normalization：</b>對每個批次內的激活值做標準化（均值 0、標準差 1），程式碼中沒有計算均值、標準差、以及 γ、β 可學習參數的跡象</li></ul><b>▍Dropout 的核心機制：</b><br>在訓練時，Dropout 隨機「關掉」一部分神經元（設定為 0），強迫剩餘的神經元彼此獨立學習，避免神經元間過度共適應（co-adaptation），從而降低過擬合風險。推論時保留所有神經元以獲得完整的預測能力。<br><br><b>▍Inverted Dropout 與標準 Dropout 的差異：</b><br>• <b>標準 Dropout：</b>訓練時 <code>return x * mask</code>，推論時需調整 <code>x * (1-dropout_rate)</code><br>• <b>Inverted Dropout（本題）：</b>訓練時 <code>return x * mask / p</code>，推論時無需調整，直接使用，更方便<br><b>▍記憶口訣：</b>「訓練隨機丟、推論全保留」、「Dropout = 隨機關神經元」。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>LASSO</b>：透過數學懲罰，強迫模型把不重要特徵的係數直接變成零，自動幫你做到「特徵篩選」。</li><li><b>L2正則化</b>：透過懲罰，強迫模型所有的特徵係數都盡量縮小變平滑（但不歸零），讓模型預測不易過度波動。</li><li><b>Dropout</b>：神經網路訓練常用絕招，故意在每一次訓練時隨機「關掉」一些神經元，強迫剩下的神經元獨立思考避免死背。</li><li><b>批次正規化</b>：在網路層與層之間，馬上將傳遞的數字「標準化（均值0標準差1）」，能防止數字爆掉，讓訓練快又穩。</li><li><b>過擬合</b>：模型把練習題（訓練資料）死背下來，考得極高分，但在沒看過的題目（測試資料）上慘敗。</li></ul>",
+          ],
+          memoryTip: "看到隨機關閉部分神經元，就幾乎是 Dropout。",
+          mnemonic: "隨機關節點",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 40,
+          answer: "C",
+          question: "依據附圖程式碼進行資料處理，下列何者正確？",
+          code: "import numpy as np\n\nv1 = np.array([1, 2, 3])\nv2 = np.array([4, 5, 6])\nA = np.array([[1, 2], [3, 4]])",
+          options: {
+            A: "np.linalg.inv(A) 計算矩陣 A 的行列式",
+            B: "v1 * v2 結果為 array([5, 7, 9])",
+            C: "np.dot(v1, v2) 結果為 np.int64(32)",
+            D: "np.linalg.eig(A) 計算矩陣 A 的反矩陣",
+          },
+          explanation:
+            "【答案：C — np.dot(v1, v2) 結果為 np.int64(32)】<br><br><b>▍逐項驗證：</b><br><ul><li><b>A — np.linalg.inv(A) 計算矩陣 A 的行列式：</b><b>錯誤</b>。np.linalg.inv(A) 計算的是<b>矩陣的逆矩陣（Inverse Matrix）</b>，不是行列式。行列式應使用 np.linalg.det(A)。<br>inv(A) 結果：<code style='display:inline;background:#f5f5f5;padding:2px 6px;border-radius:4px;'>array([[-2., 1.], [1.5, -0.5]])</code>，不是單一數值</li><li><b>B — v1 * v2 結果為 array([5, 7, 9])：</b><b>錯誤</b>。v1 * v2 在 NumPy 中執行<b>逐元素乘法（Element-wise Multiplication）</b>，不是向量內積。<br>正確結果：<code style='display:inline;background:#f5f5f5;padding:2px 6px;border-radius:4px;'>v1 * v2 = [1×4, 2×5, 3×6] = [4, 10, 18]</code>，不是 [5,7,9]</li><li><b>C — np.dot(v1, v2) 結果為 np.int64(32)：</b><b>正確！</b>np.dot() 計算向量內積（點積）。<br>計算過程：1×4 + 2×5 + 3×6 = 4 + 10 + 18 = <b>32</b><br>結果為單一純量，型別為 np.int64</li><li><b>D — np.linalg.eig(A) 計算矩陣 A 的反矩陣：</b><b>錯誤</b>。np.linalg.eig(A) 計算的是<b>特徵值與特徵向量（Eigenvalues & Eigenvectors）</b>，不是反矩陣。反矩陣應使用 np.linalg.inv(A)</li></ul><b>▍NumPy 線性代數函數對照表：</b><br><table style='border-collapse:collapse;margin:10px 0;'><tr><td style='border:1px solid #ddd;padding:8px;'><b>函數</b></td><td style='border:1px solid #ddd;padding:8px;'><b>功能</b></td><td style='border:1px solid #ddd;padding:8px;'><b>傳回值</b></td></tr><tr><td style='border:1px solid #ddd;padding:8px;'>np.dot(v1, v2)</td><td style='border:1px solid #ddd;padding:8px;'>向量內積</td><td style='border:1px solid #ddd;padding:8px;'>純量</td></tr><tr><td style='border:1px solid #ddd;padding:8px;'>v1 * v2</td><td style='border:1px solid #ddd;padding:8px;'>逐元素乘法</td><td style='border:1px solid #ddd;padding:8px;'>向量</td></tr><tr><td style='border:1px solid #ddd;padding:8px;'>np.linalg.inv(A)</td><td style='border:1px solid #ddd;padding:8px;'>矩陣逆矩陣</td><td style='border:1px solid #ddd;padding:8px;'>矩陣</td></tr><tr><td style='border:1px solid #ddd;padding:8px;'>np.linalg.det(A)</td><td style='border:1px solid #ddd;padding:8px;'>矩陣行列式</td><td style='border:1px solid #ddd;padding:8px;'>純量</td></tr><tr><td style='border:1px solid #ddd;padding:8px;'>np.linalg.eig(A)</td><td style='border:1px solid #ddd;padding:8px;'>特徵值、特徵向量</td><td style='border:1px solid #ddd;padding:8px;'>元組(值, 向量)</td></tr></table><b>▍向量內積 vs 逐元素乘法：</b><br>• <b>內積（np.dot）：</b>兩向量對應位置相乘再求和，結果為單一數值。用於計算向量間的相似度、投影等<br>• <b>逐元素乘法（*）：</b>對應位置分別相乘，結果仍為向量。用於廣播運算、mask 操作等<br><b>▍記憶口訣：</b>「dot 是內積、星號是逐元、inv 是反矩、eig 是特徵」。",
+          notes: [],
+          memoryTip: "NumPy 常考三件事：逐元素乘法、內積、矩陣函數不要搞混。",
+          mnemonic: "dot 是內積",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "選項背景知識",
+        },
+        {
+          no: 41,
+          answer: "D",
+          question:
+            "考慮擲出骰子並採用Monte Carlo方法估算條件機率，參考附圖程式碼。事件 A：擲出偶數。事件 B：擲出大於3。請問下列何者為條件機率P(A∣B)的正確值？",
+          code: "import numpy as np\n\nnp.random.seed(123)\nn = 100000\ndice_rolls = np.random.randint(1, 7, size=n)\n\nA = (dice_rolls % 2 == 0)\nB = (dice_rolls > 3)\nA_and_B = A & B",
+          options: {
+            A: "A_and_B.sum() / (A.sum() * B.sum())",
+            B: "A_and_B.sum() / (A.sum() + B.sum())",
+            C: "A_and_B.sum() / A.sum()",
+            D: "A_and_B.sum() / B.sum()",
+          },
+          explanation:
+            "【答案：D — A_and_B.sum() / B.sum()】<br><br><b>▍條件機率定義：</b><br>P(A∣B) = P(A∩B) / P(B) = 「A 和 B 同時發生的次數」/ 「B 發生的次數」<br><br><b>▍程式碼邏輯拆解：</b><br><ul><li><b>dice_rolls = np.random.randint(1, 7, size=n)</b>：模擬 100,000 次擲骰子（每次出現 1-6）</li><li><b>A = (dice_rolls % 2 == 0)</b>：布林陣列，標記偶數（2,4,6）的位置為 True</li><li><b>B = (dice_rolls > 3)</b>：布林陣列，標記大於3（4,5,6）的位置為 True</li><li><b>A_and_B = A & B</b>：布林陣列，標記既是偶數又大於3（4,6）的位置為 True</li></ul><b>▍計算 P(A∣B)：</b><br>骰子出現時：<br>• 事件 B（大於3）：{4,5,6}，共 3 種結果，佔 50%<br>• 事件 A∩B（既偶又>3）：{4,6}，共 2 種結果<br>• P(A∣B) = 2/3 ≈ 0.667<br><br>程式碼中：<br>• A_and_B.sum()：計數 A 和 B 同時為 True 的次數（≈50,000 次中的 2/3）<br>• B.sum()：計數 B 為 True 的次數（≈50,000 次）<br>• A_and_B.sum() / B.sum()：直接計算條件機率 ≈ 0.667<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>A — A_and_B.sum() / (A.sum() * B.sum())：</b>分母是兩個計數的乘積，沒有任何機率論意義，數值會非常小</li><li><b>B — A_and_B.sum() / (A.sum() + B.sum())：</b>分母是兩個計數的和，這是聯合機率的錯誤公式</li><li><b>C — A_and_B.sum() / A.sum()：</b>這計算的是 P(B∣A)（給定是偶數，大於3 的機率），不是 P(A∣B)</li></ul><b>▍Monte Carlo 方法的本質：</b><br>透過大量隨機模擬來估計機率，而不是直接計算。本題透過 100,000 次模擬，用<b>相對頻率近似理論機率</b>。樣本數越大，估計越精確。<br><b>▍記憶口訣：</b>「P(A∣B)，分子是交集，分母是 B」、「條件機率分母是條件事件」。",
+          notes: [],
+          memoryTip: "P(A|B) 一定記成「交集除以 B」。",
+          mnemonic: "條件分母放 B",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "選項背景知識",
+        },
+        {
+          type: "instruction",
+          title: "VGG16 模型架構說明",
+          preamble:
+            "VGG16 是由牛津大學 Visual Geometry Group(VGG)在 2014 年提出的經典卷積神經網路（Convolutional Neural Network, CNN）架構。該模型以簡潔且規則的層堆疊設計聞名，廣泛應用於影像分類、特徵提取及遷移學習等任務。附圖程式碼載入了預訓練的 VGG16 模型，並輸出其完整層級結構及參數統計摘要（如附表）。請根據此資訊回答 42~45 題。",
+          code: "from torchsummary import summary\nfrom torchvision import models\nmodel = models.vgg16(weights='IMAGENET1K_V1')\nsummary(model, (3,150,150))",
+          model_summary:
+            "================================================================\n        Layer (type)               Output Shape         Param #\n================================================================\n            Conv2d-1         [-1, 64, 150, 150]           1,792\n              ReLU-2         [-1, 64, 150, 150]               0\n            Conv2d-3         [-1, 64, 150, 150]          36,928\n              ReLU-4         [-1, 64, 150, 150]               0\n         MaxPool2d-5           [-1, 64, 75, 75]               0\n            Conv2d-6          [-1, 128, 75, 75]          73,856\n              ReLU-7          [-1, 128, 75, 75]               0\n            Conv2d-8          [-1, 128, 75, 75]         147,584\n              ReLU-9          [-1, 128, 75, 75]               0\n        MaxPool2d-10          [-1, 128, 37, 37]               0\n           Conv2d-11          [-1, 256, 37, 37]         295,168\n             ReLU-12          [-1, 256, 37, 37]               0\n           Conv2d-13          [-1, 256, 37, 37]         590,080\n             ReLU-14          [-1, 256, 37, 37]               0\n           Conv2d-15          [-1, 256, 37, 37]         590,080\n             ReLU-16          [-1, 256, 37, 37]               0\n        MaxPool2d-17          [-1, 256, 18, 18]               0\n           Conv2d-18          [-1, 512, 18, 18]       1,180,160\n             ReLU-19          [-1, 512, 18, 18]               0\n           Conv2d-20          [-1, 512, 18, 18]       2,359,808\n             ReLU-21          [-1, 512, 18, 18]               0\n           Conv2d-22          [-1, 512, 18, 18]       2,359,808\n             ReLU-23          [-1, 512, 18, 18]               0\n        MaxPool2d-24            [-1, 512, 9, 9]               0\n           Conv2d-25            [-1, 512, 9, 9]       2,359,808\n             ReLU-26            [-1, 512, 9, 9]               0\n           Conv2d-27            [-1, 512, 9, 9]       2,359,808\n             ReLU-28            [-1, 512, 9, 9]               0\n           Conv2d-29            [-1, 512, 9, 9]       2,359,808\n             ReLU-30            [-1, 512, 9, 9]               0\n        MaxPool2d-31            [-1, 512, 4, 4]               0\nAdaptiveAvgPool2d-32            [-1, 512, 7, 7]               0\n           Linear-33                 [-1, 4096]     102,764,544\n             ReLU-34                 [-1, 4096]               0\n          Dropout-35                 [-1, 4096]               0\n           Linear-36                 [-1, 4096]      16,781,312\n             ReLU-37                 [-1, 4096]               0\n          Dropout-38                 [-1, 4096]               0\n           Linear-39                 [-1, 1000]       4,097,000\n================================================================\nTotal params: 138,357,544\nTrainable params: 138,357,544\nNon-trainable params: 0\n----------------------------------------------------------------\nInput size (MB): 0.26",
+        },
+        {
+          no: 42,
+          answer: "B",
+          question:
+            "在深度神經網路中，不同層的參數量（parameter count）差異極大。有些層雖然數量少但計算量大，有些則相反。了解參數分佈情形，有助於模型壓縮與遷移學習設計。請問在VGG16中，下列何者的參數量最多？",
+          options: {
+            A: "卷積層(Conv2d)",
+            B: "全連接層(Linear)",
+            C: "ReLU激活函數",
+            D: "池化層(MaxPool2d, AdaptiveAvgPool2d)",
+          },
+          explanation:
+            "【答案：B — 全連接層（Linear）的參數量最多】<br><br>VGG16 的架構由 13 層卷積層 + 3 層全連接層組成，但參數分布極度不均衡——絕大多數參數集中在<b>全連接層</b>。<br><br><b>▍參數量比較：</b><br>• 全部卷積層合計參數：約 <b>14.7M</b>（1470 萬）<br>• 全連接層（3 層）合計參數：約 <b>123.6M</b>（1.236 億）<br>• VGG16 總參數：約 <b>138.4M</b>（1.384 億）<br>全連接層佔總參數的 <b>約 89%</b>，其中第一層 FC（25088 → 4096）就有 25088 × 4096 + 4096 ≈ <b>102.8M</b> 個參數，遠超所有卷積層的總和。<br><br><b>▍為什麼全連接層參數這麼多？</b><br>卷積層透過<b>參數共享</b>（同一個卷積核滑過整張特徵圖），一個 3×3 卷積核只有 9 個權重；但全連接層每個輸入節點都與每個輸出節點相連，沒有參數共享，參數量 = 輸入維度 × 輸出維度，一旦輸入維度大（如 25088），參數量立刻爆炸。<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>A — 卷積層（Conv2d）：</b>雖然卷積層 FLOPs（運算量）最多（因為要在整個特徵圖上滑動），但<b>參數量</b>因參數共享而很少。記住：「卷積層：算得多、存得少；全連接層：算得少、存得多」。</li><li><b>C — ReLU：</b>激活函數沒有可學習的參數，參數量為 0。</li><li><b>D — 池化層：</b>池化層同樣沒有可學習參數（MaxPool 取最大值不需訓練），參數量為 0。</li></ul><b>▍記憶口訣：</b>「VGG16：參數多看 FC（全連接），FLOPs 多看 Conv（卷積）」。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>ReLU</b>：神經網路最受歡迎的啟動函數。遇到負數變0，正數保持不變。這能簡單快速保留訊號特徵並引進非線性。</li><li><b>遷移學習</b>：把其他人用海量資料預先訓練好的超強AI拿來，只稍微訓練它認得你的專屬小任務資料。</li><li><b>過擬合</b>：模型把練習題（訓練資料）死背下來，考得極高分，但在沒看過的題目（測試資料）上慘敗。</li></ul>",
+          ],
+          memoryTip: "VGG16 要記：參數多看 FC，FLOPs 多看 Conv。",
+          mnemonic: "參數在 FC",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 43,
+          answer: "A",
+          question:
+            "在神經網路中，了解各層的運算量分佈，有助於模型壓縮與硬體加速的策略設計。請問在VGG16中，下列何者運算量(FLOPs)最多？",
+          options: {
+            A: "卷積層(Conv2d)",
+            B: "全連接層(Linear)",
+            C: "ReLU激活函數",
+            D: "池化層(MaxPool2d, AdaptiveAvgPool2d)",
+          },
+          explanation:
+            "【答案：A — 卷積層（Conv2d）的運算量（FLOPs）最多】<br><br>FLOPs（Floating Point Operations）衡量的是模型執行一次前向傳播需要的<b>浮點運算次數</b>，反映計算複雜度，與參數量是兩個不同的概念。<br><br><b>▍為什麼卷積層 FLOPs 最多？</b><br>卷積層每次操作：對特徵圖的每一個位置，都要讓卷積核在該位置做一次完整的乘加運算。<br>FLOPs ≈ 2 × 輸入通道數 × 卷積核大小² × 輸出通道數 × 輸出特徵圖尺寸²<br><br>VGG16 早期卷積層的輸入特徵圖還很大（如 224×224、112×112），雖然每個卷積核參數量少，但要在龐大的空間維度上<b>反覆滑動計算</b>，使總 FLOPs 極高。VGG16 總 FLOPs 約 <b>15.5G</b>，其中卷積層佔 <b>約 99%</b>。<br><br><b>▍FLOPs vs 參數量對比（VGG16）：</b><br>| 層類型 | 參數量 | FLOPs |<br>|--------|--------|-------|<br>| 卷積層 | 少（~14.7M，共享） | 極多（~15.4G）|<br>| 全連接層 | 多（~123.6M）| 少（~0.1G）|<br>| ReLU / 池化 | 0 | 極少 |<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>B — 全連接層：</b>全連接層雖然<b>參數量</b>最多，但輸入只是一維向量，沒有空間維度上的滑動，FLOPs 相對少得多。</li><li><b>C — ReLU：</b>ReLU 只做 max(0,x)，每個元素一次比較，計算極簡單，FLOPs 遠小於卷積。</li><li><b>D — 池化層：</b>MaxPool 只做取最大值，無乘法運算，FLOPs 可忽略不計。</li></ul><b>▍記憶口訣：</b>「卷積層算得最多（FLOPs 冠軍），全連接層存得最多（參數量冠軍）」。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>ReLU</b>：神經網路最受歡迎的啟動函數。遇到負數變0，正數保持不變。這能簡單快速保留訊號特徵並引進非線性。</li><li><b>過擬合</b>：模型把練習題（訓練資料）死背下來，考得極高分，但在沒看過的題目（測試資料）上慘敗。</li></ul>",
+          ],
+          memoryTip: "CNN 中算得最兇的通常是卷積，不是池化也不是 ReLU。",
+          mnemonic: "算力在 Conv",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 44,
+          answer: "D",
+          question:
+            "VGG16層數深且結構規則，由多層卷積、池化及全連接層組成。了解各層的輸入/輸出維度、參數量及記憶體需求，有助於掌握CNN模型的組成邏輯與實作技巧。根據VGG16的模型架構，下列敘述何者正確？",
+          options: {
+            A: "AdaptiveAvgPool2d的輸出會被攤平後傳入第一個全連接層；由於前一層池化輸出空間為 4×4，所以第一個線性層的輸入維度是 512×4×4 = 8192",
+            B: "Linear-33（第一個全連接層）報出的102,764,544參數只包含權重，偏差（bias）沒有算在內",
+            C: "根據列出的「Estimated Total Size (MB) = 624.98」，表示訓練此模型只需大約625MB的GPU記憶體（包含所有optimizer state與梯度），所以一張 1 GB的GPU就足夠訓練",
+            D: "VGG16包含13層卷積層（conv）與3層全連接層（FC），總參數數目約為 138,357,544（約138.36M）",
+          },
+          explanation:
+            "【答案：D — VGG16 包含 13 層卷積層與 3 層全連接層，總參數約 138.36M】<br><br>VGG16 由牛津大學 VGG 組於 2014 年提出（Simonyan & Zisserman），其架構規則、層數固定，是深度學習課程中最常考的標準架構之一。<br><br><b>▍VGG16 標準架構：</b><br>• <b>5 個 Block</b>，共 <b>13 層 Conv2d</b>（3×3 卷積核）+ 5 層 MaxPool；<br>• <b>3 層全連接層</b>：FC1（4096）→ FC2（4096）→ FC3（1000，ImageNet 類別數）；<br>• 總參數：<b>約 138.36M（1.38 億）</b>，其中 FC 層佔約 89%。<br><br><b>▍逐一驗證其他選項：</b><br><ul><li><b>A — AdaptiveAvgPool2d 輸出為 4×4，第一個 FC 輸入為 512×4×4 = 8192：</b><b>錯誤</b>。VGG16 的 AdaptiveAvgPool2d 輸出為 <b>7×7</b>（不是 4×4），因此第一個 FC 的輸入維度為 512×7×7 = <b>25,088</b>，而非 8,192。這是 VGG16 的標準架構細節。</li><li><b>B — Linear-33 的 102,764,544 參數只包含權重，不含偏置：</b><b>錯誤</b>。Linear 層的參數量 = 輸入 × 輸出 + 輸出（偏置）。25088 × 4096 = 102,760,448，加上偏置 4096，共 <b>102,764,544</b>，這個數字<b>已包含</b>偏置。</li><li><b>C — 624.98 MB 表示只需約 625 MB GPU 記憶體即可訓練：</b><b>錯誤</b>。模型摘要中的 Estimated Total Size 只包含模型權重的靜態大小，實際訓練還需要儲存<b>梯度、優化器狀態（Adam 有 2× 參數量）、中間激活值</b>等，實際 GPU 記憶體需求通常是靜態大小的 3–5 倍以上，一張 1 GB GPU 完全不夠。</li></ul><b>▍記憶口訣：</b>「VGG16 = 13 Conv + 3 FC，AdaptiveAvgPool 出 7×7，FC 輸入 25088，總參數 138M」。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>過擬合</b>：模型把練習題（訓練資料）死背下來，考得極高分，但在沒看過的題目（測試資料）上慘敗。</li></ul>",
+          ],
+          memoryTip: "VGG16 的最穩定記法就是「13 個卷積、3 個全連接」。",
+          mnemonic: "VGG 十三卷三全",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 45,
+          answer: "B",
+          question:
+            "在實務應用中，我們常使用遷移學習(transfer learning)技巧，即載入預訓練模型（如VGG16），凍結部分層的參數，只針對特定任務重新訓練最後幾層，這種做法可節省訓練時間並提升模型效能。假設你要對VGG16進行遷移學習(transfer learning)，希望凍結卷積層的參數，只訓練最後全連接層(classifier)。下列哪段程式碼寫法正確？",
+          options: {
+            A: "<pre><code>import torch\nimport torchvision.models as models\n\nmodel = models.vgg16(pretrained=True)\nfor param in model.parameters():\n    param.requires_grad = False\nmodel.classifier[6] = torch.nn.Linear(4096, 10)</code></pre>",
+            B: "<pre><code>import torch\nimport torchvision.models as models\n\nmodel = models.vgg16(pretrained=True)\nfor param in model.features.parameters():\n    param.requires_grad = False\nmodel.classifier[6] = torch.nn.Linear(4096, 10)</code></pre>",
+            C: "<pre><code>import torch\nimport torchvision.models as models\n\nmodel = models.vgg16(pretrained=True)\nfor param in model.classifier.parameters():\n    param.requires_grad = False\nmodel.classifier[6] = torch.nn.Linear(4096, 10)</code></pre>",
+            D: "<pre><code>import torch\nimport torchvision.models as models\n\nmodel = models.vgg16(pretrained=True)\nmodel.requires_grad = False\nmodel.classifier[6] = torch.nn.Linear(4096, 10)</code></pre>",
+          },
+          explanation:
+            "【答案：B — 凍結卷積層參數，只訓練全連接層】<br><br>PyTorch 中 VGG16 被分成兩個主要模組：<b>features</b>（所有卷積層 + 池化層）與 <b>classifier</b>（3 層全連接層）。遷移學習的策略是「<b>凍結已學好的特徵提取器（features），只微調任務特定的分類頭（classifier）</b>」。<br><br><b>▍PyTorch VGG16 架構：</b><br>```<br>model.features     → 所有卷積層（Conv2d）+ 池化層（MaxPool）+ AdaptiveAvgPool<br>model.classifier   → 3 層全連接層（Linear）<br>```<br><br><b>▍為什麼選 B？</b><br>正確做法必須：<br>1. 凍結 <b>model.features</b> 的所有參數：`for param in model.features.parameters(): param.requires_grad = False`<br>2. 保持 classifier 參數可訓練（預設為 True）<br>3. 替換最後一層 FC（Linear-39）以適應新的任務類別數（例如從 1000 改成 10）：`model.classifier[6] = torch.nn.Linear(4096, 10)`<br><br>這樣訓練時，反向傳播只會更新 classifier 中未凍結的參數，大幅節省計算與記憶體，同時充分利用預訓練的卷積特徵。<br><br><b>▍為什麼排除其他選項？</b><br><ul><li><b>A — 凍結 model.parameters()：</b><b>錯誤</b>。這會凍結<b>所有</b>參數（包括 classifier），導致分類頭也無法訓練，新任務無法學習。</li><li><b>C — 凍結 model.classifier.parameters()：</b><b>錯誤</b>。邏輯反了！應該凍結 features 讓它保留預訓練知識，保留 classifier 讓它學習新任務。這樣寫會導致卷積層繼續學習（浪費時間），分類頭反而凍結無法調整。</li><li><b>D — model.requires_grad = False：</b><b>錯誤</b>。這是給整個模型物件設定屬性，不是給參數設定可訓練狀態，無法達到凍結特定層的目的。requires_grad 必須在<b>參數</b>層級操作。</li></ul><b>▍遷移學習的完整步驟：</b><br>1. 加載預訓練模型<br>2. 凍結 backbone（features）<br>3. 替換最後分類層<br>4. 加載新任務資料<br>5. 只訓練新分類層（或部分 classifier）<br><br><b>▍記憶口訣：</b>「遷移學習凍 features，訓 classifier；不能倒過來」。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>遷移學習</b>：把其他人用海量資料預先訓練好的超強AI拿來，只稍微訓練它認得你的專屬小任務資料。</li></ul>",
+          ],
+          memoryTip: "Transfer learning 常見套路：前面凍結、後面微調。",
+          mnemonic: "凍前訓後",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          type: "instruction",
+          title: "手寫數字影像資料集說明",
+          preamble:
+            "在郵遞區號自動辨識的研究中，研究人員收集了一份手寫數字影像資料集，每一張影像為 8×8 的灰階圖片，共包含多個手寫數字樣本。這份資料集來自 UCI Machine Learning Repository，常被用於數字辨識與機器學習方法的教學與實驗。<br><br>在過程中，研究人員發現資料中可能存在雜訊，例如筆跡模糊或影像中附加的干擾點，這會影響後續分類模型的效能。因此，他們希望透過資料降噪的方法，提升後續分類的準確度。同時，他們也想透過 KNN (K-Nearest Neighbors) 搭配交叉驗證來評估模型表現，確保模型在不同資料切割下都能有穩定的預測能力。",
+          code: "from sklearn.datasets import load_digits\ndigits = load_digits()\ndigits.data.shape",
+          notes: [
+            "輸出結果：<code>(1797, 64)</code>",
+            "<b>部分樣本經繪製後的外觀如下圖所示：</b>",
+            "<b>根據這份資料來回答 46~47 題。</b>",
+          ],
+          mediaPath: "assets/46-47.png",
+          sectionLabel: "第三科｜正式考題",
+          sourceKey: "subject3-official",
+        },
+        {
+          no: 46,
+          answer: "B",
+          question:
+            "假設研究人員已將含有雜訊的手寫數字影像存放在變數 noisy 中。部分資料經視覺化後的外觀如下圖所示。他們嘗試使用 PCA 進行降噪，並希望能保留影像的主要特徵，同時去除影像中的雜訊。然而，當程式執行後，觀察到影像仍然含有明顯的雜訊。研究人員懷疑是程式中某個步驟的設定不正確，導致 PCA 沒有發揮降噪的作用，需要修改程式碼才能讓降噪有效。請問哪一段程式碼需要修改，才能讓 PCA 對 noisy 影像有效去噪？",
+          code: "import numpy as np\nnoisy = np.random.normal(digits.data, 4)\n\nfrom sklearn.decomposition import PCA  # 程式碼A\npca = PCA()                            # 程式碼B\npca.fit(noisy)                         # 程式碼C\ncomponents = pca.transform(noisy)      # 程式碼D\nfiltered = pca.inverse_transform(components)  # 程式碼E",
+          mediaPath: "assets/46.png",
+          options: {
+            A: "程式碼A",
+            B: "程式碼B",
+            C: "程式碼C",
+            D: "程式碼D",
+          },
+          explanation:
+            "依答案可知需要修改的是程式碼 B。PCA 降噪的關鍵通常在於主成分保留數或重建流程設定，若這一步錯了，就無法有效去除雜訊。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>PCA</b>：把原本很多、很雜的資料特徵，濃縮轉換成幾個互不干擾、且能保留最大資訊量的「主成分」。</li><li><b>交叉驗證</b>：把資料切塊，輪流拿一塊當考卷、其他當練習題，藉此反覆測試模型真實實力的方法。</li><li><b>持續整合</b>：工程師一提交程式碼，系統就自動幫忙建置與執行各種測試，及早發現錯誤（多用於軟體開發）。</li></ul>",
+          ],
+          memoryTip: "PCA 去噪重點不在套模型，而在保留多少成分與如何重建。",
+          mnemonic: "PCA 先降再還",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 47,
+          answer: "B",
+          question:
+            "研究人員在對digits資料集進行分類時，決定使用KNN並搭配交叉驗證來評估模型準確率。他們撰寫了四組不同的程式碼來進行KNN訓練與交叉驗證，但不確定哪幾組程式碼能正確執行並輸出準確率。每組程式碼在資料切割、模型訓練、交叉驗證函數的使用上略有差異，研究人員希望找出可以正確完成任務的程式碼組合，以確保模型評估的可靠性。",
+          code: '# 程式碼A：\nfrom sklearn.model_selection import StratifiedKFold, cross_val_score\nfrom sklearn.neighbors import KNeighborsClassifier\n\nX, y = digits.data, digits.target\nmodel = KNeighborsClassifier(n_neighbors=3)\ncv = StratifiedKFold(n_splits=5, shuffle=True)\nscores = cross_val_score(model, X, y, cv=cv, scoring="accuracy")\nprint(scores.mean())\n\n# 程式碼B：\nfrom sklearn.model_selection import StratifiedKFold, cross_val_score\nfrom sklearn.neighbors import KNeighborsClassifier\n\nX, y = digits.data, digits.target\nmodel = KNeighborsClassifier(n_neighbors=3)\ncv = StratifiedKFold(n_splits=5, shuffle=True)\nscores = cross_val_score(model, X, y, cv=cv, scoring="f1")\nprint(scores.mean())\n\n# 程式碼C：\nfrom sklearn.model_selection import StratifiedKFold, cross_val_score\nfrom sklearn.neighbors import KNeighborsClassifier\n\nX, y = digits.data, digits.target\nmodel = KNeighborsClassifier(n_neighbors=3)\nscores = cross_val_score(model, X, y, cv=5, scoring="accuracy")\nprint(scores.mean())\n\n# 程式碼D：\nfrom sklearn.model_selection import StratifiedKFold, cross_val_score\nfrom sklearn.neighbors import KNeighborsClassifier\n\nX, y = digits.data, digits.target\nmodel = KNeighborsClassifier(n_neighbors=3)\ncv = StratifiedKFold(n_splits=5, shuffle=True)\nscores = cross_val_score(model, X, y, cv=cv, scoring="f1")\nprint(scores.mean())',
+          options: {
+            A: "程式碼A、程式碼B、程式碼C、程式碼D",
+            B: "程式碼A、程式碼C",
+            C: "程式碼A、程式碼B",
+            D: "程式碼C、程式碼D",
+          },
+          explanation:
+            '【答案：B — 程式碼 A、程式碼 C】<br><br>這道題考查的是 <b>cross_val_score() 函數的正確用法</b>、<b>交叉驗證策略的選擇</b>，以及 <b>評分指標的適用場景</b>。<br><br><b>▍正確程式碼分析：</b><br><ul><li><b>程式碼 A ✓</b>：<br>• 使用 <code>StratifiedKFold(n_splits=5, shuffle=True)</code> 進行分層 5 折交叉驗證<br>• 使用 <code>scoring="accuracy"</code> 評估多分類問題（digits 有 0-9 共 10 類）<br>• 輸出平均準確率 <code>scores.mean()</code><br>✅ <b>完全正確</b></li><li><b>程式碼 B ✗</b>：<br>• 使用 <code>scoring="f1"</code>（F1 分數）來評估多分類<br>• F1 是二分類指標，用於多分類時預設採用 <code>average=\'binary\'</code>，會報錯或給出誤導結果<br>• 多分類應使用 <code>scoring="f1_weighted"</code> 或 <code>"accuracy"</code><br>❌ <b>評分指標不適用</b></li><li><b>程式碼 C ✓</b>：<br>• 使用 <code>cv=5</code>（整數）讓 cross_val_score 自動套用 <code>StratifiedKFold(n_splits=5)</code><br>• 對多分類問題，cross_val_score 會自動選用分層交叉驗證<br>• 使用 <code>scoring="accuracy"</code> 正確評估<br>• 與程式碼 A 邏輯等價，但程式碼更簡潔<br>✅ <b>完全正確</b></li><li><b>程式碼 D ✗</b>：<br>• 同樣使用 <code>scoring="f1"</code>，不適用於多分類（同程式碼 B）<br>❌ <b>評分指標不適用</b></li></ul><b>▍關鍵知識點：</b><br>| 指標 | 適用場景 | 說明 |<br>|------|---------|------|<br>| <code>accuracy</code> | 多分類、二分類 | 預測正確的比例，通用且直觀 |<br>| <code>f1</code> | 二分類（不平衡資料） | 預設 <code>average=\'binary\'</code>，多分類時會錯誤 |<br>| <code>f1_weighted</code> | 多分類（不平衡資料） | 按類別頻率加權的 F1 |<br>| <code>cv=5</code> | 多分類、二分類 | 自動套用 StratifiedKFold |<br>| <code>cv=KFold()</code> | 二分類 | 不分層，可能導致資料不平衡 |<br><br><b>▍記憶口訣：</b>「多分類選 accuracy，二分類不平衡選 f1_weighted；cv 整數自動分層」。',
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>交叉驗證（Cross-Validation）</b>：把資料切塊，輪流拿一塊當考卷、其他當練習題，藉此反覆測試模型真實實力的方法。k-fold 表示切成 k 份，每份輪流當驗證集。</li><li><b>分層交叉驗證（StratifiedKFold）</b>：在分類問題中，按比例保持各類別在每一折中的分布，避免因隨機切分導致某一折缺少某個類別。</li><li><b>準確率（Accuracy）</b>：分類問題中最直觀的評估指標，計算預測正確的比例，範圍 0-1，越高越好。</li><li><b>F1 分數（F1 Score）</b>：用於<b>二分類</b>及<b>不平衡資料</b>的指標，結合精準率和回召率。在 scikit-learn 中，多分類必須指定 <code>average='weighted'</code> 或 <code>'macro'</code> 等參數。</li></ul>",
+            "🔍 <b>常見錯誤</b>：<ul><li>誤用 <code>scoring='f1'</code> 於多分類 → 應改用 <code>'f1_weighted'</code> 或 <code>'accuracy'</code></li><li>混淆 <code>cv=StratifiedKFold(...)</code> 與 <code>cv=5</code> → 後者會自動套用分層 5 折</li><li>使用非分層的 <code>KFold</code> 於不平衡資料 → 導致某些類別在某一折完全缺失</li></ul>",
+          ],
+          memoryTip: "交叉驗證題常在抓評分指標、API 用法與資料分層是否正確。",
+          mnemonic: "交叉驗證看 API",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          type: "instruction",
+          title: "鐵達尼號資料集與多層感知機模型說明",
+          preamble:
+            "使用鐵達尼號（Titanic）資料集進行多層感知機（Multilayer Perceptron, MLP）分類預測分析，其中 survived 為反應變數（1 表示存活，0 表示死亡）。附圖程式碼展示資料載入與處理，請根據此資料回答第 48~50 題。",
+          code: 'import numpy as np\nimport pandas as pd\nfrom keras import Sequential\nfrom keras.layers import Input, Dense\n\nnp.random.seed(123)\ndf_train = pd.read_csv("titanic_train.csv")\ndf_test = pd.read_csv("titanic_test.csv")',
+          notes: ["<b>下圖顯示資料集的前 5 筆資料：</b>"],
+          mediaPath: "assets/48-50-2-pic.png",
+          additionalCode:
+            "dataset_train = df_train.values.astype('float32')\ndataset_test = df_test.values.astype('float32')\n\nX_train = dataset_train[:, 0:9]\ny_train = dataset_train[:, 9]\nX_test = dataset_test[:, 0:9]\ny_test = dataset_test[:, 9]",
+          sectionLabel: "第三科｜正式考題",
+          sourceKey: "subject3-official",
+        },
+        {
+          no: 48,
+          answer: "C",
+          question: "參考下圖程式碼，下列何者正確？",
+          code: "X_train -= X_train.mean(axis=0)\nX_train /= X_train.std(axis=0)\nX_test -= X_test.mean(axis=0)\nX_test /= X_test.std(axis=0)",
+          options: {
+            A: "A、B、C、D",
+            B: "A、E",
+            C: "A、D",
+            D: "A、C、F",
+          },
+          preamble:
+            "<b>A：</b> X_train -= X_train.mean(axis=0) 將每個訓練集特徵的平均值調整為 0<br><b>B：</b> X_train /= X_train.std(axis=0) 將每個訓練集特徵的標準差調整為 0<br><b>C：</b> X_train 處理結果會將資料壓縮到 0 和 1 之間<br><b>D：</b> 標準化結果防止梯度爆炸或消失<br><b>E：</b> 標準化是屬於特徵選擇(Feature Selection)方法<br><b>F：</b> X_train 程式碼應修正為 X_train = X_train.std(axis=0), X_test 程式碼應修正為 X_test = X_test.std(axis=0)",
+          explanation:
+            "【答案：C — A、D 正確】<br><br>這道題考查的是資料標準化（Standardization）的操作原理和作用。題目給出的代碼執行了<b>Z-score 標準化</b>：先減去平均值、再除以標準差。<br><br><b>▍逐項分析：</b><br><ul><li><b>A ✓ 正確</b>：<br>• <code>X_train -= X_train.mean(axis=0)</code> 對每一列（特徵）執行「減去該列平均值」<br>• 結果是讓該特徵的均值變為 0，這稱為「中心化」（Centering）<br>• ✅ 敘述完全正確</li><li><b>B ✗ 錯誤</b>：<br>• <code>X_train /= X_train.std(axis=0)</code> 是「除以標準差」，不是「調整為 0」<br>• 標準差除以自己的結果是 1，所以標準差變為 1，而非 0<br>• ❌ 敘述有誤</li><li><b>C ✗ 錯誤</b>：<br>• 標準化（Z-score）的結果<b>不是壓縮到 0~1</b>，而是調整為「平均 0、標準差 1」的分佈<br>• 壓縮到 0~1 是<b>正規化（Min-Max Normalization）</b>：(x - min) / (max - min)<br>• 標準化後的數據仍可能為負或超過 1<br>• ❌ 混淆了兩個不同的縮放方法</li><li><b>D ✓ 正確</b>：<br>• 標準化有助於<b>梯度下降收斂</b>：未標準化的特徵量級差異大，導致梯度大小變化劇烈<br>• 標準化使所有特徵處於相同量級，讓梯度更穩定，避免<b>梯度爆炸（Gradient Explosion）</b>或<b>梯度消失（Gradient Vanishing）</b><br>• 這對神經網路訓練特別重要<br>• ✅ 敘述正確</li><li><b>E ✗ 錯誤</b>：<br>• 標準化是<b>特徵縮放（Feature Scaling）</b>方法，<b>不是特徵選擇（Feature Selection）</b><br>• 特徵選擇是指<b>篩選哪些特徵</b>（如決策樹的分裂、L1 正則化的稀疏化）<br>• 標準化只改變<b>特徵的數值範圍</b>，不改變特徵個數<br>• ❌ 概念混淆</li><li><b>F ✗ 錯誤</b>：<br>• 題目程式碼寫的是 <code>X_train /= X_train.std(axis=0)</code>（除以標準差），已經是正確做法<br>• 改為 <code>X_train = X_train.std(axis=0)</code>（只取標準差，丟棄原數據）會導致資料丟失<br>• ❌ 建議的修正是錯的</li></ul><b>▍正確答案：A、D</b><br><b>▍記憶要點：</b><br>| 方法 | 公式 | 結果範圍 | 用途 |<br>|------|------|--------|------|<br>| 標準化（Z-score） | (x - μ) / σ | -∞ ~ +∞ | 神經網路、距離型模型 |<br>| 正規化（Min-Max） | (x - min) / (max - min) | 0 ~ 1 | 神經網路（某些情況）|<br>| 歸一化（Normalization） | x / ∥x∥ | 0 ~ 1 | 文本、向量 |<br><br><b>▍記憶口訣：</b>「標準化零均一差，正規化零到一；特選是篩人，特縮是調尺」。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>特徵縮放（Feature Scaling）</b>：把數值大小差別很大的各種欄位，轉換壓縮到差不多的數值範圍，避免模型因某欄數值太大而「大小眼」。包括標準化、正規化等方法。</li><li><b>標準化（Standardization）</b>：用 Z-score 方法將資料調整為平均值 0、標準差 1，公式：<code>(x - 平均值) / 標準差</code>。</li><li><b>正規化（Normalization）</b>：將資料縮放到 0~1 範圍，公式：<code>(x - 最小值) / (最大值 - 最小值)</code>。</li><li><b>梯度爆炸（Gradient Explosion）</b>：在深層網路訓練中，反向傳播的梯度越來越大，導致參數更新失控。</li><li><b>梯度消失（Gradient Vanishing）</b>：在深層網路訓練中，反向傳播的梯度越來越小，導致前面層幾乎學不到東西。</li></ul>",
+            "🔍 <b>常見混淆</b>：<ul><li>標準化 vs 正規化 → 標準化是「均值 0、標準差 1」；正規化是「壓到 0~1」。</li><li>特徵縮放 vs 特徵選擇 → 縮放改變<b>數值範圍</b>；選擇改變<b>特徵個數</b>。</li><li>訓練集與測試集的標準化 → 兩者都要用<b>訓練集的平均值和標準差</b>來轉換，避免資訊洩漏。</li></ul>",
+          ],
+          memoryTip:
+            "標準化是『零均一差』（平均0、標準差1），而非壓到0~1；後者是正規化。",
+          mnemonic: "標準化零均一差",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 49,
+          answer: "C",
+          question:
+            "參考下圖執行結果，下列何者正確？（註：A選項的數學式為標準激活函數，但請判斷是否與所述激活函數相符）",
+          code: 'model = Sequential()\nmodel.add(Input(shape=(X_train.shape[1],)))\nmodel.add(Dense(10, activation="relu"))\nmodel.add(Dense(10, activation="relu"))\nmodel.add(Dense(1, activation="sigmoid"))\nmodel.summary()\nmodel.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])',
+          options: {
+            A: 'activation="relu"其數學式為 f(x) = 1/(1+e<sup>-x</sup>)；',
+            B: "空格1值為110，空格2值為100；",
+            C: "空格1值為100，空格2值為110；",
+            D: 'activation="sigmoid"一般用於多類別分類預測模型',
+          },
+          mediaPath: "assets/49-pic.png",
+          explanation:
+            "【答案：C — 空格1值為100，空格2值為110】<br><br>這道題考查的是<b>神經網路參數計算</b>和<b>激活函數的應用場景</b>。給定的模型使用 Titanic 資料集，X_train 有 9 個特徵（pclass, sex, age, sibsp, parch, fare, embarked_C, embarked_Q, embarked_S）。<br><br><b>▍參數計算分析：</b><br>Dense 層的參數數 = 輸入維度 × 輸出維度 + 輸出維度（偏置）<br><br>根據模型架構：<br>• <b>第 1 層 Dense(10)：</b><br>  - 輸入：X_train.shape[1] = 9<br>  - 輸出：10<br>  - 參數 = 9 × 10（權重）+ 10（偏置）= <b>100</b> ✓ （空格1）<br><br>• <b>第 2 層 Dense_1(10)：</b><br>  - 輸入：10（來自前一層）<br>  - 輸出：10<br>  - 參數 = 10 × 10（權重）+ 10（偏置）= <b>110</b> ✓ （空格2）<br><br>• <b>第 3 層 Dense_2(1)：</b><br>  - 輸入：10<br>  - 輸出：1<br>  - 參數 = 10 × 1（權重）+ 1（偏置）= <b>11</b> ✓ （已給定）<br><br><b>▍逐項分析：</b><br><ul><li><b>A ✗ 錯誤</b>：<br>• 選項給出的數學式 f(x) = 1/(1+e<sup>-x</sup>) 是 <b>Sigmoid 的公式</b>，不是 ReLU<br>• ReLU 的正確數學式是：f(x) = max(0, x) 或分段函數形式：<br>  - f(x) = x (當 x > 0)<br>  - f(x) = 0 (當 x ≤ 0)<br>• 選項中文本與公式不符，是個陷阱題<br>• ❌ 敘述錯誤</li><li><b>B ✗ 錯誤</b>：<br>• 空格1應為 100，空格2 應為 110<br>• 本選項顛倒了，說「空格1 = 110，空格2 = 100」<br>• ❌ 數值反了</li><li><b>C ✓ 正確</b>：<br>• 空格1 = 100，空格2 = 110<br>• 符合參數計算結果<br>• ✅ 敘述正確</li><li><b>D ✗ 錯誤</b>：<br>• Sigmoid 將輸出壓縮到 0~1 範圍，適合<b>二分類</b>問題<br>• 互斥多類別分類（Multiclass）應使用 Softmax 激活函數<br>• 題目中最後一層用 sigmoid 是因為 Titanic 問題是<b>二分類</b>（survived=0 或 1）<br>• ❌ 概念混淆</li></ul><b>▍正確答案：C</b><br><b>（A選項是陷阱題：公式對應Sigmoid而非ReLU）</b><br><br><b>▍激活函數對比：</b><br>| 激活函數 | 公式 | 輸出範圍 | 適用場景 |<br>|---------|------|---------|--------|<br>| ReLU | max(0, x) | 0 ~ ∞ | 隱藏層（最常用）|<br>| Sigmoid | 1 / (1 + e^-x) | 0 ~ 1 | 二分類輸出層 |<br>| Softmax | e^x_i / Σe^x_j | 機率分佈 | 多類別輸出層 |<br>| Tanh | (e^x - e^-x) / (e^x + e^-x) | -1 ~ 1 | 隱藏層（較少用）|<br><br><b>▍記憶口訣：</b>「參數 = 進出×進 + 出；隱層用ReLU快又靈；二分用Sigmoid，多類用Softmax」。",
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>ReLU（Rectified Linear Unit）</b>：神經網路最受歡迎的激活函數。遇到負數變0，正數保持不變。公式：max(0, x)。優點是快速、能引進非線性；缺點是可能導致「神經元死亡」（某些神經元永遠輸出0）。</li><li><b>Sigmoid</b>：一種經典激活函數，將任何輸入壓縮到 0 到 1 之間，看起來像機率值，適合二分類問題。但在深層網路容易引發梯度消失。</li><li><b>Softmax</b>：多分類專用的激活函數，把AI輸出的一堆任意數字轉換成加起來等於100%的「機率分佈」，用來判斷模型最猜哪個類別。</li><li><b>參數數量（Parameters）</b>：神經網路中可訓練的權重和偏置總數，越多需要越多資料和計算。</li></ul>",
+            "🔍 <b>常見混淆</b>：<ul><li>ReLU vs Sigmoid → ReLU 用在隱藏層（輸出可 > 1），Sigmoid 用在二分類輸出層（輸出 0~1）。</li><li>Sigmoid vs Softmax → Sigmoid 二分類，Softmax 多分類。</li><li>二分類 vs 多分類 → Titanic 是二分類（0=死亡，1=存活），用 Sigmoid；如果分 3+ 類用 Softmax。</li></ul>",
+          ],
+          memoryTip:
+            "參數計算：輸入 × 輸出 + 輸出；隱層ReLU，二分Sigmoid，多類Softmax。",
+          mnemonic: "層層都有參",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "名詞白話解說",
+        },
+        {
+          no: 50,
+          answer: "C",
+          question: "參考下圖執行結果，下列何者正確？",
+          code: 'history = model.fit(X_train, y_train, validation_split=0.2, epochs=100, batch_size=10)\nloss, accuracy = model.evaluate(X_train, y_train, verbose=0)\n\nimport matplotlib.pyplot as plt\nloss = history.history["loss"]\nepochs = range(1, len(loss)+1)\nval_loss = history.history["val_loss"]\nplt.plot(epochs, loss, 空格1, label="Training Loss")\nplt.plot(epochs, val_loss, 空格2, label="Validation Loss")\nplt.title("Training and Validation Loss")\nplt.xlabel("Epochs")\nplt.ylabel("Loss")\nplt.legend()\nplt.show()',
+          mediaPath: "assets/50-pic.png",
+          options: {
+            A: "A、D",
+            B: "B、C",
+            C: "A、D",
+            D: "C、D、E",
+          },
+          preamble:
+            '<b>選項說明：</b><br><b>A：</b> 空格 1 須填入 "b-"<br><b>B：</b> 空格 2 須填入 "b--"<br><b>C：</b> 空格 1 須填入 "r-"<br><b>D：</b> 空格 2 須填入 "r--"<br><b>E：</b> 驗證損失明顯較訓練損失減少更明顯',
+          explanation:
+            '【答案：C — A、D 正確】<br><br>這道題考查的是 <b>matplotlib 繪圖語法</b>和<b>模型訓練曲線的特徵解讀</b>。題目要求填入兩個線條樣式參數來繪製訓練曲線和驗證曲線。<br><br><b>▍matplotlib 線條樣式參數：</b><br>線條樣式參數由兩部分組成：<br>• 顏色代碼：b（藍）、r（紅）、g（綠）、k（黑）等<br>• 線條類型：-（實線）、--（虛線）、:（點線）、-.（點虛線）<br><br><b>▍空格填入分析：</b><br>根據圖表執行結果：<br>• <b>訓練損失（Training Loss）</b>：藍色實線 → "b-"<br>• <b>驗證損失（Validation Loss）</b>：紅色虛線 → "r--"<br><br>因此：<br>• <b>空格 1（訓練損失線條樣式）= "b-"</b> ✓<br>• <b>空格 2（驗證損失線條樣式）= "r--"</b> ✓<br><br><b>▍逐項分析：</b><br><ul><li><b>A ✓ 正確</b>：<br>• 空格 1 須填入 "b-"（藍色實線表示訓練損失）<br>• 符合圖表中訓練曲線的外觀<br>• ✅ 敘述正確</li><li><b>B ✗ 錯誤</b>：<br>• 空格 2 應填入 "r--"（紅色虛線），而非 "b--"（藍色虛線）<br>• "b--" 是藍色虛線，與圖表中驗證損失的紅色虛線不符<br>• ❌ 顏色錯誤</li><li><b>C ✗ 錯誤</b>：<br>• 空格 1 應填入 "b-"（藍色實線），而非 "r-"（紅色實線）<br>• "r-" 是紅色實線，與圖表中訓練損失的藍色實線不符<br>• ❌ 顏色錯誤</li><li><b>D ✓ 正確</b>：<br>• 空格 2 須填入 "r--"（紅色虛線表示驗證損失）<br>• 符合圖表中驗證曲線的外觀<br>• ✅ 敘述正確</li><li><b>E ✗ 錯誤</b>：<br>• 從圖表可見，<b>訓練損失從 0.65 下降到 0.40，下降幅度約 0.25</b><br>• 驗證損失從 0.62 下降到 0.45，下降幅度約 0.17<br>• <b>訓練損失的下降更明顯</b>，而非驗證損失<br>• 這是過擬合的典型表現：訓練效果好，但驗證效果相對較弱<br>• ❌ 敘述反了</li></ul><b>▍正確答案：A、D</b><br><br><b>▍matplotlib 常見線條樣式：</b><br>| 樣式 | 含義 | 範例 |<br>|------|------|------|<br>| "b-" | 藍色實線 | 訓練曲線 |<br>| "r--" | 紅色虛線 | 驗證曲線 |<br>| "g:" | 綠色點線 | 測試曲線 |<br>| "k-." | 黑色點虛線 | 參考線 |<br><br><b>▍過擬合現象解讀：</b><br>圖表顯示的典型過擬合特徵：<br>• 訓練損失持續下降，最終穩定在 0.40<br>• 驗證損失在約 20 個 epoch 後開始平台化，穩定在 0.45<br>• <b>驗證損失 > 訓練損失</b>，且差距逐漸擴大<br>• 表示模型對訓練資料的擬合度遠高於驗證資料<br><br><b>▍記憶口訣：</b>「藍色實線畫訓練，紅色虛線驗證線；過擬合訓練好驗證差」。',
+          notes: [
+            "💡 <b>名詞翻譯百科</b>（給初學者的白話解說）：<ul><li><b>matplotlib.pyplot.plot()</b>：Python 繪圖庫中最常用的繪線函數，第三個參數是線條樣式，由顏色代碼和線條類型組合而成。</li><li><b>訓練損失（Training Loss）</b>：模型在訓練集上的誤差，用來評估模型對訓練資料的擬合程度。</li><li><b>驗證損失（Validation Loss）</b>：模型在驗證集上的誤差，用來評估模型對未見資料的泛化能力，是判斷過擬合的關鍵指標。</li><li><b>過擬合（Overfitting）</b>：訓練損失很小但驗證損失很大，表示模型把訓練資料的特性（包括雜訊）死背下來，對新資料的泛化能力弱。</li></ul>",
+            '🔍 <b>常見混淆</b>：<ul><li>線條顏色 vs 線條類型 → "b-" 是藍色實線，"r--" 是紅色虛線，不要混淆。</li><li>訓練 vs 驗證 → 訓練曲線反映擬合程度，驗證曲線反映泛化能力；過擬合時訓練更好。</li><li>Learning curve 解讀 → 不是看絕對值大小，而是看趨勢和曲線間的差距。</li></ul>',
+          ],
+          memoryTip:
+            "畫 learning curve 常見搭配：train 用藍實線，valid 用紅虛線。",
+          mnemonic: "藍實紅虛",
+          sourceKey: "subject3-official",
+          sourceLabel: "第三科正式題",
+          sectionLabel: "第三科｜正式考題",
+          notesSummary: "選項背景知識",
+        },
+      ];
+      const pageKey = "ipas-subject3-detailed";
+      const filterType = "range";
+
+      const list = document.getElementById("questionList");
+      const resultCount = document.getElementById("resultCount");
+      const searchInput = document.getElementById("searchInput");
+      const extraFilter = document.getElementById("extraFilter");
+      const answerFilter = document.getElementById("answerFilter");
+      const themeToggle = document.getElementById("themeToggle");
+      const answerToggle = document.getElementById("answerToggle");
+      const reviewFilterToggle = document.getElementById("reviewFilterToggle");
+      const navRoot = document.getElementById("quickNavContent");
+
+      const STORAGE = {
+        theme: pageKey + "-theme",
+        review: pageKey + "-review",
+        reviewFilter: pageKey + "-review-filter",
+      };
+
+      const revealedIds = new Set();
+      const markedIds = new Set(
+        JSON.parse(localStorage.getItem(STORAGE.review) || "[]"),
+      );
+      let reviewOnlyMode =
+        localStorage.getItem(STORAGE.reviewFilter) === "true";
+      let allAnswersVisible = false;
+
+      if (localStorage.getItem(STORAGE.theme) === "dark") {
+        document.body.classList.add("dark-mode");
+      }
+
+      function updateThemeButton() {
+        const dark = document.body.classList.contains("dark-mode");
+        themeToggle.textContent = dark ? "☀️ Light Mode" : "🌙 Dark Mode";
+        themeToggle.classList.toggle("active", dark);
+      }
+
+      function saveMarkedIds() {
+        localStorage.setItem(STORAGE.review, JSON.stringify([...markedIds]));
+      }
+
+      function updateReviewFilterButton() {
+        reviewFilterToggle.textContent = reviewOnlyMode
+          ? "⭐ 顯示全部題目"
+          : "⭐ 只看已標註題";
+        reviewFilterToggle.classList.toggle("active", reviewOnlyMode);
+      }
+
+      function updateAnswerToggleButton() {
+        answerToggle.textContent = allAnswersVisible
+          ? "🙈 隱藏全部答案"
+          : "👁️ 顯示全部答案";
+        answerToggle.classList.toggle("active", allAnswersVisible);
+      }
+
+      function buildQuestionId(item) {
+        return item.sourceKey + "-q-" + item.no;
+      }
+
+      function isVisibleByFilter(item, keyword, extraValue, answerValue) {
+        const haystack = [
+          item.question,
+          item.explanation,
+          item.memoryTip,
+          item.mnemonic,
+          ...(item.options ? Object.values(item.options) : []),
+          ...(item.notes || []),
+        ]
+          .join(" ")
+          .toLowerCase();
+        const matchKeyword = !keyword || haystack.includes(keyword);
+        const matchAnswer =
+          answerValue === "all" || item.answer === answerValue;
+        let matchExtra = true;
+        if (filterType === "range" && extraValue !== "all") {
+          const [start, end] = extraValue.split("-").map(Number);
+          matchExtra = item.no >= start && item.no <= end;
+        }
+        if (filterType === "source" && extraValue !== "all") {
+          matchExtra = item.sourceKey === extraValue;
+        }
+        const matchReview =
+          !reviewOnlyMode || markedIds.has(buildQuestionId(item));
+        return matchKeyword && matchAnswer && matchExtra && matchReview;
+      }
+
+      function answerBadgeHtml(item, questionId) {
+        const visible = revealedIds.has(questionId);
+        return (
+          '<span class="badge answer ' +
+          (visible ? "" : "is-hidden") +
+          '" data-question-id="' +
+          questionId +
+          '" aria-pressed="' +
+          (visible ? "true" : "false") +
+          '" title="' +
+          (visible ? "點擊隱藏答案" : "點擊顯示答案") +
+          '">' +
+          (visible ? "答案：" + item.answer : "點擊顯示答案") +
+          "</span>"
+        );
+      }
+
+      function render(items) {
+        list.innerHTML = items
+          .map((item) => {
+            if (item.type === "instruction") {
+              const notesHtml = (item.notes || [])
+                .map(
+                  (note) =>
+                    '<div style="margin-bottom: 12px; font-size: 0.95rem;">' +
+                    note +
+                    "</div>",
+                )
+                .join("");
+              return [
+                '<section class="instruction-block">',
+                '  <h2 class="instruction-title">' + item.title + "</h2>",
+                '  <div class="instruction-content">',
+                item.preamble
+                  ? '    <div class="preamble"><p>' +
+                    item.preamble +
+                    "</p></div>"
+                  : "",
+                item.code
+                  ? '    <div class="code-block"><pre><code>' +
+                    item.code.replace(/</g, "&lt;").replace(/>/g, "&gt;") +
+                    "</code></pre></div>"
+                  : "",
+                notesHtml
+                  ? '    <div class="instruction-notes">' + notesHtml + "</div>"
+                  : "",
+                item.mediaPath
+                  ? '    <div class="question-media"><img src="' +
+                    item.mediaPath +
+                    '" alt="資料集樣本視覺化" /></div>'
+                  : "",
+                item.additionalCode
+                  ? '    <div class="code-block"><pre><code>' +
+                    item.additionalCode
+                      .replace(/</g, "&lt;")
+                      .replace(/>/g, "&gt;") +
+                    "</code></pre></div>"
+                  : "",
+                item.model_summary
+                  ? '    <div class="code-block"><pre><code>' +
+                    item.model_summary
+                      .replace(/</g, "&lt;")
+                      .replace(/>/g, "&gt;") +
+                    "</code></pre></div>"
+                  : "",
+                "  </div>",
+                "</section>",
+              ].join("");
+            }
+            const questionId = buildQuestionId(item);
+            const answerVisible = revealedIds.has(questionId);
+            const optionsHtml = item.options
+              ? Object.entries(item.options)
+                  .map(
+                    ([key, value]) =>
+                      '<li class="' +
+                      (item.answer === key ? "correct" : "") +
+                      '"><strong>(' +
+                      key +
+                      ")</strong>" +
+                      value +
+                      "</li>",
+                  )
+                  .join("")
+              : "";
+            const notesHtml = (item.notes || [])
+              .map((note) => "<li>" + note + "</li>")
+              .join("");
+            return [
+              '<article class="question-card ' +
+                (markedIds.has(questionId) ? "review-marked " : "") +
+                (answerVisible ? "answer-visible" : "") +
+                '" id="' +
+                questionId +
+                '" data-source-key="' +
+                item.sourceKey +
+                '">',
+              '  <div class="card-top">',
+              '    <span class="badge no">第 ' + item.no + " 題</span>",
+              '    <span class="badge source">' + item.sourceLabel + "</span>",
+              "    " + answerBadgeHtml(item, questionId),
+              '    <button class="review-button ' +
+                (markedIds.has(questionId) ? "active" : "") +
+                '" type="button" data-review-id="' +
+                questionId +
+                '">' +
+                (markedIds.has(questionId) ? "⭐ 已標註" : "☆ 標註複習") +
+                "</button>",
+              "  </div>",
+              item.preamble
+                ? '  <div class="preamble"><p>' + item.preamble + "</p></div>"
+                : "",
+              item.question
+                ? '  <div class="question-text">' + item.question + "</div>"
+                : "",
+              item.questionMedia
+                ? '  <figure class="question-media">' +
+                  item.questionMedia +
+                  "</figure>"
+                : "",
+              item.mediaPath
+                ? '  <div class="question-media"><img src="' +
+                  item.mediaPath +
+                  '" alt="題目圖片" /></div>'
+                : "",
+              item.code
+                ? '  <div class="code-block"><pre><code>' +
+                  item.code.replace(/</g, "&lt;").replace(/>/g, "&gt;") +
+                  "</code></pre></div>"
+                : "",
+              item.model_summary
+                ? '  <div class="code-block"><pre><code>' +
+                  item.model_summary
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;") +
+                  "</code></pre></div>"
+                : "",
+              item.options
+                ? '  <div class="choices-block">' +
+                  '    <div class="choices-title">題目選項</div>' +
+                  '    <ul class="choices">' +
+                  optionsHtml +
+                  "</ul>" +
+                  "  </div>"
+                : "",
+              item.explanation
+                ? '  <div class="explanation answer-dependent ' +
+                  (answerVisible ? "" : "is-hidden") +
+                  '"><strong>詳解：</strong>' +
+                  item.explanation +
+                  "</div>"
+                : "",
+              item.memoryTip || item.mnemonic
+                ? '<div class="memory-box answer-dependent ' +
+                  (answerVisible ? "" : "is-hidden") +
+                  '"><h4>好記版解說</h4><p>' +
+                  (item.memoryTip || "") +
+                  "</p>" +
+                  (item.mnemonic
+                    ? '<div class="mnemonic">口訣：' + item.mnemonic + "</div>"
+                    : "") +
+                  "</div>"
+                : "",
+              "  <details>",
+              "    <summary>" +
+                (item.notesSummary || "題目選項相關背景知識") +
+                "</summary>",
+              '    <ul class="notes">' + notesHtml + "</ul>",
+              "  </details>",
+              "</article>",
+            ].join("");
+          })
+          .join("");
+        resultCount.textContent =
+          "目前顯示 " + items.length + " 題／共 " + questions.length + " 題";
+        wireCardInteractions(items);
+        buildQuickNav(items);
+        syncAnswerToggleState();
+      }
+
+      function setCardAnswerState(questionId, visible) {
+        const card = document.getElementById(questionId);
+        if (!card) return;
+        const badge = card.querySelector(".badge.answer");
+        const item = questions.find(
+          (entry) => buildQuestionId(entry) === questionId,
+        );
+        if (!badge || !item) return;
+        badge.classList.toggle("is-hidden", !visible);
+        badge.textContent = visible ? "答案：" + item.answer : "點擊顯示答案";
+        badge.setAttribute("aria-pressed", visible ? "true" : "false");
+        badge.title = visible ? "點擊隱藏答案" : "點擊顯示答案";
+        card.classList.toggle("answer-visible", visible);
+        card
+          .querySelectorAll(".answer-dependent")
+          .forEach((el) => el.classList.toggle("is-hidden", !visible));
+      }
+
+      function wireCardInteractions(items) {
+        document.querySelectorAll(".badge.answer").forEach((badge) => {
+          badge.addEventListener("click", () => {
+            const questionId = badge.dataset.questionId;
+            if (revealedIds.has(questionId)) {
+              revealedIds.delete(questionId);
+              setCardAnswerState(questionId, false);
+            } else {
+              revealedIds.add(questionId);
+              setCardAnswerState(questionId, true);
+            }
+            syncAnswerToggleState();
+          });
+        });
+
+        document.querySelectorAll(".review-button").forEach((button) => {
+          button.addEventListener("click", () => {
+            const questionId = button.dataset.reviewId;
+            if (markedIds.has(questionId)) {
+              markedIds.delete(questionId);
+            } else {
+              markedIds.add(questionId);
+            }
+            saveMarkedIds();
+            filterQuestions();
+          });
+        });
+      }
+
+      function syncAnswerToggleState() {
+        const visibleIds = Array.from(
+          list.querySelectorAll(".question-card"),
+        ).map((card) => card.id);
+        allAnswersVisible =
+          visibleIds.length > 0 &&
+          visibleIds.every((id) => revealedIds.has(id));
+        updateAnswerToggleButton();
+      }
+
+      function buildQuickNav(items) {
+        const groups = new Map();
+        items.forEach((item) => {
+          if (item.type === "instruction") return;
+          if (!groups.has(item.sectionLabel)) groups.set(item.sectionLabel, []);
+          groups.get(item.sectionLabel).push(item);
+        });
+        navRoot.innerHTML = Array.from(groups.entries())
+          .map(([label, entries]) => {
+            const links = entries
+              .map((item) => {
+                const questionId = buildQuestionId(item);
+                const reviewClass = markedIds.has(questionId)
+                  ? "review-link"
+                  : "";
+                return (
+                  '<a class="' +
+                  reviewClass +
+                  '" href="#' +
+                  questionId +
+                  '">' +
+                  item.no +
+                  "</a>"
+                );
+              })
+              .join("");
+            return (
+              '<section class="quick-nav-section"><div class="quick-nav-title">' +
+              label +
+              '</div><div class="quick-nav-links">' +
+              links +
+              "</div></section>"
+            );
+          })
+          .join("");
+      }
+
+      function filterQuestions() {
+        const keyword = searchInput.value.trim().toLowerCase();
+        const extraValue = extraFilter.value;
+        const answerValue = answerFilter.value;
+        const filtered = questions.filter((item) =>
+          isVisibleByFilter(item, keyword, extraValue, answerValue),
+        );
+        render(filtered);
+        localStorage.setItem(STORAGE.reviewFilter, String(reviewOnlyMode));
+        updateReviewFilterButton();
+      }
+
+      searchInput.addEventListener("input", filterQuestions);
+      extraFilter.addEventListener("change", filterQuestions);
+      answerFilter.addEventListener("change", filterQuestions);
+
+      themeToggle.addEventListener("click", () => {
+        document.body.classList.toggle("dark-mode");
+        localStorage.setItem(
+          STORAGE.theme,
+          document.body.classList.contains("dark-mode") ? "dark" : "light",
+        );
+        updateThemeButton();
+      });
+
+      answerToggle.addEventListener("click", () => {
+        const visibleIds = Array.from(
+          list.querySelectorAll(".question-card"),
+        ).map((card) => card.id);
+        const shouldShow = !allAnswersVisible;
+        visibleIds.forEach((id) => {
+          if (shouldShow) revealedIds.add(id);
+          else revealedIds.delete(id);
+          setCardAnswerState(id, shouldShow);
+        });
+        syncAnswerToggleState();
+      });
+
+      reviewFilterToggle.addEventListener("click", () => {
+        reviewOnlyMode = !reviewOnlyMode;
+        filterQuestions();
+      });
+
+      updateThemeButton();
+      updateReviewFilterButton();
+      filterQuestions();
+
+      // Quick-nav collapse / expand
+      const quickNav = document.getElementById("quickNav");
+      const quickNavToggle = document.getElementById("quickNavToggle");
+      const NAV_COLLAPSED_KEY = "quickNavCollapsed";
+      if (localStorage.getItem(NAV_COLLAPSED_KEY) === "true") {
+        quickNav.classList.add("collapsed");
+      }
+      quickNavToggle.addEventListener("click", () => {
+        quickNav.classList.toggle("collapsed");
+        localStorage.setItem(
+          NAV_COLLAPSED_KEY,
+          quickNav.classList.contains("collapsed") ? "true" : "false",
+        );
+      });
+    </script>
+  </body>
+</html>

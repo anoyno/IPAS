@@ -1,0 +1,82 @@
+# 第39題
+def forward(x, p, training=True):
+    if training:
+        mask = np.random.binomial(1, p, size=x.shape)
+        return x * mask / p
+    else:
+        return x
+
+# 第40題
+import numpy as np
+
+v1 = np.array([1, 2, 3])
+v2 = np.array([4, 5, 6])
+A = np.array([[1, 2], [3, 4]])
+# 第41題
+import numpy as np
+
+np.random.seed(123)
+n = 100000
+dice_rolls = np.random.randint(1, 7, size=n)
+
+A = (dice_rolls % 2 == 0)
+B = (dice_rolls > 3)
+A_and_B = A & B
+
+# 第42~45題
+from torchsummary import summary
+from torchvision import models
+model = models.vgg16(weights='IMAGENET1K_V1')
+summary(model, (3,150,150))
+
+# 第45題 選項
+# (A)
+import torch
+import torchvision.models as models
+
+model = models.vgg16(pretrained=True)
+for param in model.parameters():
+    param.requires_grad = False
+model.classifier[6] = torch.nn.Linear(4096, 10)
+
+# (B)
+import torch
+import torchvision.models as models
+
+model = models.vgg16(pretrained=True)
+for param in model.features.parameters():
+    param.requires_grad = False
+model.classifier[6] = torch.nn.Linear(4096, 10)
+
+# (C)
+import torch
+import torchvision.models as models
+
+model = models.vgg16(pretrained=True)
+for param in model.classifier.parameters():
+    param.requires_grad = False
+model.classifier[6] = torch.nn.Linear(4096, 10)
+
+# (D)
+import torch
+import torchvision.models as models
+
+model = models.vgg16(pretrained=True)
+model.requires_grad = False
+model.classifier[6] = torch.nn.Linear(4096, 10)
+
+# 第46~47題前置說明
+from sklearn.datasets import load_digits
+digits = load_digits()
+digits.data.shape
+
+
+# 第46題（續）
+import numpy as np
+noisy = np.random.normal(digits.data, 4)
+
+from sklearn.decomposition import PCA  # 程式碼A
+pca = PCA()                            # 程式碼B
+pca.fit(noisy)                         # 程式碼C
+components = pca.transform(noisy)      # 程式碼D
+filtered = pca.inverse_transform(components)  # 程式碼E
