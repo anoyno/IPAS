@@ -11,7 +11,10 @@
       "PowerShell(git commit -m \"first commit\")",
       "PowerShell(git branch -M main)",
       "PowerShell(git remote add origin https://github.com/anoyno/IPAS.git)",
-      "PowerShell(git push -u origin main)"
+      "PowerShell(git push -u origin main)",
+      "Bash(Select-String -Path \"c:\\\\Users\\\\sin03\\\\Desktop\\\\機器學習\\\\IPAS\\\\subject3_exam_detailed_guide.html\" -Pattern \"詳解|第 25 題\")",
+      "Bash(Select-Object -First 5)",
+      "Bash(powershell -Command \"start 'c:\\\\Users\\\\sin03\\\\Desktop\\\\機器學習\\\\IPAS\\\\regularization.html'\")"
     ]
   }
 }

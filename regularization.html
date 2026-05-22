@@ -26,7 +26,7 @@
     color: var(--text);
     font-family: 'Noto Sans TC', sans-serif;
     min-height: 100vh;
-    padding: 2rem 1.5rem 4rem;
+    padding: calc(80px + 2rem) 1.5rem 4rem;
   }
 
   /* ── Header ── */
@@ -84,6 +84,7 @@
   .tab-btn.active.gen { color: #f472b6; border: 1px solid rgba(244,114,182,0.3); }
   .tab-btn.active.stat { color: #22d3ee; border: 1px solid rgba(34,211,238,0.3); }
   .tab-btn.active.eval { color: #34d399; border: 1px solid rgba(52,211,153,0.3); }
+  .tab-btn.active.nlp { color: #ec4899; border: 1px solid rgba(236,72,153,0.3); }
 
   /* ── Page ── */
   .page { display: none; }
@@ -196,9 +197,87 @@
     .tabs { flex-wrap: wrap; }
     .tab-btn { font-size: 0.78rem; padding: 0.45rem 0.9rem; }
   }
+
+  /* ── Search ── */
+  .search-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 1.5rem;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+  }
+  #searchInput {
+    max-width: 500px;
+    width: 100%;
+    padding: 0.6rem 1rem;
+    background: var(--surface2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  #searchInput:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 8px rgba(79,142,247,0.2);
+  }
+  #searchInput::placeholder {
+    color: var(--text-muted);
+  }
+  #clearBtn {
+    padding: 0.6rem 0.75rem;
+    background: transparent;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s;
+  }
+  #clearBtn:hover {
+    color: var(--text);
+    border-color: var(--accent);
+    background: rgba(79,142,247,0.1);
+  }
+  .search-result-info {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    min-width: 150px;
+    text-align: center;
+  }
+  .card.hidden {
+    display: none !important;
+  }
+  .card.highlight {
+    animation: highlight-pulse 0.3s ease-out;
+  }
+  @keyframes highlight-pulse {
+    from {
+      box-shadow: 0 0 0 3px rgba(79,142,247,0.4);
+    }
+    to {
+      box-shadow: 0 0 0 0 rgba(79,142,247,0);
+    }
+  }
 </style>
 </head>
 <body>
+
+<!-- Search Container -->
+<div class="search-container">
+  <input type="text" id="searchInput" placeholder="搜尋（例如：L1、Dropout、Attention...）" />
+  <button id="clearBtn" title="清除搜尋">✕</button>
+  <div id="searchResult" class="search-result-info"></div>
+</div>
 
 <div class="header">
   <div class="tag">Machine Learning</div>
@@ -217,6 +296,7 @@
     <button class="tab-btn gen" onclick="switchTab('gen')">🎨 生成模型</button>
     <button class="tab-btn stat" onclick="switchTab('stat')">📊 統計檢定</button>
     <button class="tab-btn eval" onclick="switchTab('eval')">📏 評估指標</button>
+    <button class="tab-btn nlp" onclick="switchTab('nlp')">🔤 文本表示</button>
   </div>
 </div>
 
@@ -235,64 +315,84 @@
   <div class="grid">
     <div class="card blue">
       <div class="card-head"><div class="icon">λ₁</div><div><div class="card-title">L1 正則化（Lasso）</div><div class="card-en">Least Absolute Shrinkage and Selection Operator</div></div></div>
-      <div class="card-body">在損失函數加入權重的<strong style="color:var(--text)">絕對值之和</strong>。效果是讓不重要的權重直接歸零，有自動特徵選擇的效果。<div class="formula">Loss = Loss₀ + λ Σ|wᵢ|</div>適合特徵很多但只有少數真正有用的情境（稀疏模型）。</div>
+      <div class="card-body">在損失函數加入權重的<strong style="color:var(--text)">絕對值之和</strong>。效果是讓不重要的權重直接歸零，有自動特徵選擇的效果。<div class="formula">Loss = Loss₀ + λ Σ|wᵢ|</div>適合特徵很多但只有少數真正有用的情境（稀疏模型）。
+      <div style="background:rgba(79,142,247,0.1);border:1px solid rgba(79,142,247,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+        <div style="font-size:0.68rem;color:#4f8ef7;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🔪 國中生版本</div>
+        <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">想像你有一個特別任性的老師，他規定：「如果你的分數中有某科貢獻不大，我就直接把你在那科的分數砍掉，變成 0。」所以最後你會<strong style="color:var(--text)">只保留真正有用的科目，其他直接廢掉</strong>。這就是 L1 砍到歸零的概念。</div>
+      </div></div>
       <div class="tags"><span class="badge badge-type">參數懲罰</span><span class="badge badge-use">特徵選擇</span><span class="badge badge-use">稀疏模型</span></div>
     </div>
     <div class="card purple">
       <div class="card-head"><div class="icon">λ₂</div><div><div class="card-title">L2 正則化（Ridge）</div><div class="card-en">Weight Decay / Tikhonov Regularization</div></div></div>
-      <div class="card-body">在損失函數加入權重的<strong style="color:var(--text)">平方和</strong>。效果是讓所有權重趨近於小值但不會歸零，讓模型整體更平滑。<div class="formula">Loss = Loss₀ + λ Σwᵢ²</div>深度學習中常稱為 <em>Weight Decay</em>，是最常用的正則化方式。</div>
+      <div class="card-body">在損失函數加入權重的<strong style="color:var(--text)">平方和</strong>。效果是讓所有權重趨近於小值但不會歸零，讓模型整體更平滑。<div class="formula">Loss = Loss₀ + λ Σwᵢ²</div>深度學習中常稱為 <em>Weight Decay</em>，是最常用的正則化方式。
+      <div style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+        <div style="font-size:0.68rem;color:#a78bfa;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">📉 國中生版本</div>
+        <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">想像你是個貪心的商人，喜歡把錢都花在某件事上（某個權重特別大）。但有個稅務官說：「權重越大我就越課重稅」，所以你被迫把錢<strong style="color:var(--text)">分散到各種事業上，讓每個都稍微縮小一點</strong>。這樣雖然沒有人失業，但每個人都被迫變小。</div>
+      </div></div>
       <div class="tags"><span class="badge badge-type">參數懲罰</span><span class="badge badge-use">深度學習</span><span class="badge badge-use">最常用</span></div>
     </div>
     <div class="card teal">
       <div class="card-head"><div class="icon">⚡</div><div><div class="card-title">Elastic Net</div><div class="card-en">L1 + L2 Combined</div></div></div>
-      <div class="card-body">L1 與 L2 的混合版本，用超參數 α 控制兩者比例。兼具 L1 的稀疏性與 L2 的穩定性。<div class="formula">Loss = Loss₀ + λ[α Σ|wᵢ| + (1-α) Σwᵢ²]</div>特徵之間高度相關時比單獨 L1 更穩定。</div>
+      <div class="card-body">L1 與 L2 的混合版本，用超參數 α 控制兩者比例。兼具 L1 的稀疏性與 L2 的穩定性。<div class="formula">Loss = Loss₀ + λ[α Σ|wᵢ| + (1-α) Σwᵢ²]</div>特徵之間高度相關時比單獨 L1 更穩定。
+      <div style="background:rgba(34,211,238,0.1);border:1px solid rgba(34,211,238,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+        <div style="font-size:0.68rem;color:#22d3ee;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">⚖️ 國中生版本</div>
+        <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">L1 說：「廢人砍掉」，L2 說：「每人都縮水」。Elastic Net 就是<strong style="color:var(--text)">兩方都聽一點，各退一步</strong>。這樣既能刪除廢人，也能讓倖存者不會太弱。最靈活的做法。</div>
+      </div></div>
       <div class="tags"><span class="badge badge-type">參數懲罰</span><span class="badge badge-use">高相關特徵</span></div>
     </div>
     <div class="card green">
       <div class="card-head"><div class="icon">⊘</div><div><div class="card-title">Dropout</div><div class="card-en">Random Neuron Deactivation</div></div></div>
-      <div class="card-body">訓練時<strong style="color:var(--text)">隨機關閉</strong>一定比例的神經元，防止神經元之間過度共同依賴。預測時全部神經元開啟。<div class="formula">p = 0.5（隱藏層）  p = 0.1~0.2（輸入層）</div>相當於同時訓練多個子網路並取集成平均。</div>
-      <div class="tags"><span class="badge badge-type">架構設計</span><span class="badge badge-use">深度學習</span><span class="badge badge-warn">預測時關閉</span></div>
+      <div class="card-body">訓練時<strong style="color:var(--text)">隨機關閉</strong>一定比例的神經元，防止神經元之間過度共同依賴。預測時全部神經元開啟。<div class="formula">p = 0.5（隱藏層）  p = 0.1~0.2（輸入層）</div>相當於同時訓練多個子網路並取集成平均。
+      <div style="background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+        <div style="font-size:0.68rem;color:#34d399;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">👥 國中生版本</div>
+        <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">想像一個班級在做小組作業，有個調皮的老師規定：「每堂課我隨機請假 50% 的學生」。學生們被迫<strong style="color:var(--text)">不能依賴某個聰明的人</strong>，每個人都得獨立思考。這樣訓練出來的隊伍，即使某人請假也能應付。</div>
+      </div></div>
+      <div class="tags"><span class="badge badge-type">架構設計</span><span class="badge badge-use">深度學習</span><span class="badge badge-warn">預測時開啟</span></div>
     </div>
     <div class="card orange">
       <div class="card-head"><div class="icon">∑</div><div><div class="card-title">Batch Normalization</div><div class="card-en">Internal Covariate Shift Reduction</div></div></div>
-      <div class="card-body">每一層的輸出在 mini-batch 內做標準化，穩定訓練過程。雖然主要目的是加速訓練，但也有輕微的正則化效果。<div class="formula">x̂ = (x − μ_B) / √(σ²_B + ε)</div>使用 BN 後通常可以降低 Dropout 的使用需求。</div>
+      <div class="card-body">每一層的輸出在 mini-batch 內做標準化，穩定訓練過程。雖然主要目的是加速訓練，但也有輕微的正則化效果。<div class="formula">x̂ = (x − μ_B) / √(σ²_B + ε)</div>使用 BN 後通常可以降低 Dropout 的使用需求。
+      <div style="background:rgba(251,146,60,0.1);border:1px solid rgba(251,146,60,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+        <div style="font-size:0.68rem;color:#fb923c;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">📏 國中生版本</div>
+        <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">每一層出來的資料都「亂七八糟」（分布不穩定），BN 就是在<strong style="color:var(--text)">每一層都裝一個「整隊機器」，把資料整理整齊後再往下傳</strong>。這樣下一層就能安心工作，訓練變快也更穩定。</div>
+      </div></div>
       <div class="tags"><span class="badge badge-type">訓練策略</span><span class="badge badge-use">加速訓練</span><span class="badge badge-warn">間接正則化</span></div>
     </div>
     <div class="card pink">
       <div class="card-head"><div class="icon">⏹</div><div><div class="card-title">Early Stopping</div><div class="card-en">Training Termination by Validation Loss</div></div></div>
-      <div class="card-body">監控驗證集的損失，當驗證損失不再下降時就<strong style="color:var(--text)">提早停止訓練</strong>，避免在訓練集上過度擬合。<div class="formula">if val_loss 連續 patience 輪沒改善 → 停止</div>最簡單有效的方法之一，幾乎沒有額外計算成本。</div>
+      <div class="card-body">監控驗證集的損失，當驗證損失不再下降時就<strong style="color:var(--text)">提早停止訓練</strong>，避免在訓練集上過度擬合。<div class="formula">if val_loss 連續 patience 輪沒改善 → 停止</div>最簡單有效的方法之一，幾乎沒有額外計算成本。
+      <div style="background:rgba(244,114,182,0.1);border:1px solid rgba(244,114,182,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+        <div style="font-size:0.68rem;color:#f472b6;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🛑 國中生版本</div>
+        <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">模型就像學生讀書，一開始進度快（訓練集分數高）。但讀到某一點後，<strong style="color:var(--text)">新知識幫助不大了，反而容易死背（過度擬合）</strong>。Early Stopping 就是說：「不要貪心，見好就收，看考卷（驗證集）不進步就停。」</div>
+      </div></div>
       <div class="tags"><span class="badge badge-type">訓練策略</span><span class="badge badge-use">所有模型</span><span class="badge badge-use">零成本</span></div>
     </div>
     <div class="card blue">
       <div class="card-head"><div class="icon">🔀</div><div><div class="card-title">資料增強</div><div class="card-en">Data Augmentation</div></div></div>
-      <div class="card-body">透過對訓練資料做隨機變換（翻轉、裁剪、旋轉、加噪等）人工擴充資料量，讓模型學習更多樣的輸入分佈。<div class="formula">影像：flip / crop / rotate / color jitter<br>文字：synonym replace / back-translation</div>資料量不足時效果最明顯。</div>
+      <div class="card-body">透過對訓練資料做隨機變換（翻轉、裁剪、旋轉、加噪等）人工擴充資料量，讓模型學習更多樣的輸入分佈。<div class="formula">影像：flip / crop / rotate / color jitter<br>文字：synonym replace / back-translation</div>資料量不足時效果最明顯。
+      <div style="background:rgba(79,142,247,0.1);border:1px solid rgba(79,142,247,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+        <div style="font-size:0.68rem;color:#4f8ef7;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🎭 國中生版本</div>
+        <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">你只有 100 張貓咪照片，但想訓練識別貓的 AI。Data Augmentation 就像<strong style="color:var(--text)">拿同一隻貓的照片，翻轉它、模糊它、改變角度、改變光線</strong>，變成 1000 張「不同的貓」。這樣 AI 見過更多變化，不會只死背原本 100 張。</div>
+      </div></div>
       <div class="tags"><span class="badge badge-type">資料增強</span><span class="badge badge-use">影像 / NLP</span><span class="badge badge-use">資料不足</span></div>
     </div>
     <div class="card purple">
       <div class="card-head"><div class="icon">≈</div><div><div class="card-title">Label Smoothing</div><div class="card-en">Soft Target Regularization</div></div></div>
-      <div class="card-body">把 one-hot 標籤的 1 換成 <em>1−ε</em>，0 換成 <em>ε/(K−1)</em>，讓模型不要對預測結果過度自信，提升泛化能力。<div class="formula">y_smooth = (1 − ε) · y_hard + ε / K</div>常用於分類任務，ε 通常設 0.1。</div>
+      <div class="card-body">把 one-hot 標籤的 1 換成 <em>1−ε</em>，0 換成 <em>ε/(K−1)</em>，讓模型不要對預測結果過度自信，提升泛化能力。<div class="formula">y_smooth = (1 − ε) · y_hard + ε / K</div>常用於分類任務，ε 通常設 0.1。
+      <div style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+        <div style="font-size:0.68rem;color:#a78bfa;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">😌 國中生版本</div>
+        <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">老師說「這題答案是 A」，模型就<strong style="color:var(--text)">100% 相信是 A，完全不考慮 B、C、D</strong>。但實務上，也許 B 有 5% 機率是對的。Label Smoothing 就是教模型：「別太確定，留點謙遜，其他選項也有小機率是對的。」</div>
+      </div></div>
       <div class="tags"><span class="badge badge-type">訓練策略</span><span class="badge badge-use">分類任務</span><span class="badge badge-use">ε ≈ 0.1</span></div>
     </div>
     <div class="card green">
       <div class="card-head"><div class="icon">✕</div><div><div class="card-title">Mixup</div><div class="card-en">Convex Combination Augmentation</div></div></div>
-      <div class="card-body">隨機取兩筆訓練資料做<strong style="color:var(--text)">線性插值</strong>，輸入和標籤都混合，讓模型學習更平滑的決策邊界。<div class="formula">x̃ = λxᵢ + (1−λ)xⱼ<br>ỹ = λyᵢ + (1−λ)yⱼ</div>在影像分類和 NLP 都有顯著提升效果。</div>
+      <div class="card-body">隨機取兩筆訓練資料做<strong style="color:var(--text)">線性插值</strong>，輸入和標籤都混合，讓模型學習更平滑的決策邊界。<div class="formula">x̃ = λxᵢ + (1−λ)xⱼ<br>ỹ = λyᵢ + (1−λ)yⱼ</div>在影像分類和 NLP 都有顯著提升效果。
+      <div style="background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+        <div style="font-size:0.68rem;color:#34d399;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🍹 國中生版本</div>
+        <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">你有一張「貓」的照片和一張「狗」的照片，Mixup 就是把它們<strong style="color:var(--text)">50% 混起來，變成一張既像貓又像狗的混合體，標籤也是 50% 貓 + 50% 狗</strong>。模型學習這種「模糊地帶」，決策邊界就變得平滑，不容易過度擬合。</div>
+      </div></div>
       <div class="tags"><span class="badge badge-type">資料增強</span><span class="badge badge-use">影像 / NLP</span></div>
-    </div>
-  </div>
-
-  <!-- 口訣 -->
-  <div class="section">
-    <div class="section-title">// 記憶口訣</div>
-    <div class="grid" style="margin:0">
-      <div class="card blue"><div class="card-head"><div class="icon">λ₁</div><div><div class="card-title">L1（Lasso）</div><div class="card-en">L1 Regularization</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.5rem">「砍到歸零，留強去弱」</div>權重直接砍掉 → 自動淘汰沒用的特徵</div></div>
-      <div class="card purple"><div class="card-head"><div class="icon">λ₂</div><div><div class="card-title">L2（Ridge）</div><div class="card-en">L2 Regularization</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.5rem">「人人縮水，沒人失業」</div>所有權重都變小，但不會被開除</div></div>
-      <div class="card teal"><div class="card-head"><div class="icon">⚡</div><div><div class="card-title">Elastic Net</div><div class="card-en">L1 + L2 Combined</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.5rem">「L1 L2 各退一步」</div>兩個都要，用 α 調比例</div></div>
-      <div class="card green"><div class="card-head"><div class="icon">⊘</div><div><div class="card-title">Dropout</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.5rem">「隨機請假，鍛鍊替補」</div>神經元輪流請假，讓每個人都練到</div></div>
-      <div class="card orange"><div class="card-head"><div class="icon">∑</div><div><div class="card-title">Batch Normalization</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.5rem">「每層整隊再出發」</div>每一層輸出亂掉前先整齊再往下傳</div></div>
-      <div class="card pink"><div class="card-head"><div class="icon">⏹</div><div><div class="card-title">Early Stopping</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.5rem">「見好就收，別貪」</div>驗證集不再進步就喊停，別繼續死記</div></div>
-      <div class="card blue"><div class="card-head"><div class="icon">🔀</div><div><div class="card-title">Data Augmentation</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.5rem">「同一張臉換妝再練」</div>翻轉、裁剪、加噪，讓模型見多識廣</div></div>
-      <div class="card purple"><div class="card-head"><div class="icon">≈</div><div><div class="card-title">Label Smoothing</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.5rem">「別太確定，留點謙遜」</div>把標籤的 1 稍微調低，不讓模型過度自信</div></div>
-      <div class="card green"><div class="card-head"><div class="icon">✕</div><div><div class="card-title">Mixup</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.5rem">「兩道菜混著吃，學融合」</div>兩筆資料插值混合，學習模糊邊界</div></div>
     </div>
   </div>
 
@@ -414,6 +514,10 @@
         把所有值壓縮到 <strong style="color:var(--text)">[0, 1]</strong> 的範圍內（也可以指定其他區間如 [−1, 1]）。保留原始分佈形狀，但對<strong style="color:var(--text)">離群值很敏感</strong>。
         <div class="formula">x' = (x − x_min) / (x_max − x_min)</div>
         資料沒有特別的分佈假設時適用，常用於影像像素值（0~255 → 0~1）。
+        <div style="background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#34d399;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">📊 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">想像班上學生的身高從 140cm 到 200cm。Min-Max 就是把<strong style="color:var(--text)">最矮的變成 0，最高的變成 1，其他人線性插在中間</strong>。缺點：如果突然來一個 220cm 的外星人，整個排名就亂掉。</div>
+        </div>
       </div>
       <div class="tags"><span class="badge badge-norm">縮放類</span><span class="badge badge-use">影像處理</span><span class="badge badge-warn">離群值敏感</span></div>
     </div>
@@ -425,6 +529,10 @@
         轉換為<strong style="color:var(--text)">平均值 0、標準差 1</strong> 的分佈。不改變分佈形狀，對離群值比 Min-Max 更穩健。
         <div class="formula">x' = (x − μ) / σ</div>
         假設資料近似常態分佈時效果最好。線性模型、SVM、PCA 的標準前處理步驟。
+        <div style="background:rgba(79,142,247,0.1);border:1px solid rgba(79,142,247,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#4f8ef7;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">📈 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">班上考試成績，平均 70 分、標準差 10 分。Z-score 把分數轉成：你的成績多少個「標準差」遠離平均。80 分的人就是 +1（比平均高 1 個標準差），60 分的人就是 -1。<strong style="color:var(--text)">這樣可以比較不同科目的成績</strong>，是最常用的標準化方法。</div>
+        </div>
       </div>
       <div class="tags"><span class="badge badge-norm">分佈轉換</span><span class="badge badge-use">最常用</span><span class="badge badge-use">線性模型</span></div>
     </div>
@@ -436,6 +544,10 @@
         用<strong style="color:var(--text)">中位數（median）和四分位距（IQR）</strong>代替平均數和標準差來縮放，極端值影響較小。
         <div class="formula">x' = (x − median) / IQR<br>IQR = Q3 − Q1</div>
         資料中有明顯離群值、又不想刪掉時的首選。
+        <div style="background:rgba(251,146,60,0.1);border:1px solid rgba(251,146,60,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#fb923c;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🛡️ 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">Z-score 怕離群值（如一個考 150 分的天才會毀掉平均）。Robust Scaling 改用<strong style="color:var(--text)">「中位數」代替平均</strong>，因為中位數是「中間那個人」，不受極端值影響。就像你要描述班級成績，說「中位數 70」比「平均 75（但有人考 0、有人考 150）」更真實。</div>
+        </div>
       </div>
       <div class="tags"><span class="badge badge-norm">抗離群值</span><span class="badge badge-use">有離群值</span></div>
     </div>
@@ -447,6 +559,10 @@
         對數值取 log，將<strong style="color:var(--text)">右偏分佈</strong>（長尾分佈）壓縮成近似常態分佈。適合數值跨越多個數量級的特徵。
         <div class="formula">x' = log(x + 1)  （+1 避免 log(0)）</div>
         薪資、房價、瀏覽量等呈冪律分佈的資料特別有效。
+        <div style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#a78bfa;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">📊 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">薪資分佈很奇怪：大多數人 30 萬，但有少數 CEO 賺 3000 萬（相差 100 倍！）。直接用會失衡。Log 轉換就是<strong style="color:var(--text)">把這個「1 倍、10 倍、100 倍」的關係，轉成「1、2、3」的線性關係</strong>。這樣 AI 就能處理了。</div>
+        </div>
       </div>
       <div class="tags"><span class="badge badge-norm">分佈轉換</span><span class="badge badge-use">右偏分佈</span><span class="badge badge-use">冪律資料</span></div>
     </div>
@@ -458,6 +574,10 @@
         將每個樣本的特徵向量縮放為<strong style="color:var(--text)">單位長度（長度 = 1）</strong>，保留方向、忽略大小。
         <div class="formula">x' = x / ‖x‖₂ = x / √(Σxᵢ²)</div>
         文字特徵（TF-IDF）、餘弦相似度計算前的標準步驟。注意跟 L2 正則化不同！
+        <div style="background:rgba(34,211,238,0.1);border:1px solid rgba(34,211,238,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#22d3ee;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🧭 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">你和朋友都喜歡「籃球、足球、電玩」，但你花的時間不同（籃球 100 小時、足球 50、電玩 30），朋友花更多（籃球 1000、足球 500、電玩 300）。L2 正規化說：「忽略你們花的總時間，只看<strong style="color:var(--text)">比例方向是否一樣</strong>」。這樣可以比較喜好的相似度。</div>
+        </div>
       </div>
       <div class="tags"><span class="badge badge-norm">向量縮放</span><span class="badge badge-use">NLP</span><span class="badge badge-use">相似度計算</span></div>
     </div>
@@ -469,6 +589,10 @@
         對<strong style="color:var(--text)">每個樣本</strong>在特徵維度上做標準化（Batch Norm 是在 batch 維度上做）。不受 batch size 影響，適合序列模型。
         <div class="formula">x' = (x − μ_sample) / σ_sample</div>
         Transformer、RNN 的標準配備，batch size 小或變長序列時比 Batch Norm 更穩定。
+        <div style="background:rgba(244,114,182,0.1);border:1px solid rgba(244,114,182,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#f472b6;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">👤 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">Batch Norm 是<strong style="color:var(--text)">「比較整個班級的同學」</strong>。但序列模型（讀句子）不在乎其他句子怎樣，只在乎自己的特徵標準化。Layer Norm 就是<strong style="color:var(--text)">「每個人獨立調整自己」</strong>，不受班級同學影響。Transformer 用 Layer Norm，因為句子長度差異大。</div>
+        </div>
       </div>
       <div class="tags"><span class="badge badge-norm">神經網路</span><span class="badge badge-use">Transformer</span><span class="badge badge-use">RNN</span></div>
     </div>
@@ -480,23 +604,14 @@
         用數學方式找出最佳的冪次轉換，讓資料分佈<strong style="color:var(--text)">盡量接近常態分佈</strong>。Box-Cox 只能處理正數，Yeo-Johnson 可以處理負數。
         <div class="formula">Box-Cox: x' = (xλ − 1) / λ  (λ ≠ 0)<br>Yeo-Johnson: 適用正負值</div>
         比 Log 轉換更彈性，自動學習最佳 λ。
+        <div style="background:rgba(250,204,21,0.1);border:1px solid rgba(250,204,21,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#facc15;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🔬 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">Log 轉換是「我知道怎麼轉」。Power Transform 是「<strong style="color:var(--text)">讓 AI 自己試試看，用 x^0.5、x^0.3、x^2 等各種冪次，找到讓分佈最「正常」的那個</strong>」。是更聰明的自動轉換方式，但計算成本較高。</div>
+        </div>
       </div>
       <div class="tags"><span class="badge badge-norm">分佈轉換</span><span class="badge badge-use">偏態資料</span></div>
     </div>
 
-  </div>
-
-  <!-- 口訣 -->
-  <div class="section">
-    <div class="section-title">// 記憶口訣</div>
-    <div class="grid" style="margin:0">
-      <div class="card green"><div class="card-head"><div class="icon">↔</div><div><div class="card-title">Min-Max</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.5rem">「壓扁進箱子，整齊排好」</div>不管原來多大，全部塞進 [0,1]</div></div>
-      <div class="card blue"><div class="card-head"><div class="icon">σ</div><div><div class="card-title">Z-score</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.5rem">「以平均為原點，標準差當尺」</div>幾個標準差就是多偏離平均</div></div>
-      <div class="card orange"><div class="card-head"><div class="icon">⚖</div><div><div class="card-title">Robust Scaling</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.5rem">「用中位數，不被極端值帶跑」</div>有怪異資料點也不怕</div></div>
-      <div class="card purple"><div class="card-head"><div class="icon">㏒</div><div><div class="card-title">Log 轉換</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.5rem">「長尾拉回來，大數壓扁」</div>幾億變幾十，分佈更對稱</div></div>
-      <div class="card teal"><div class="card-head"><div class="icon">→₁</div><div><div class="card-title">L2 正規化（向量）</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.5rem">「只看方向，不看大小」</div>向量長度歸一，比較角度</div></div>
-      <div class="card pink"><div class="card-head"><div class="icon">∥</div><div><div class="card-title">Layer Norm</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.5rem">「每個人自己對齊自己」</div>不跟別人比，只跟自己的特徵比</div></div>
-    </div>
   </div>
 
   <!-- 選哪個？ -->
@@ -712,25 +827,41 @@
 
       <div class="card blue">
         <div class="card-head"><div class="icon">📏</div><div><div class="card-title">線性回歸</div><div class="card-en">Linear Regression</div></div></div>
-        <div class="card-body">用一條直線（或超平面）擬合資料，預測<strong style="color:var(--text)">連續數值</strong>。最簡單的監督式模型，可解釋性高。<div class="formula">ŷ = w₀ + w₁x₁ + w₂x₂ + ...</div>例：根據房子坪數預測售價。</div>
+        <div class="card-body">用一條直線（或超平面）擬合資料，預測<strong style="color:var(--text)">連續數值</strong>。最簡單的監督式模型，可解釋性高。<div class="formula">ŷ = w₀ + w₁x₁ + w₂x₂ + ...</div>例：根據房子坪數預測售價。
+        <div style="background:rgba(79,142,247,0.1);border:1px solid rgba(79,142,247,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#4f8ef7;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">📊 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">想像你有很多「房子坪數 vs 售價」的資料點。線性回歸就是<strong style="color:var(--text)">找一條最佳直線，讓所有點都盡量貼著這條線</strong>。然後用這條線預測新房子的價格。簡單直白，但只適合「大致成直線」的關係。</div>
+        </div></div>
         <div class="tags"><span class="badge badge-use">回歸</span><span class="badge badge-type">線性模型</span><span class="badge badge-norm">高可解釋性</span></div>
       </div>
 
       <div class="card purple">
         <div class="card-head"><div class="icon">🚦</div><div><div class="card-title">羅吉斯回歸</div><div class="card-en">Logistic Regression</div></div></div>
-        <div class="card-body">名字叫「回歸」但實際做<strong style="color:var(--text)">分類</strong>，輸出機率值（0~1）。常作為深度學習最後一層的基礎。<div class="formula">P(y=1) = σ(wᵀx) = 1 / (1 + e⁻ᶻ)</div>例：預測這封信是不是垃圾郵件。</div>
+        <div class="card-body">名字叫「回歸」但實際做<strong style="color:var(--text)">分類</strong>，輸出機率值（0~1）。常作為深度學習最後一層的基礎。<div class="formula">P(y=1) = σ(wᵀx) = 1 / (1 + e⁻ᶻ)</div>例：預測這封信是不是垃圾郵件。
+        <div style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#a78bfa;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🎲 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">線性回歸預測「房價多少」（數字）。羅吉斯回歸做<strong style="color:var(--text)">「是還是不是」（0 或 1）</strong>，但輸出的是機率（0.7 表示 70% 可能是垃圾郵件）。就是<strong style="color:var(--text)">在直線輸出套上一個 S 形函數，把數值壓到 0~1</strong>。</div>
+        </div></div>
         <div class="tags"><span class="badge badge-use">分類</span><span class="badge badge-type">線性模型</span><span class="badge badge-norm">輸出機率</span></div>
       </div>
 
       <div class="card green">
         <div class="card-head"><div class="icon">🌳</div><div><div class="card-title">決策樹</div><div class="card-en">Decision Tree</div></div></div>
-        <div class="card-body">用一系列「是/否」問題把資料分開，像流程圖。直觀易懂，但容易<strong style="color:var(--text)">過擬合</strong>，通常搭配整合方法使用。<div class="formula">分裂準則：Gini / Entropy / MSE</div>例：根據症狀判斷是哪種病。</div>
+        <div class="card-body">用一系列「是/否」問題把資料分開，像流程圖。直觀易懂，但容易<strong style="color:var(--text)">過擬合</strong>，通常搭配整合方法使用。<div class="formula">分裂準則：Gini / Entropy / MSE</div>例：根據症狀判斷是哪種病。
+        <div style="background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#34d399;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🌳 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">像玩「猜猜我是誰」：每次問一個是非題縮小範圍。「有4條腿嗎？」→「會飛嗎？」→「答案是鳥！」。決策樹就是<strong style="color:var(--text)">自動找出最好的問題順序</strong>，每次問完把資料分成兩堆，一直問到答案出來。</div>
+        </div></div>
         <div class="tags"><span class="badge badge-use">分類 / 回歸</span><span class="badge badge-norm">高可解釋性</span><span class="badge badge-warn">易過擬合</span></div>
       </div>
 
       <div class="card orange">
         <div class="card-head"><div class="icon">🌲</div><div><div class="card-title">隨機森林</div><div class="card-en">Random Forest</div></div></div>
-        <div class="card-body">訓練很多棵決策樹，最後<strong style="color:var(--text)">投票取結果</strong>（Bagging）。比單棵樹穩定很多，不容易過擬合。<div class="formula">f(x) = majority_vote(tree₁, tree₂, ..., treeₙ)</div>實務上最常用的入門強力模型之一。</div>
+        <div class="card-body">訓練很多棵決策樹，最後<strong style="color:var(--text)">投票取結果</strong>（Bagging）。比單棵樹穩定很多，不容易過擬合。<div class="formula">f(x) = majority_vote(tree₁, tree₂, ..., treeₙ)</div>實務上最常用的入門強力模型之一。
+        <div style="background:rgba(251,146,60,0.1);border:1px solid rgba(251,146,60,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#fb923c;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🌲 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">一棵決策樹容易「太死記」（過擬合）。隨機森林的做法是<strong style="color:var(--text)">種很多棵樹，每棵看不同的資料子集</strong>，最後讓全部的樹投票，誰票多聽誰的。就像考試不靠一個同學，而是問全班再取平均。</div>
+        </div></div>
         <div class="tags"><span class="badge badge-use">分類 / 回歸</span><span class="badge badge-type">集成方法</span><span class="badge badge-norm">穩健</span></div>
       </div>
 
@@ -812,29 +943,143 @@
 
       <div class="card pink">
         <div class="card-head"><div class="icon">📐</div><div><div class="card-title">支援向量機</div><div class="card-en">SVM — Support Vector Machine</div></div></div>
-        <div class="card-body">找到讓兩類資料<strong style="color:var(--text)">間距最大</strong>的邊界（超平面）。用 kernel trick 可以處理非線性分類。<div class="formula">最大化間距：2 / ‖w‖</div>高維度、小資料集時效果不錯。</div>
+        <div class="card-body">找到讓兩類資料<strong style="color:var(--text)">間距最大</strong>的邊界（超平面）。用 kernel trick 可以處理非線性分類。<div class="formula">最大化間距：2 / ‖w‖</div>高維度、小資料集時效果不錯。
+        <div style="background:rgba(244,114,182,0.1);border:1px solid rgba(244,114,182,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#f472b6;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">📐 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">把兩群點畫在紙上，SVM 要找一條線把它們分開，而且要讓<strong style="color:var(--text)">兩邊離這條線的距離盡量最寬</strong>（留最寬的走廊）。讓邊界穩固，新資料不容易分錯。當資料無法用直線分時，用 kernel trick「升維」到可以分的空間。</div>
+        </div></div>
         <div class="tags"><span class="badge badge-use">分類 / 回歸</span><span class="badge badge-type">幾何方法</span><span class="badge badge-norm">小資料集</span></div>
       </div>
 
       <div class="card blue">
         <div class="card-head"><div class="icon">👥</div><div><div class="card-title">K 近鄰法</div><div class="card-en">KNN — K-Nearest Neighbors</div></div></div>
-        <div class="card-body">找最近的 K 個鄰居，用<strong style="color:var(--text)">多數決</strong>決定類別。沒有「訓練」過程，預測時才計算距離。<div class="formula">ŷ = mode(y₁, y₂, ..., yₖ)  — K個最近鄰</div>直覺簡單，但資料量大時預測慢。</div>
+        <div class="card-body">找最近的 K 個鄰居，用<strong style="color:var(--text)">多數決</strong>決定類別。沒有「訓練」過程，預測時才計算距離。<div class="formula">ŷ = mode(y₁, y₂, ..., yₖ)  — K個最近鄰</div>直覺簡單，但資料量大時預測慢。
+        <div style="background:rgba(79,142,247,0.1);border:1px solid rgba(79,142,247,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#4f8ef7;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">👥 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">「你跟誰最像，你就跟他一樣」。KNN 不用事先訓練，預測時直接找 <strong style="color:var(--text)">K 個最近的鄰居</strong>，看他們大多數是什麼類別，就猜這個新點也是那個類別。就像你轉學到新學校，看最近坐的幾個同學喜歡什麼，就猜你也喜歡什麼。</div>
+        </div></div>
         <div class="tags"><span class="badge badge-use">分類 / 回歸</span><span class="badge badge-norm">直觀</span><span class="badge badge-warn">大資料集慢</span></div>
       </div>
 
       <div class="card purple">
         <div class="card-head"><div class="icon">🧠</div><div><div class="card-title">神經網路 / 深度學習</div><div class="card-en">Neural Network / Deep Learning</div></div></div>
-        <div class="card-body">模仿大腦神經元，用多層非線性轉換學習複雜規律。當資料量夠大時，<strong style="color:var(--text)">幾乎無所不能</strong>。<div class="formula">影像→CNN　文字→Transformer　序列→RNN</div>現代 AI 的核心，但需要大量資料和算力。</div>
+        <div class="card-body">模仿大腦神經元，用多層非線性轉換學習複雜規律。當資料量夠大時，<strong style="color:var(--text)">幾乎無所不能</strong>。<div class="formula">影像→CNN　文字→Transformer　序列→RNN</div>現代 AI 的核心，但需要大量資料和算力。
+        <div style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#a78bfa;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🧠 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">模仿人腦：很多神經元連成一層一層的網路，每層各自提取不同程度的特徵。前幾層抓「邊緣」，中間層抓「形狀」，後幾層抓「意義」。<strong style="color:var(--text)">資料越多、層越深，能學的東西越複雜</strong>，現在的 ChatGPT、圖片辨識都靠它。</div>
+        </div></div>
         <div class="tags"><span class="badge badge-use">分類 / 回歸 / 生成</span><span class="badge badge-type">深度學習</span><span class="badge badge-warn">需要大資料</span></div>
       </div>
 
       <div class="card green">
         <div class="card-head"><div class="icon">📊</div><div><div class="card-title">樸素貝葉斯</div><div class="card-en">Naive Bayes</div></div></div>
-        <div class="card-body">基於貝葉斯定理，假設所有特徵<strong style="color:var(--text)">彼此獨立</strong>（雖然現實中常不成立）。速度極快，資料少時也能用。<div class="formula">P(y|x) ∝ P(y) × ΠP(xᵢ|y)</div>文字分類、垃圾郵件過濾的經典方法。</div>
+        <div class="card-body">基於貝葉斯定理，假設所有特徵<strong style="color:var(--text)">彼此獨立</strong>（雖然現實中常不成立）。速度極快，資料少時也能用。<div class="formula">P(y|x) ∝ P(y) × ΠP(xᵢ|y)</div>文字分類、垃圾郵件過濾的經典方法。
+        <div style="background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#34d399;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">📊 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">收到一封郵件，裡面有「免費」「優惠」「點擊」這些詞。貝葉斯方法是：統計過去垃圾郵件裡這些詞出現的機率，<strong style="color:var(--text)">把每個詞的機率乘起來</strong>，看是垃圾郵件的機率大，還是正常郵件大。「天真」是因為它假設每個詞互相獨立，但實際上速度快又有效。</div>
+        </div></div>
         <div class="tags"><span class="badge badge-use">分類</span><span class="badge badge-norm">速度快</span><span class="badge badge-use">NLP</span></div>
       </div>
 
     </div>
+  </div>
+
+  <!-- ── 不平衡資料處理 ── -->
+  <div class="section" style="margin-top:2.5rem">
+    <div class="section-title">// 不平衡資料處理（Class Imbalance）</div>
+
+    <div style="background:var(--surface);border:1px solid rgba(251,146,60,0.25);border-radius:14px;padding:1.25rem;margin-bottom:1.25rem">
+      <div style="font-size:0.7rem;color:#fb923c;font-family:'JetBrains Mono',monospace;margin-bottom:0.7rem">💡 什麼是類別不平衡？</div>
+      <div style="font-size:0.83rem;color:var(--text-dim);line-height:1.8">訓練資料中各類別數量差異極大。例如詐騙偵測：<strong style="color:var(--text)">99% 正常交易、1% 詐騙</strong>。模型直接預測全部為「正常」也有 99% 準確率，但完全沒有學到詐騙的特徵。需要特殊處理才能讓模型真正學會少數類別。</div>
+    </div>
+
+    <div class="grid" style="margin:0">
+
+      <div class="card orange" style="grid-column:1/-1">
+        <div class="card-head"><div class="icon">🧬</div><div><div class="card-title">SMOTE</div><div class="card-en">Synthetic Minority Over-sampling Technique</div></div></div>
+        <div class="card-body">
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8;margin-bottom:0.9rem">在少數類別樣本之間<strong style="color:var(--text)">「插值」生成新的合成樣本</strong>，而非單純複製，讓少數類別的樣本數量增加到與多數類別相近。</div>
+
+          <div style="background:var(--surface2);border:1px solid rgba(251,146,60,0.2);border-radius:10px;padding:0.9rem;margin-bottom:0.9rem">
+            <div style="font-size:0.68rem;color:#fb923c;font-family:'JetBrains Mono',monospace;margin-bottom:0.6rem">⚙️ 運作步驟</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0.6rem;font-size:0.78rem">
+              <div style="background:rgba(251,146,60,0.08);border-radius:7px;padding:0.65rem"><span style="color:#fdba74;font-weight:600;display:block;margin-bottom:0.25rem">① 選一個少數類別樣本 x</span><span style="color:var(--text-muted)">從所有少數類別的點中隨機選一個</span></div>
+              <div style="background:rgba(251,146,60,0.08);border-radius:7px;padding:0.65rem"><span style="color:#fdba74;font-weight:600;display:block;margin-bottom:0.25rem">② 找 K 個最近鄰</span><span style="color:var(--text-muted)">在少數類別裡找最近的 K 個點（通常 K=5）</span></div>
+              <div style="background:rgba(251,146,60,0.08);border-radius:7px;padding:0.65rem"><span style="color:#fdba74;font-weight:600;display:block;margin-bottom:0.25rem">③ 隨機選一個鄰居 x'</span><span style="color:var(--text-muted)">從 K 個鄰居中隨機挑一個</span></div>
+              <div style="background:rgba(251,146,60,0.08);border-radius:7px;padding:0.65rem"><span style="color:#fdba74;font-weight:600;display:block;margin-bottom:0.25rem">④ 在兩點之間插值</span><span style="color:var(--text-muted)">x_new = x + λ × (x' − x)，λ ∈ [0, 1] 隨機</span></div>
+            </div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:#fdba74;margin-top:0.7rem;line-height:1.8">
+              原始少數樣本：A=(2,3)　B=(4,7)<br>
+              λ=0.6 → 合成樣本 = (2,3) + 0.6×(2,4) = <strong style="color:var(--text)">(3.2, 5.4)</strong>　← 新樣本落在兩點連線上
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.9rem;margin-bottom:0.9rem">
+            <div style="background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.2);border-radius:9px;padding:0.9rem;font-size:0.78rem">
+              <div style="color:#fca5a5;font-weight:600;margin-bottom:0.5rem">❌ 單純複製（Over-sampling）</div>
+              <div style="color:var(--text-muted);line-height:1.7">把少數類別樣本直接複製貼上。模型反覆看同樣的點，<strong style="color:var(--text-dim)">容易過擬合這幾個點</strong>，決策邊界不夠通用。</div>
+            </div>
+            <div style="background:rgba(251,146,60,0.07);border:1px solid rgba(251,146,60,0.2);border-radius:9px;padding:0.9rem;font-size:0.78rem">
+              <div style="color:#fdba74;font-weight:600;margin-bottom:0.5rem">✓ SMOTE（合成插值）</div>
+              <div style="color:var(--text-muted);line-height:1.7">在已有樣本之間<strong style="color:var(--text-dim)">生成全新的合成點</strong>，讓少數類別的分布更完整，決策邊界更平滑、泛化更好。</div>
+            </div>
+          </div>
+
+          <div style="background:rgba(251,146,60,0.1);border:1px solid rgba(251,146,60,0.2);border-radius:10px;padding:0.9rem;margin-bottom:0.9rem">
+            <div style="font-size:0.68rem;color:#fb923c;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🧬 國中生版本</div>
+            <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">假設詐騙交易只有 100 筆，正常交易有 10000 筆。SMOTE 不是把這 100 筆複製 100 次，而是<strong style="color:var(--text)">找兩筆相似的詐騙交易，在它們「中間」造出一筆新的假詐騙交易</strong>（特徵值介於兩者之間）。就像在地圖上兩個城市之間「憑空建一座新城市」，讓少數類別的地盤更豐富，模型更容易學到規律。</div>
+          </div>
+
+          <div style="background:var(--surface2);border-radius:9px;padding:0.85rem;font-size:0.78rem;line-height:1.8">
+            <div style="color:#fdba74;font-weight:600;margin-bottom:0.5rem">SMOTE 變體</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.5rem">
+              <div><span style="color:#fb923c">Borderline-SMOTE：</span><span style="color:var(--text-muted)">只在決策邊界附近的樣本間插值，更有針對性</span></div>
+              <div><span style="color:#fb923c">ADASYN：</span><span style="color:var(--text-muted)">難以分類的少數樣本附近生成更多合成樣本</span></div>
+              <div><span style="color:#fb923c">SMOTE + Tomek Links：</span><span style="color:var(--text-muted)">過採樣後再清除邊界上的多數類別噪點</span></div>
+              <div><span style="color:#fb923c">SMOTE + ENN：</span><span style="color:var(--text-muted)">用 Edited Nearest Neighbour 清理生成後的噪音</span></div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:0.9rem;padding:0.65rem 0.9rem;background:rgba(100,116,139,0.08);border:1px solid rgba(100,116,139,0.2);border-radius:9px;font-size:0.78rem;color:var(--text-dim);line-height:1.7">
+          ⚠️ <strong style="color:var(--text)">為什麼不適合高維稀疏資料？</strong><br>
+          <strong style="color:var(--text-dim)">高維</strong> = 特徵數量極多（如 TF-IDF 文本有 10 萬個維度）；<strong style="color:var(--text-dim)">稀疏</strong> = 大部分特徵值都是 0（一篇文章只用到幾百個詞，其餘欄位全是 0）。<br>
+          在高維空間裡，每個點和其他點的距離都差不多遠（<strong style="color:var(--text)">維度詛咒</strong>），「最近鄰」的概念失去意義，SMOTE 插值出的合成樣本可能完全不真實。
+        </div>
+        <div class="tags"><span class="badge badge-type">過採樣</span><span class="badge badge-use">不平衡資料</span><span class="badge badge-norm">詐騙偵測 / 醫療診斷</span><span class="badge badge-warn">不適合高維稀疏資料</span></div>
+      </div>
+
+      <div class="card blue">
+        <div class="card-head"><div class="icon">✂️</div><div><div class="card-title">Under-sampling（欠採樣）</div><div class="card-en">Random Under-sampling / Tomek Links</div></div></div>
+        <div class="card-body">從多數類別中<strong style="color:var(--text)">隨機刪除一些樣本</strong>，讓兩類數量接近。
+        <div class="formula">多數類別：10000 筆 → 隨機刪到 1000 筆<br>少數類別：1000 筆 → 維持不動<br>→ 比例從 10:1 變為 1:1</div>
+        <div style="background:rgba(79,142,247,0.1);border:1px solid rgba(79,142,247,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#4f8ef7;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">✂️ 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">班上 100 個正常學生、5 個特殊學生，老師只看 5 個正常學生的資料來學。<strong style="color:var(--text)">簡單快速，但會丟失大量多數類別的資訊</strong>，資料本來就不多時不適合用。</div>
+        </div></div>
+        <div class="tags"><span class="badge badge-norm">簡單快速</span><span class="badge badge-warn">丟失資訊</span></div>
+      </div>
+
+      <div class="card green">
+        <div class="card-head"><div class="icon">⚖️</div><div><div class="card-title">Class Weights（類別權重）</div><div class="card-en">Cost-sensitive Learning</div></div></div>
+        <div class="card-body">不改變資料，而是在損失函數裡<strong style="color:var(--text)">讓少數類別的錯誤罰得更重</strong>。
+        <div class="formula">weight_minority = N_total / (2 × N_minority)<br>loss = −[w₁·y·log(p) + w₀·(1−y)·log(1−p)]<br>sklearn: class_weight='balanced'</div>
+        <div style="background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#34d399;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">⚖️ 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">不增刪資料，直接告訴模型：<strong style="color:var(--text)">「你如果把詐騙猜成正常，罰你 10 分；把正常猜成詐騙只罰 1 分」</strong>。最簡單、不需要生成假資料，是實務上的第一選擇。</div>
+        </div></div>
+        <div class="tags"><span class="badge badge-norm">最簡單</span><span class="badge badge-use">實務首選</span><span class="badge badge-type">不需生成資料</span></div>
+      </div>
+
+    </div>
+
+    <table style="margin-top:1.5rem">
+      <thead><tr><th>方法</th><th>原理</th><th>優點</th><th>缺點</th><th>適合情境</th></tr></thead>
+      <tbody>
+        <tr><td><span class="method-name">SMOTE</span></td><td>合成少數類別樣本</td><td>增加多樣性、不過擬合</td><td>高維稀疏資料效果差</td><td>資料量中等、結構化資料</td></tr>
+        <tr><td><span class="method-name">Under-sampling</span></td><td>刪除多數類別樣本</td><td>快速、降低計算量</td><td>丟失有用資訊</td><td>資料量非常大</td></tr>
+        <tr><td><span class="method-name">Class Weights</span></td><td>調整損失函數權重</td><td>最簡單、不改資料</td><td>無法處理極端不平衡</td><td>輕微不平衡的第一選擇</td></tr>
+      </tbody>
+    </table>
   </div>
 
   <!-- ── 非監督式學習 ── -->
@@ -844,37 +1089,105 @@
 
       <div class="card green">
         <div class="card-head"><div class="icon">🎯</div><div><div class="card-title">K-Means 分群</div><div class="card-en">K-Means Clustering</div></div></div>
-        <div class="card-body">把資料分成 K 群，每群以<strong style="color:var(--text)">重心（centroid）</strong>代表，反覆更新直到穩定。需要事先指定 K 值。<div class="formula">最小化：Σ ‖xᵢ − μₖ‖²</div>例：把客戶分成幾種消費族群。</div>
+        <div class="card-body">把資料分成 K 群，每群以<strong style="color:var(--text)">重心（centroid）</strong>代表，反覆更新直到穩定。需要事先指定 K 值。<div class="formula">最小化：Σ ‖xᵢ − μₖ‖²</div>例：把客戶分成幾種消費族群。
+        <div style="background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#34d399;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🎯 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">把 1000 個顧客分成 3 群：先隨機放 3 個「中心點」，每個顧客歸到最近的中心點，再重新算各群的平均位置作為新中心，<strong style="color:var(--text)">一直重複直到中心不動</strong>。就像找「最有代表性的集合地點」。</div>
+        </div></div>
         <div class="tags"><span class="badge badge-norm">分群</span><span class="badge badge-use">客群分析</span><span class="badge badge-warn">需指定 K</span></div>
       </div>
 
       <div class="card teal">
         <div class="card-head"><div class="icon">🌿</div><div><div class="card-title">階層式分群</div><div class="card-en">Hierarchical Clustering</div></div></div>
-        <div class="card-body">不需要指定群數，從每個點各自一群開始，逐步<strong style="color:var(--text)">合併最近的群</strong>，產生樹狀結構（dendrogram）。<div class="formula">距離度量：ward / complete / average</div>可以從樹狀圖決定要切幾群。</div>
+        <div class="card-body">不需要指定群數，從每個點各自一群開始，逐步<strong style="color:var(--text)">合併最近的群</strong>，產生樹狀結構（dendrogram）。<div class="formula">距離度量：ward / complete / average</div>可以從樹狀圖決定要切幾群。
+        <div style="background:rgba(34,211,238,0.1);border:1px solid rgba(34,211,238,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#22d3ee;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🌿 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">從「每個人各自一群」開始，每次把<strong style="color:var(--text)">最像的兩群合併</strong>，畫成像家族族譜的樹狀圖。不需要事先決定幾群，看完樹狀圖再決定「在哪裡切斷」要幾群。更彈性，但資料量大時比較慢。</div>
+        </div></div>
         <div class="tags"><span class="badge badge-norm">分群</span><span class="badge badge-norm">不需指定 K</span></div>
       </div>
 
       <div class="card blue">
         <div class="card-head"><div class="icon">📉</div><div><div class="card-title">主成分分析</div><div class="card-en">PCA — Principal Component Analysis</div></div></div>
-        <div class="card-body">找出資料變異最大的方向，把高維資料<strong style="color:var(--text)">壓縮成低維</strong>，保留最多資訊。常用於視覺化和降維前處理。<div class="formula">找特徵向量：X^T X → 取前 k 個</div>100 個特徵 → 2D 可視化。</div>
+        <div class="card-body">找出資料變異最大的方向，把高維資料<strong style="color:var(--text)">壓縮成低維</strong>，保留最多資訊。常用於視覺化和降維前處理。<div class="formula">找特徵向量：X^T X → 取前 k 個</div>100 個特徵 → 2D 可視化。
+        <div style="background:rgba(79,142,247,0.1);border:1px solid rgba(79,142,247,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#4f8ef7;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">📉 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">資料有 100 個特徵太複雜了。PCA 找到<strong style="color:var(--text)">「哪個方向的變化最大」</strong>，把資料投影到那幾個方向，用 2～3 個維度就能代表原本 100 個。就像把 3D 立體物體的「最有特色的角度」投影成 2D 平面圖。</div>
+        </div></div>
         <div class="tags"><span class="badge badge-norm">降維</span><span class="badge badge-use">視覺化</span><span class="badge badge-use">前處理</span></div>
       </div>
 
       <div class="card purple">
         <div class="card-head"><div class="icon">🗺️</div><div><div class="card-title">t-SNE / UMAP</div><div class="card-en">Non-linear Dimensionality Reduction</div></div></div>
-        <div class="card-body">把高維資料<strong style="color:var(--text)">非線性壓縮到 2D/3D</strong>，保留鄰近關係，主要用於視覺化。比 PCA 更能保留局部結構。<div class="formula">t-SNE：慢但效果好<br>UMAP：快且保留全域結構</div>深度學習特徵向量的視覺化標準工具。</div>
+        <div class="card-body">把高維資料<strong style="color:var(--text)">非線性壓縮到 2D/3D</strong>，保留鄰近關係，主要用於視覺化。比 PCA 更能保留局部結構。<div class="formula">t-SNE：慢但效果好<br>UMAP：快且保留全域結構</div>深度學習特徵向量的視覺化標準工具。
+        <div style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#a78bfa;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🗺️ 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">把 1000 維的詞向量「攤平」到 2D 平面，<strong style="color:var(--text)">讓原本相近的點在圖上也靠近</strong>。比 PCA 更能保留局部關係（同一類的字詞聚在一起）。但注意：只能看圖，不能拿來當模型的輸入特徵。</div>
+        </div></div>
         <div class="tags"><span class="badge badge-norm">降維</span><span class="badge badge-use">視覺化</span><span class="badge badge-warn">不適合作前處理</span></div>
       </div>
 
       <div class="card orange">
         <div class="card-head"><div class="icon">🤫</div><div><div class="card-title">自編碼器</div><div class="card-en">Autoencoder</div></div></div>
-        <div class="card-body">神經網路版的降維：先<strong style="color:var(--text)">壓縮（encoder）</strong>再還原（decoder），學習資料的精華表示。<div class="formula">輸入 → 瓶頸層（latent） → 還原輸出<br>Loss = ‖輸入 − 還原‖²</div>異常偵測、去除雜訊、生成模型的基礎。</div>
+        <div class="card-body">神經網路版的降維：先<strong style="color:var(--text)">壓縮（encoder）</strong>再還原（decoder），學習資料的精華表示。<div class="formula">輸入 → 瓶頸層（latent） → 還原輸出<br>Loss = ‖輸入 − 還原‖²</div>異常偵測、去除雜訊、生成模型的基礎。
+        <div style="background:rgba(251,146,60,0.1);border:1px solid rgba(251,146,60,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#fb923c;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🤫 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">先把圖片「壓縮」成一小段摘要（瓶頸層），再從摘要「還原」回原圖。訓練目標是讓還原後的圖盡量像原圖。<strong style="color:var(--text)">如果某張圖還原得很差，代表它很不正常</strong>——這就是異常偵測的原理。</div>
+        </div></div>
         <div class="tags"><span class="badge badge-norm">降維</span><span class="badge badge-use">異常偵測</span><span class="badge badge-type">深度學習</span></div>
       </div>
 
       <div class="card pink">
         <div class="card-head"><div class="icon">🔮</div><div><div class="card-title">DBSCAN</div><div class="card-en">Density-Based Spatial Clustering</div></div></div>
-        <div class="card-body">基於<strong style="color:var(--text)">密度</strong>分群，能自動發現任意形狀的群集，並把稀疏點標記為<strong style="color:var(--text)">異常值（noise）</strong>。<div class="formula">參數：ε（鄰域半徑）、MinPts（最少鄰居數）</div>不需要指定群數，但對參數敏感。</div>
+        <div class="card-body">基於<strong style="color:var(--text)">密度</strong>分群，能自動發現任意形狀的群集，並把稀疏點標記為<strong style="color:var(--text)">異常值（noise）</strong>。<div class="formula">參數：ε（鄰域半徑）、MinPts（最少鄰居數）</div>不需要指定群數，但對參數敏感。<div style="background:var(--surface2);border-radius:9px;padding:1rem;margin-top:1rem;font-size:0.85rem;line-height:1.8">
+            <div style="font-weight:600;color:var(--text);margin-bottom:0.8rem">DBSCAN 三種點的角色：</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:0.8rem;margin-bottom:0.8rem">
+              <div style="background:rgba(79,142,247,0.15);padding:0.7rem;border-radius:6px;border-left:3px solid #4f8ef7">
+                <div style="color:var(--accent);font-weight:600;font-size:0.9rem;margin-bottom:0.3rem">🔵 核心點 (Core)</div>
+                <div style="color:var(--text-muted);font-size:0.8rem">鄰域內樣本數 ≥ MinPts</div>
+              </div>
+              <div style="background:rgba(52,211,153,0.15);padding:0.7rem;border-radius:6px;border-left:3px solid #34d399">
+                <div style="color:#34d399;font-weight:600;font-size:0.9rem;margin-bottom:0.3rem">🟢 邊界點 (Border)</div>
+                <div style="color:var(--text-muted);font-size:0.8rem">在核心點鄰域內，但自己不夠格</div>
+              </div>
+              <div style="background:rgba(244,114,182,0.15);padding:0.7rem;border-radius:6px;border-left:3px solid #f472b6">
+                <div style="color:#f472b6;font-weight:600;font-size:0.9rem;margin-bottom:0.3rem">⚫ 雜訊點 (Noise)</div>
+                <div style="color:var(--text-muted);font-size:0.8rem">孤立無群，既無群，也不靠近核心點</div>
+              </div>
+            </div>
+            <div style="text-align:center;margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)">
+              <svg viewBox="0 0 400 200" width="100%" style="max-width:300px;margin:0 auto;display:block">
+                <!-- 群集 1 -->
+                <circle cx="80" cy="80" r="50" fill="rgba(79,142,247,0.1)" stroke="rgba(79,142,247,0.3)" stroke-width="2" stroke-dasharray="5,5"/>
+                <circle cx="60" cy="60" r="3" fill="#4f8ef7"/>
+                <circle cx="80" cy="70" r="3" fill="#4f8ef7"/>
+                <circle cx="100" cy="60" r="3" fill="#4f8ef7"/>
+                <circle cx="90" cy="85" r="3" fill="#34d399"/>
+                <circle cx="120" cy="90" r="3" fill="#34d399"/>
+
+                <!-- 群集 2 -->
+                <circle cx="300" cy="100" r="50" fill="rgba(79,142,247,0.1)" stroke="rgba(79,142,247,0.3)" stroke-width="2" stroke-dasharray="5,5"/>
+                <circle cx="280" cy="80" r="3" fill="#4f8ef7"/>
+                <circle cx="310" cy="90" r="3" fill="#4f8ef7"/>
+                <circle cx="320" cy="120" r="3" fill="#4f8ef7"/>
+                <circle cx="280" cy="130" r="3" fill="#34d399"/>
+
+                <!-- 雜訊點 -->
+                <circle cx="200" cy="30" r="3" fill="#f472b6"/>
+                <circle cx="250" cy="170" r="3" fill="#f472b6"/>
+
+                <!-- 圖例 -->
+                <circle cx="30" cy="170" r="3" fill="#4f8ef7"/>
+                <text x="40" y="175" font-size="12" fill="var(--text)" font-family="Noto Sans TC">核心點</text>
+
+                <circle cx="130" cy="170" r="3" fill="#34d399"/>
+                <text x="140" y="175" font-size="12" fill="var(--text)" font-family="Noto Sans TC">邊界點</text>
+
+                <circle cx="240" cy="170" r="3" fill="#f472b6"/>
+                <text x="250" y="175" font-size="12" fill="var(--text)" font-family="Noto Sans TC">雜訊點</text>
+              </svg>
+            </div>
+          </div></div>
         <div class="tags"><span class="badge badge-norm">分群</span><span class="badge badge-use">異常偵測</span><span class="badge badge-norm">任意形狀</span></div>
       </div>
 
@@ -888,25 +1201,41 @@
 
       <div class="card yellow">
         <div class="card-head"><div class="icon">🏷️</div><div><div class="card-title">Self-Training</div><div class="card-en">自我訓練</div></div></div>
-        <div class="card-body">先用有標籤資料訓練模型，對無標籤資料預測，把<strong style="color:var(--text)">高信心的預測</strong>加入訓練集，反覆迭代。<div class="formula">高信心預測 → 加入標籤資料 → 重新訓練</div>最簡單的半監督方法，但錯誤會累積放大。</div>
+        <div class="card-body">先用有標籤資料訓練模型，對無標籤資料預測，把<strong style="color:var(--text)">高信心的預測</strong>加入訓練集，反覆迭代。<div class="formula">高信心預測 → 加入標籤資料 → 重新訓練</div>最簡單的半監督方法，但錯誤會累積放大。
+        <div style="background:rgba(250,204,21,0.1);border:1px solid rgba(250,204,21,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#facc15;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🏷️ 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">先用少量有答案的題目學習，再對大量無答案的題目「自己猜」，把<strong style="color:var(--text)">猜得最有把握的加入答案庫</strong>，繼續學習。就像先記 100 個單字，再靠這 100 個猜更多詞的意思，但猜錯的知識也會被加入，可能越學越歪。</div>
+        </div></div>
         <div class="tags"><span class="badge badge-use">分類</span><span class="badge badge-warn">錯誤會累積</span></div>
       </div>
 
       <div class="card yellow">
         <div class="card-head"><div class="icon">🔁</div><div><div class="card-title">一致性正則化</div><div class="card-en">Consistency Regularization</div></div></div>
-        <div class="card-body">對同一筆無標籤資料做不同的隨機擾動，訓練模型對兩種版本給出<strong style="color:var(--text)">一致的預測</strong>。<div class="formula">Loss = CE(有標籤) + λ·MSE(無標籤增強版)</div>MixMatch、FixMatch 等 SOTA 方法的核心思想。</div>
+        <div class="card-body">對同一筆無標籤資料做不同的隨機擾動，訓練模型對兩種版本給出<strong style="color:var(--text)">一致的預測</strong>。<div class="formula">Loss = CE(有標籤) + λ·MSE(無標籤增強版)</div>MixMatch、FixMatch 等 SOTA 方法的核心思想。
+        <div style="background:rgba(250,204,21,0.1);border:1px solid rgba(250,204,21,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#facc15;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🔁 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">把同一張圖翻轉、調亮、加雜訊，做成兩個不同版本，要求模型<strong style="color:var(--text)">對兩個版本給出一樣的預測</strong>。真正學會的人，同一道題換個說法也答得出來——這個概念就是一致性正則化。</div>
+        </div></div>
         <div class="tags"><span class="badge badge-use">分類</span><span class="badge badge-type">深度學習</span><span class="badge badge-norm">現代主流</span></div>
       </div>
 
       <div class="card yellow">
         <div class="card-head"><div class="icon">🧬</div><div><div class="card-title">偽標籤法</div><div class="card-en">Pseudo-Labeling</div></div></div>
-        <div class="card-body">對無標籤資料產生<strong style="color:var(--text)">「偽標籤」</strong>，視同真實標籤一起訓練。與 Self-Training 類似，但通常搭配信心閾值過濾。<div class="formula">if P(y|x) &gt; threshold → 使用偽標籤</div>深度學習競賽常用技巧，效果顯著。</div>
+        <div class="card-body">對無標籤資料產生<strong style="color:var(--text)">「偽標籤」</strong>，視同真實標籤一起訓練。與 Self-Training 類似，但通常搭配信心閾值過濾。<div class="formula">if P(y|x) &gt; threshold → 使用偽標籤</div>深度學習競賽常用技巧，效果顯著。
+        <div style="background:rgba(250,204,21,0.1);border:1px solid rgba(250,204,21,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#facc15;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🧬 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">模型對無標籤資料猜測答案，<strong style="color:var(--text)">只有「信心超過 90%」的猜測才當作真答案</strong>繼續訓練。像考試猜題：確定的才填，不確定的留白不填錯。Kaggle 比賽常用這招在測試集上再「加訓」一輪，提升分數。</div>
+        </div></div>
         <div class="tags"><span class="badge badge-use">分類</span><span class="badge badge-use">競賽常用</span></div>
       </div>
 
       <div class="card yellow">
         <div class="card-head"><div class="icon">🌐</div><div><div class="card-title">圖半監督學習</div><div class="card-en">Graph-based SSL</div></div></div>
-        <div class="card-body">把資料點當節點，相似的點連邊建圖，讓<strong style="color:var(--text)">標籤沿著邊傳播</strong>到無標籤節點。<div class="formula">節點i的標籤 ← 鄰居節點標籤的加權平均</div>社群網路分析、知識圖譜的常用方法。</div>
+        <div class="card-body">把資料點當節點，相似的點連邊建圖，讓<strong style="color:var(--text)">標籤沿著邊傳播</strong>到無標籤節點。<div class="formula">節點i的標籤 ← 鄰居節點標籤的加權平均</div>社群網路分析、知識圖譜的常用方法。
+        <div style="background:rgba(250,204,21,0.1);border:1px solid rgba(250,204,21,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#facc15;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🌐 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">把每個資料點想成社群網路的一個人，朋友之間互相連線。少數人有「標籤」（比如：知道是 A 派系），<strong style="color:var(--text)">標籤會沿著朋友關係傳播</strong>：和 A 派系的人越親近，你也越可能是 A 派系。</div>
+        </div></div>
         <div class="tags"><span class="badge badge-use">分類</span><span class="badge badge-use">圖資料</span></div>
       </div>
 
@@ -961,72 +1290,44 @@
 
       <div class="card purple">
         <div class="card-head"><div class="icon">🔧</div><div><div class="card-title">Fine-tuning（微調）</div><div class="card-en">Pre-trained Model Fine-tuning</div></div></div>
-        <div class="card-body">把預訓練模型（如 ResNet、BERT）拿來，在新任務的資料上<strong style="color:var(--text)">繼續訓練</strong>，讓模型微調參數適應新問題。<div class="formula">預訓練模型 → 替換最後幾層 → 小 lr 繼續訓練</div>最常見的遷移學習做法，幾乎是現代深度學習的標準流程。</div>
+        <div class="card-body">把預訓練模型（如 ResNet、BERT）拿來，在新任務的資料上<strong style="color:var(--text)">繼續訓練</strong>，讓模型微調參數適應新問題。<div class="formula">預訓練模型 → 替換最後幾層 → 小 lr 繼續訓練</div>最常見的遷移學習做法，幾乎是現代深度學習的標準流程。
+        <div style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#a78bfa;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🔧 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">別人已經把 1000 萬張圖的知識學進去了，把那個模型拿過來，<strong style="color:var(--text)">替換最後一層（負責「輸出答案」的部分）</strong>，再用你自己的幾千張圖微調。就像借一個已有10年廚藝的廚師，只需要教他你餐廳的菜單風格就好。</div>
+        </div></div>
         <div class="tags"><span class="badge badge-type">遷移學習</span><span class="badge badge-use">影像 / NLP</span><span class="badge badge-norm">最常用</span></div>
       </div>
 
       <div class="card purple">
         <div class="card-head"><div class="icon">❄️</div><div><div class="card-title">Feature Extraction（特徵萃取）</div><div class="card-en">Frozen Backbone</div></div></div>
-        <div class="card-body">把預訓練模型當<strong style="color:var(--text)">固定的特徵提取器</strong>，凍結大部分層的參數，只訓練新加的分類頭。<div class="formula">凍結所有層 → 只訓練最後的 classifier</div>新資料很少、算力不足時適用，比 Fine-tuning 快很多。</div>
+        <div class="card-body">把預訓練模型當<strong style="color:var(--text)">固定的特徵提取器</strong>，凍結大部分層的參數，只訓練新加的分類頭。<div class="formula">凍結所有層 → 只訓練最後的 classifier</div>新資料很少、算力不足時適用，比 Fine-tuning 快很多。
+        <div style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#a78bfa;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">❄️ 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">把預訓練模型整個「冷凍」住，<strong style="color:var(--text)">只在最後接一個新的分類層來訓練</strong>。就像借一台相機（鏡頭不動），只換濾鏡。資料太少時用這個比 Fine-tuning 更安全，不容易過擬合，速度也快很多。</div>
+        </div></div>
         <div class="tags"><span class="badge badge-type">遷移學習</span><span class="badge badge-use">小資料集</span><span class="badge badge-norm">速度快</span></div>
       </div>
 
       <div class="card purple">
         <div class="card-head"><div class="icon">🧩</div><div><div class="card-title">Domain Adaptation（領域適應）</div><div class="card-en">Cross-Domain Transfer</div></div></div>
-        <div class="card-body">在 A 領域訓練，想用在 B 領域。讓模型學會<strong style="color:var(--text)">忽略領域差異</strong>，只保留任務相關知識。<div class="formula">例：用白天照片訓練 → 用在夜間影像</div>自動駕駛、醫療影像跨機構遷移的關鍵技術。</div>
+        <div class="card-body">在 A 領域訓練，想用在 B 領域。讓模型學會<strong style="color:var(--text)">忽略領域差異</strong>，只保留任務相關知識。<div class="formula">例：用白天照片訓練 → 用在夜間影像</div>自動駕駛、醫療影像跨機構遷移的關鍵技術。
+        <div style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#a78bfa;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🧩 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">在台灣開車的 AI，要拿去日本（靠左行駛）用。Domain Adaptation 讓模型<strong style="color:var(--text)">學會忽略「台灣 vs 日本」的差異</strong>，只保留「如何辨識障礙物」等核心技能。醫院 A 的 X 光 AI 想用在醫院 B 的不同機型 X 光機，也是同樣問題。</div>
+        </div></div>
         <div class="tags"><span class="badge badge-type">遷移學習</span><span class="badge badge-use">跨領域</span></div>
       </div>
 
       <div class="card purple">
         <div class="card-head"><div class="icon">🌍</div><div><div class="card-title">Foundation Model（基礎模型）</div><div class="card-en">GPT / BERT / SAM / CLIP</div></div></div>
-        <div class="card-body">在<strong style="color:var(--text)">超大規模資料</strong>上訓練的通用模型，幾乎可以遷移到任何下游任務，只需要少量微調甚至只要提示（prompt）。<div class="formula">GPT → 文字生成  BERT → 理解任務<br>CLIP → 影像文字對齊  SAM → 任意分割</div>現代 AI 的核心趨勢。</div>
+        <div class="card-body">在<strong style="color:var(--text)">超大規模資料</strong>上訓練的通用模型，幾乎可以遷移到任何下游任務，只需要少量微調甚至只要提示（prompt）。<div class="formula">GPT → 文字生成  BERT → 理解任務<br>CLIP → 影像文字對齊  SAM → 任意分割</div>現代 AI 的核心趨勢。
+        <div style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#a78bfa;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🌍 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">用幾乎所有的網路文字/圖片訓練出來的超大模型，像一個「什麼都懂一點」的通才。不用再從頭訓練，<strong style="color:var(--text)">只要給幾個例子（few-shot）或直接用文字指令（prompt）</strong>，就能做各種任務。ChatGPT、DALL-E 都是這類模型。</div>
+        </div></div>
         <div class="tags"><span class="badge badge-type">遷移學習</span><span class="badge badge-use">通用模型</span><span class="badge badge-norm">現代主流</span></div>
       </div>
 
-    </div>
-  </div>
-
-  <!-- ── 口訣 ── -->
-  <div class="section" style="margin-top:2.5rem">
-    <div class="section-title">// 每個方法的記憶口訣</div>
-
-    <div style="font-size:0.7rem;font-family:'JetBrains Mono',monospace;color:#93c5fd;letter-spacing:0.08em;margin-bottom:0.75rem;margin-top:0.5rem">— 監督式學習 —</div>
-    <div class="grid" style="margin:0 0 1.5rem">
-      <div class="card blue"><div class="card-head"><div class="icon">📏</div><div><div class="card-title">線性回歸</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">「一條直線解決問題」</div><div style="color:var(--text-muted);font-size:0.78rem">數值預測的起點，先試它再說</div></div></div>
-      <div class="card blue"><div class="card-head"><div class="icon">🚦</div><div><div class="card-title">羅吉斯回歸</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">「名字是回歸，心是分類」</div><div style="color:var(--text-muted);font-size:0.78rem">輸出機率，告訴你「是」的可能性</div></div></div>
-      <div class="card green"><div class="card-head"><div class="icon">🌳</div><div><div class="card-title">決策樹</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">「不斷問是非題，問到答案出來」</div><div style="color:var(--text-muted);font-size:0.78rem">直觀但愛死記，要配合整合方法</div></div></div>
-      <div class="card orange"><div class="card-head"><div class="icon">🌲</div><div><div class="card-title">隨機森林</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">「一棵樹不可信，一片林才穩」</div><div style="color:var(--text-muted);font-size:0.78rem">多數決，集體比個人聰明</div></div></div>
-      <div class="card teal"><div class="card-head"><div class="icon">⚡</div><div><div class="card-title">XGBoost / LightGBM</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">「後一棵樹專門修前一棵的錯」</div><div style="color:var(--text-muted);font-size:0.78rem">不斷補漏洞，結構資料的王者</div></div></div>
-      <div class="card pink"><div class="card-head"><div class="icon">📐</div><div><div class="card-title">SVM</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">「找最寬的走廊把兩群隔開」</div><div style="color:var(--text-muted);font-size:0.78rem">邊界越寬越穩，高維小資料適合</div></div></div>
-      <div class="card blue"><div class="card-head"><div class="icon">👥</div><div><div class="card-title">KNN</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">「你是誰，看你鄰居就知道」</div><div style="color:var(--text-muted);font-size:0.78rem">物以類聚，找最近的 K 個朋友投票</div></div></div>
-      <div class="card purple"><div class="card-head"><div class="icon">🧠</div><div><div class="card-title">神經網路</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">「層層轉換，複雜問題慢慢懂」</div><div style="color:var(--text-muted);font-size:0.78rem">資料多就強，資料少就過擬合</div></div></div>
-      <div class="card green"><div class="card-head"><div class="icon">📊</div><div><div class="card-title">樸素貝葉斯</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">「把每個線索獨立加起來算機率」</div><div style="color:var(--text-muted);font-size:0.78rem">假設天真但速度快，文字分類好用</div></div></div>
-    </div>
-
-    <div style="font-size:0.7rem;font-family:'JetBrains Mono',monospace;color:#6ee7b7;letter-spacing:0.08em;margin-bottom:0.75rem">— 非監督式學習 —</div>
-    <div class="grid" style="margin:0 0 1.5rem">
-      <div class="card green"><div class="card-head"><div class="icon">🎯</div><div><div class="card-title">K-Means</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">「找重心，不斷靠近最近的圈」</div><div style="color:var(--text-muted);font-size:0.78rem">先猜 K 個中心，反覆收斂</div></div></div>
-      <div class="card teal"><div class="card-head"><div class="icon">🌿</div><div><div class="card-title">階層式分群</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">「從各自為政，逐步合併成大家族」</div><div style="color:var(--text-muted);font-size:0.78rem">不用定 K，切樹狀圖決定幾群</div></div></div>
-      <div class="card blue"><div class="card-head"><div class="icon">📉</div><div><div class="card-title">PCA</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">「把資料壓扁，只留最重要的方向」</div><div style="color:var(--text-muted);font-size:0.78rem">100 維壓成 2 維還能看出結構</div></div></div>
-      <div class="card purple"><div class="card-head"><div class="icon">🗺️</div><div><div class="card-title">t-SNE / UMAP</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">「把鄰居關係畫成地圖」</div><div style="color:var(--text-muted);font-size:0.78rem">只能看，不能拿來當訓練特徵</div></div></div>
-      <div class="card orange"><div class="card-head"><div class="icon">🤫</div><div><div class="card-title">自編碼器</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">「壓縮再還原，學精華不學雜訊」</div><div style="color:var(--text-muted);font-size:0.78rem">還原不好的就是異常點</div></div></div>
-      <div class="card pink"><div class="card-head"><div class="icon">🔮</div><div><div class="card-title">DBSCAN</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">「人多的地方是群，孤立的是異類」</div><div style="color:var(--text-muted);font-size:0.78rem">密度夠才算一群，稀疏點當異常值</div></div></div>
-    </div>
-
-    <div style="font-size:0.7rem;font-family:'JetBrains Mono',monospace;color:#fde68a;letter-spacing:0.08em;margin-bottom:0.75rem">— 半監督式學習 —</div>
-    <div class="grid" style="margin:0 0 1.5rem">
-      <div class="card yellow"><div class="card-head"><div class="icon">🏷️</div><div><div class="card-title">Self-Training</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">「自己批改自己的考卷，有把握的才算」</div><div style="color:var(--text-muted);font-size:0.78rem">高信心才納入，否則錯誤會滾雪球</div></div></div>
-      <div class="card yellow"><div class="card-head"><div class="icon">🔁</div><div><div class="card-title">一致性正則化</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">「同一道題換個問法，答案要一樣」</div><div style="color:var(--text-muted);font-size:0.78rem">對擾動保持穩定，代表真的學會了</div></div></div>
-      <div class="card yellow"><div class="card-head"><div class="icon">🧬</div><div><div class="card-title">偽標籤法</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">「模型猜的答案，暫時當真的用」</div><div style="color:var(--text-muted);font-size:0.78rem">設閾值過濾，不然假的帶壞真的</div></div></div>
-      <div class="card yellow"><div class="card-head"><div class="icon">🌐</div><div><div class="card-title">圖半監督</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">「標籤像病毒，沿著關係傳播出去」</div><div style="color:var(--text-muted);font-size:0.78rem">連得越近，傳播越強</div></div></div>
-    </div>
-
-    <div style="font-size:0.7rem;font-family:'JetBrains Mono',monospace;color:#c4b5fd;letter-spacing:0.08em;margin-bottom:0.75rem">— 遷移學習 —</div>
-    <div class="grid" style="margin:0">
-      <div class="card purple"><div class="card-head"><div class="icon">🔧</div><div><div class="card-title">Fine-tuning</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">「借別人練好的身體，再做小調整」</div><div style="color:var(--text-muted);font-size:0.78rem">大部分已學好，只需微調最後幾層</div></div></div>
-      <div class="card purple"><div class="card-head"><div class="icon">❄️</div><div><div class="card-title">Feature Extraction</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">「模型冷凍，只換頭」</div><div style="color:var(--text-muted);font-size:0.78rem">舊模型全凍住，只訓練新加的分類層</div></div></div>
-      <div class="card purple"><div class="card-head"><div class="icon">🧩</div><div><div class="card-title">Domain Adaptation</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">「在 A 地學的技能，到 B 地也能用」</div><div style="color:var(--text-muted);font-size:0.78rem">忽略領域差異，只保留任務知識</div></div></div>
-      <div class="card purple"><div class="card-head"><div class="icon">🌍</div><div><div class="card-title">Foundation Model</div></div></div><div class="card-body"><div style="font-size:1rem;font-weight:600;color:var(--text);margin-bottom:0.4rem">「站在巨人肩膀上，什麼都能做」</div></div></div>
     </div>
   </div>
 
@@ -1200,6 +1501,284 @@
     </table>
   </div>
 
+  <!-- ── 超參數調整 ── -->
+  <div class="section" style="margin-top:2.5rem">
+    <div class="section-title">// 超參數調整（Hyperparameter Tuning）</div>
+
+    <div style="background:var(--surface);border:1px solid rgba(79,142,247,0.25);border-radius:14px;padding:1.25rem;margin-bottom:1.25rem">
+      <div style="font-size:0.7rem;color:#4f8ef7;font-family:'JetBrains Mono',monospace;margin-bottom:0.7rem">💡 什麼是超參數？</div>
+      <div style="font-size:0.83rem;color:var(--text-dim);line-height:1.8">模型訓練前需要<strong style="color:var(--text)">人工設定</strong>的參數，訓練過程不會自動更新。例如：學習率、樹的深度、Dropout 比率、隱藏層數量。調整超參數的目標是找出讓驗證集表現最好的組合。</div>
+    </div>
+
+    <div class="grid" style="margin:0">
+
+      <div class="card blue">
+        <div class="card-head"><div class="icon">🔲</div><div><div class="card-title">Grid Search（網格搜尋）</div><div class="card-en">Exhaustive Search over Parameter Grid</div></div></div>
+        <div class="card-body">列出每個超參數的所有候選值，<strong style="color:var(--text)">窮舉所有組合</strong>，每個都跑一次訓練，取最好的。
+        <div class="formula">lr ∈ {0.1, 0.01, 0.001} × depth ∈ {3, 5, 7}<br>→ 共 3 × 3 = 9 組，全部跑過</div>
+        <div style="background:rgba(79,142,247,0.1);border:1px solid rgba(79,142,247,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#4f8ef7;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🔲 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">把所有選項列成一張表格，每格都試一遍。<strong style="color:var(--text)">保證找到表格裡最好的組合</strong>，但超參數一多，格子數量爆炸（3個參數各5選項 = 125組），非常耗時。</div>
+        </div></div>
+        <div class="tags"><span class="badge badge-norm">保證最優（候選內）</span><span class="badge badge-warn">組合爆炸</span></div>
+      </div>
+
+      <div class="card green">
+        <div class="card-head"><div class="icon">🎲</div><div><div class="card-title">Random Search（隨機搜尋）</div><div class="card-en">Random Sampling over Parameter Space</div></div></div>
+        <div class="card-body">在超參數空間中<strong style="color:var(--text)">隨機抽樣 N 組</strong>，只跑 N 次，取最好的。
+        <div class="formula">從連續範圍均勻抽樣：<br>lr ~ Uniform(0.0001, 0.1)<br>depth ~ RandInt(3, 10)</div>
+        <div style="background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#34d399;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🎲 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">不全試，隨機抽幾組來試。<strong style="color:var(--text)">研究顯示：如果只有少數幾個超參數真的重要，隨機搜尋比格搜尋更有效率</strong>——因為格搜尋會在不重要的參數上浪費格子。實務上比 Grid Search 更常用。</div>
+        </div></div>
+        <div class="tags"><span class="badge badge-norm">效率高</span><span class="badge badge-use">實務首選</span></div>
+      </div>
+
+      <div class="card orange">
+        <div class="card-head"><div class="icon">🧠</div><div><div class="card-title">Bayesian Optimization（貝葉斯優化）</div><div class="card-en">Surrogate Model + Acquisition Function</div></div></div>
+        <div class="card-body">用過去試過的結果<strong style="color:var(--text)">建立代理模型（surrogate）</strong>，預測哪個超參數組合最有可能改善，智慧地選下一個要試的點。
+        <div class="formula">Surrogate: p(score | params) — Gaussian Process<br>Acquisition fn: 平衡「探索未知」vs「利用已知好」<br>每輪更新代理模型 → 再選下一組</div>
+        <div style="background:rgba(251,146,60,0.1);border:1px solid rgba(251,146,60,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#fb923c;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🧠 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">不是亂猜，而是<strong style="color:var(--text)">從過去的實驗結果學習「哪個區域的參數容易表現好」</strong>，然後聰明地選下一個最值得試的點。就像有經驗的老師猜考題，不是每題都算，而是挑最可能考的題目。只需少量實驗就能找到好結果。</div>
+        </div></div>
+        <div class="tags"><span class="badge badge-norm">最少實驗次數</span><span class="badge badge-use">計算資源昂貴時</span><span class="badge badge-type">Optuna / Hyperopt</span></div>
+      </div>
+
+      <div class="card purple">
+        <div class="card-head"><div class="icon">🏆</div><div><div class="card-title">Successive Halving / Hyperband</div><div class="card-en">Early Elimination Strategy</div></div></div>
+        <div class="card-body">先用<strong style="color:var(--text)">少量資源跑所有候選</strong>，淘汰表現差的，只給表現好的更多資源繼續跑。像比賽的淘汰制。
+        <div class="formula">第1輪：100組候選 × 10 epochs → 保留前50<br>第2輪：50組候選 × 20 epochs → 保留前25<br>最終：只有少數幾組跑完整訓練</div>
+        <div style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#a78bfa;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🏆 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">像運動會多輪淘汰賽：先讓所有人跑 100 公尺，<strong style="color:var(--text)">只讓前半段的人晉級，給他們更多訓練時間</strong>，再淘汰，一直到最後只剩冠軍。不讓明顯爛的參數浪費完整的訓練資源。</div>
+        </div></div>
+        <div class="tags"><span class="badge badge-norm">快速淘汰</span><span class="badge badge-use">大規模搜尋</span></div>
+      </div>
+
+    </div>
+
+    <table style="margin-top:1.5rem">
+      <thead><tr><th>方法</th><th>試幾組</th><th>是否利用歷史</th><th>適合情境</th></tr></thead>
+      <tbody>
+        <tr><td><span class="method-name">Grid Search</span></td><td>全部組合</td><td>否</td><td>參數少、候選有限</td></tr>
+        <tr><td><span class="method-name">Random Search</span></td><td>固定 N 組</td><td>否</td><td>參數多、連續範圍</td></tr>
+        <tr><td><span class="method-name">Bayesian Optim.</span></td><td>聰明地選</td><td>✓ 利用代理模型</td><td>每次實驗代價高昂</td></tr>
+        <tr><td><span class="method-name">Hyperband</span></td><td>分輪淘汰</td><td>部分</td><td>候選很多但想省資源</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── Learning Rate Scheduler ── -->
+  <div class="section" style="margin-top:2.5rem">
+    <div class="section-title">// Learning Rate Scheduler（學習率排程）</div>
+
+    <div style="background:var(--surface);border:1px solid rgba(34,211,238,0.25);border-radius:14px;padding:1.25rem;margin-bottom:1.25rem">
+      <div style="font-size:0.7rem;color:#22d3ee;font-family:'JetBrains Mono',monospace;margin-bottom:0.7rem">💡 為什麼要動態調整學習率？</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;font-size:0.82rem;color:var(--text-dim);line-height:1.8">
+        <div>訓練<strong style="color:var(--text)">早期</strong>：lr 大一點，快速下坡，遠離壞的初始位置</div>
+        <div>訓練<strong style="color:var(--text)">後期</strong>：lr 小一點，在最低點附近精細收斂，不要跳過去</div>
+      </div>
+    </div>
+
+    <div class="grid" style="margin:0">
+
+      <div class="card teal">
+        <div class="card-head"><div class="icon">📉</div><div><div class="card-title">Step Decay / Exponential Decay</div><div class="card-en">固定步驟降低學習率</div></div></div>
+        <div class="card-body">每隔固定 epoch 或按指數衰減，把學習率降低一個倍數。
+        <div class="formula">Step: lr = lr₀ × γ^(epoch/step_size)<br>Exponential: lr = lr₀ × e^(−λt)</div>
+        <div style="background:rgba(34,211,238,0.1);border:1px solid rgba(34,211,238,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#22d3ee;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">📉 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">每跑 30 個 epoch 就把學習率砍半。<strong style="color:var(--text)">最直覺的方法</strong>，就像跑步比賽：前半程全力衝，後半程保留體力細修。缺點是要手動決定何時降、降多少。</div>
+        </div></div>
+        <div class="tags"><span class="badge badge-norm">簡單直覺</span><span class="badge badge-warn">需手動調</span></div>
+      </div>
+
+      <div class="card blue" style="grid-column:1/-1">
+        <div class="card-head"><div class="icon">🔥</div><div><div class="card-title">Cosine Annealing（餘弦退火）</div><div class="card-en">Cosine Decay with Optional Restart</div></div></div>
+        <div class="card-body">學習率按<strong style="color:var(--text)">餘弦曲線</strong>從最大值平滑下降到最小值，可搭配週期重啟（Warm Restart）。
+        <div class="formula">lr_t = lr_min + ½(lr_max − lr_min)(1 + cos(πt/T))<br>t = 當前 step，T = 週期長度</div>
+
+        <div style="background:var(--surface2);border:1px solid rgba(79,142,247,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#4f8ef7;font-family:'JetBrains Mono',monospace;margin-bottom:0.6rem">🔄 Warm Restart（SGDR）是什麼？</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8;margin-bottom:0.7rem">
+            學習率跑完一個週期降到最小值後，<strong style="color:var(--text)">不是繼續保持在低點，而是「重置回高值」再重新衰減</strong>，形成多個週期的鋸齒波形。
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;font-size:0.78rem;margin-bottom:0.7rem">
+            <div style="background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.2);border-radius:7px;padding:0.6rem">
+              <div style="color:#fca5a5;font-weight:600;margin-bottom:0.3rem">沒有 Warm Restart</div>
+              <div style="color:var(--text-muted)">lr 一路衰減到底，卡在局部最小值就出不來</div>
+            </div>
+            <div style="background:rgba(79,142,247,0.07);border:1px solid rgba(79,142,247,0.2);border-radius:7px;padding:0.6rem">
+              <div style="color:#93c5fd;font-weight:600;margin-bottom:0.3rem">有 Warm Restart</div>
+              <div style="color:var(--text-muted)">每次重置讓模型有機會跳出局部最小，再重新收斂到更好的位置</div>
+            </div>
+          </div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:#93c5fd;line-height:2">
+            週期 1：lr_max → lr_min（T₁ steps）<br>
+            週期 2：lr_max → lr_min（T₂ = 2×T₁ steps，週期可變長）<br>
+            週期 3：lr_max → lr_min（T₃ = 2×T₂ steps）…
+          </div>
+        </div>
+
+        <div style="background:rgba(79,142,247,0.1);border:1px solid rgba(79,142,247,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#4f8ef7;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🔥 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">學習率像波浪一樣平滑下降，降到谷底後<strong style="color:var(--text)">不停在那裡，而是重置回高點再降一次</strong>（Warm Restart）。重置時的大學習率讓模型有機會跳出卡住的地方，重新找更好的山谷；再衰減時精細收斂。每個週期可以越來越長，讓後期的每次重啟都有更充分的收斂時間。</div>
+        </div></div>
+        <div style="margin-top:0.9rem;padding:0.65rem 0.9rem;background:rgba(250,204,21,0.08);border:1px solid rgba(250,204,21,0.25);border-radius:9px;font-size:0.8rem;color:var(--text-dim)">
+          ⭐ <strong style="color:#fde68a">現代主流組合：</strong>通常搭配 <strong style="color:var(--text)">Warmup（見下張卡）→ Cosine Annealing</strong>，BERT、ViT、LLaMA 等大模型幾乎全部採用此組合。
+        </div>
+        <div class="tags"><span class="badge badge-norm">平滑衰減</span><span class="badge badge-use">現代主流</span><span class="badge badge-type">SGDR</span></div>
+      </div>
+
+      <div class="card green">
+        <div class="card-head"><div class="icon">🌡️</div><div><div class="card-title">Warmup + Decay</div><div class="card-en">Linear Warmup → 衰減</div></div></div>
+        <div class="card-body">訓練最開始幾步先用<strong style="color:var(--text)">非常小的學習率「熱身」</strong>，線性升到目標值，再衰減。
+        <div class="formula">Warmup 階段（前 N steps）：lr 線性從 0 升到 lr_max<br>之後：cosine / linear 衰減</div>
+        <div style="background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#34d399;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🌡️ 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">模型剛開始訓練時參數是隨機的，如果一開始就用很大的學習率，容易把模型「震壞」。Warmup 讓模型<strong style="color:var(--text)">先慢慢暖機，再全力訓練</strong>。BERT、GPT 等大模型幾乎都用這個。</div>
+        </div>
+        <div style="margin-top:0.9rem;padding:0.65rem 0.9rem;background:rgba(250,204,21,0.08);border:1px solid rgba(250,204,21,0.25);border-radius:9px;font-size:0.8rem;color:var(--text-dim)">
+          ⭐ <strong style="color:#fde68a">現代主流組合：</strong>Warmup 之後接 <strong style="color:var(--text)">Cosine Annealing（見上張卡）</strong>，兩者合用是大模型與 ViT 時代的業界標準。
+        </div></div>
+        <div class="tags"><span class="badge badge-type">Transformer 標配</span><span class="badge badge-norm">大模型必用</span></div>
+      </div>
+
+      <div class="card orange">
+        <div class="card-head"><div class="icon">📊</div><div><div class="card-title">ReduceLROnPlateau</div><div class="card-en">根據驗證集表現自動降低</div></div></div>
+        <div class="card-body">監測驗證集指標，若<strong style="color:var(--text)">連續 N 個 epoch 沒有改善</strong>，就自動降低學習率。
+        <div class="formula">if val_loss 連續 patience 個 epoch 沒降低:<br>    lr = lr × factor（通常 0.1~0.5）</div>
+        <div style="background:rgba(251,146,60,0.1);border:1px solid rgba(251,146,60,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#fb923c;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">📊 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">不需要事先規劃，模型<strong style="color:var(--text)">自己看成績決定要不要降學習率</strong>。「已經 5 個 epoch 成績沒進步了，看來學習率太大跳不進去，把它縮小 10 倍再試試」。適合不確定訓練多久的情況。</div>
+        </div></div>
+        <div class="tags"><span class="badge badge-norm">自適應</span><span class="badge badge-use">不確定訓練長度</span></div>
+      </div>
+
+      <div class="card purple">
+        <div class="card-head"><div class="icon">🔄</div><div><div class="card-title">Cyclic LR（循環學習率）</div><div class="card-en">Cyclical Learning Rate</div></div></div>
+        <div class="card-body">學習率在<strong style="color:var(--text)">最小值與最大值之間反覆循環</strong>，讓模型能跳出鞍點和局部最小值。
+        <div class="formula">三角波循環：lr 在 [lr_min, lr_max] 線性上下<br>也有 exp_range 等變體</div>
+        <div style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#a78bfa;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🔄 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">學習率像心電圖，<strong style="color:var(--text)">不斷高低交替</strong>。高的時候幫助跳出局部最小，低的時候精細收斂。好處是不需要靠直覺猜學習率該多大，在某個合理範圍內循環就夠了。</div>
+        </div></div>
+        <div class="tags"><span class="badge badge-norm">跳出局部最小</span><span class="badge badge-warn">參數需調試</span></div>
+      </div>
+
+    </div>
+
+    <table style="margin-top:1.5rem">
+      <thead><tr><th>方法</th><th>決定時機</th><th>特點</th><th>適合情境</th></tr></thead>
+      <tbody>
+        <tr><td><span class="method-name">Step / Exp Decay</span></td><td>提前設定</td><td>簡單直接</td><td>訓練 epoch 已知</td></tr>
+        <tr><td><span class="method-name">Cosine Annealing</span></td><td>提前設定</td><td>平滑，可重啟</td><td>現代 CV / NLP 任務</td></tr>
+        <tr><td><span class="method-name">Warmup + Decay</span></td><td>提前設定</td><td>大模型必用</td><td>Transformer 類模型</td></tr>
+        <tr><td><span class="method-name">ReduceLROnPlateau</span></td><td>自動觸發</td><td>無需規劃</td><td>不確定收斂步數</td></tr>
+        <tr><td><span class="method-name">Cyclic LR</span></td><td>循環交替</td><td>跳出局部最小</td><td>快速探索學習率</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── 可解釋性工具 ── -->
+  <div class="section" style="margin-top:2.5rem">
+    <div class="section-title">// 模型可解釋性工具（XAI — Explainable AI）</div>
+
+    <div style="background:var(--surface);border:1px solid rgba(244,114,182,0.25);border-radius:14px;padding:1.25rem;margin-bottom:1.25rem">
+      <div style="font-size:0.7rem;color:#f472b6;font-family:'JetBrains Mono',monospace;margin-bottom:0.7rem">💡 為什麼需要可解釋性？</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;font-size:0.82rem;color:var(--text-dim);line-height:1.8">
+        <div>模型說「這個人貸款會違約」——<strong style="color:var(--text)">為什麼？</strong>是因為收入低？年齡？負債？醫療、法律場景不能只看預測結果。</div>
+        <div>除錯時需要知道模型<strong style="color:var(--text)">到底在看什麼特徵</strong>，而不只是「準確率 92%」。</div>
+      </div>
+    </div>
+
+    <div class="grid" style="margin:0">
+
+      <div class="card orange">
+        <div class="card-head"><div class="icon">🔍</div><div><div class="card-title">SHAP</div><div class="card-en">SHapley Additive exPlanations</div></div></div>
+        <div class="card-body">基於賽局理論的<strong style="color:var(--text)">「公平分配貢獻值」</strong>方法，計算每個特徵對某次預測結果的貢獻大小與方向。
+        <div class="formula">SHAP 值 = 特徵 i 的邊際貢獻（考慮所有可能的特徵子集）<br>預測值 = 基準值 + Σ SHAP_i<br>正值 → 推高預測；負值 → 拉低預測</div>
+        <div style="background:var(--surface2);border-radius:9px;padding:0.75rem;margin-top:0.8rem;font-size:0.78rem;line-height:1.7">
+          <span style="color:#fb923c">全局解釋：</span><span style="color:var(--text-muted)">SHAP Summary Plot — 所有樣本的特徵重要性分布</span><br>
+          <span style="color:#fb923c">局部解釋：</span><span style="color:var(--text-muted)">SHAP Force Plot — 單一預測的每個特徵貢獻</span><br>
+          <span style="color:#fb923c">支援：</span><span style="color:var(--text-muted)">Tree SHAP（XGBoost 快速版）、Deep SHAP（神經網路）</span>
+        </div>
+        <div style="background:rgba(251,146,60,0.1);border:1px solid rgba(251,146,60,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#fb923c;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🔍 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">5人團隊一起完成任務，要怎麼公平分獎金？SHAP 用賽局理論的「Shapley 值」計算<strong style="color:var(--text)">每個特徵對這次預測貢獻了多少分</strong>（正或負）。「年齡+5分，收入-3分，負債-8分，所以預測違約」——每個特徵的責任都算清楚。</div>
+        </div></div>
+        <div class="tags"><span class="badge badge-norm">理論完備</span><span class="badge badge-use">全局+局部</span><span class="badge badge-type">結構化資料首選</span></div>
+      </div>
+
+      <div class="card green">
+        <div class="card-head"><div class="icon">🗺️</div><div><div class="card-title">LIME</div><div class="card-en">Local Interpretable Model-agnostic Explanations</div></div></div>
+        <div class="card-body">在<strong style="color:var(--text)">要解釋的樣本附近</strong>生成一批擾動樣本，用簡單線性模型擬合局部行為，以此解釋那次預測。
+        <div class="formula">1. 在 x 附近隨機擾動 → 得到 {x', f(x')} 對<br>2. 按距離加權，訓練簡單線性模型 g<br>3. g 的係數 = 各特徵對此預測的重要程度</div>
+        <div style="background:var(--surface2);border-radius:9px;padding:0.75rem;margin-top:0.8rem;font-size:0.78rem;line-height:1.7">
+          <span style="color:#34d399">優點：</span><span style="color:var(--text-muted)">Model-agnostic（任何黑盒模型都能用）、直覺易懂</span><br>
+          <span style="color:#34d399">缺點：</span><span style="color:var(--text-muted)">擾動隨機性導致解釋不穩定、計算慢</span><br>
+          <span style="color:#34d399">支援：</span><span style="color:var(--text-muted)">表格資料、影像（超像素遮蔽）、文字（詞語遮蔽）</span>
+        </div>
+        <div style="background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#34d399;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🗺️ 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">複雜模型就像一個黑盒子，很難直接看透。LIME 的方法是：在這筆資料附近<strong style="color:var(--text)">「微微改動各特徵」</strong>，看預測怎麼變，再用一條簡單直線來模擬這個局部行為。雖然全局複雜，但局部行為用直線就能解釋。</div>
+        </div></div>
+        <div class="tags"><span class="badge badge-norm">模型無關</span><span class="badge badge-use">任何黑盒</span><span class="badge badge-warn">穩定性差</span></div>
+      </div>
+
+      <div class="card pink">
+        <div class="card-head"><div class="icon">🌡️</div><div><div class="card-title">Grad-CAM</div><div class="card-en">Gradient-weighted Class Activation Mapping</div></div></div>
+        <div class="card-body">用<strong style="color:var(--text)">梯度資訊</strong>找出 CNN 最後一層卷積特徵對預測類別最重要的區域，生成熱力圖（Heatmap）疊加在原圖上。
+        <div class="formula">1. 對目標類別計算梯度 → ∂y^c / ∂A^k（特徵圖 A^k）<br>2. 對空間維度做全局平均池化 → 權重 α^k_c<br>3. 熱力圖 = ReLU(Σ α^k_c × A^k)</div>
+        <div style="background:var(--surface2);border-radius:9px;padding:0.75rem;margin-top:0.8rem;font-size:0.78rem;line-height:1.7">
+          <span style="color:#f472b6">用途：</span><span style="color:var(--text-muted)">影像分類解釋、偵測模型有沒有「作弊」（看背景而非主體）</span><br>
+          <span style="color:#f472b6">變體：</span><span style="color:var(--text-muted)">Guided Grad-CAM（更細節）、Grad-CAM++（多目標物件更準）</span><br>
+          <span style="color:#f472b6">限制：</span><span style="color:var(--text-muted)">只適用於 CNN，不適用於全連接或 Transformer</span>
+        </div>
+        <div style="background:rgba(244,114,182,0.1);border:1px solid rgba(244,114,182,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#f472b6;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🌡️ 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">CNN 說這張圖是「貓」，但它是在看貓臉還是在看沙發背景？Grad-CAM 算出每個像素區域對這個預測的梯度，<strong style="color:var(--text)">把「重要的地方」畫成紅色熱力圖</strong>疊在原圖上。一眼看出模型是真的在看貓，還是在作弊。</div>
+        </div></div>
+        <div class="tags"><span class="badge badge-use">影像解釋</span><span class="badge badge-type">CNN 專用</span><span class="badge badge-norm">熱力圖視覺化</span></div>
+      </div>
+
+      <div class="card blue">
+        <div class="card-head"><div class="icon">📊</div><div><div class="card-title">Permutation Importance</div><div class="card-en">特徵置換重要性</div></div></div>
+        <div class="card-body">把某個特徵的值<strong style="color:var(--text)">隨機打亂（破壞其資訊）</strong>，看準確率下降多少，下降越多代表那個特徵越重要。
+        <div class="formula">Importance(i) = baseline_score − score(打亂特徵 i 後)<br>重複多次取平均（降低隨機性）</div>
+        <div style="background:rgba(79,142,247,0.1);border:1px solid rgba(79,142,247,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#4f8ef7;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">📊 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">想知道哪個特徵最重要？把那一欄資料<strong style="color:var(--text)">洗牌打亂，讓模型「看不到」那個特徵的真實資訊</strong>，再看預測準確率掉了多少。掉最多的特徵就是最重要的。簡單直觀，任何模型都可以用。</div>
+        </div></div>
+        <div class="tags"><span class="badge badge-norm">模型無關</span><span class="badge badge-use">全局重要性</span><span class="badge badge-norm">易理解</span></div>
+      </div>
+
+      <div class="card purple">
+        <div class="card-head"><div class="icon">📈</div><div><div class="card-title">PDP / ICE Plot</div><div class="card-en">Partial Dependence Plot / Individual Conditional Expectation</div></div></div>
+        <div class="card-body">固定其他特徵，改變某一特徵的值，觀察<strong style="color:var(--text)">預測結果如何隨之變化</strong>。PDP 看平均趨勢，ICE 看每個樣本的個別反應。
+        <div class="formula">PDP: E[f(x_i, X_−i)]　對其他特徵取期望<br>ICE: f(x_i, x_−i^(j))　每個樣本各自一條線</div>
+        <div style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#a78bfa;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">📈 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">「年齡從 20 到 60，貸款違約的機率是怎麼變的？」PDP 把年齡從小到大變化，看預測的平均走勢，<strong style="color:var(--text)">一條曲線就看出特徵和預測的關係</strong>是正比、反比還是非線性。ICE 則對每個人各畫一條線，看個別差異。</div>
+        </div></div>
+        <div class="tags"><span class="badge badge-norm">模型無關</span><span class="badge badge-use">特徵關係視覺化</span></div>
+      </div>
+
+    </div>
+
+    <table style="margin-top:1.5rem">
+      <thead><tr><th>工具</th><th>解釋範圍</th><th>模型限制</th><th>適合資料類型</th><th>輸出形式</th></tr></thead>
+      <tbody>
+        <tr><td><span class="method-name">SHAP</span></td><td>全局 + 局部</td><td>無（Tree/Deep 版更快）</td><td>表格、影像、文字</td><td>貢獻值數字</td></tr>
+        <tr><td><span class="method-name">LIME</span></td><td>局部</td><td>無（模型無關）</td><td>表格、影像、文字</td><td>線性近似係數</td></tr>
+        <tr><td><span class="method-name">Grad-CAM</span></td><td>局部</td><td>CNN 專用</td><td>影像</td><td>熱力圖</td></tr>
+        <tr><td><span class="method-name">Perm. Importance</span></td><td>全局</td><td>無（模型無關）</td><td>表格</td><td>重要性分數</td></tr>
+        <tr><td><span class="method-name">PDP / ICE</span></td><td>全局</td><td>無（模型無關）</td><td>表格</td><td>趨勢曲線</td></tr>
+      </tbody>
+    </table>
+  </div>
+
 </div><!-- end page-algo -->
 
 <div class="page" id="page-math">
@@ -1215,7 +1794,7 @@
   <div class="grid" style="max-width:1100px;margin:0 auto">
 
     <!-- Monte Carlo -->
-    <div class="card" style="border-top:2px solid #facc15;border-color:var(--border)">
+    <div class="card yellow">
       <div class="card-head">
         <div class="icon" style="background:rgba(250,204,21,0.15)">🎲</div>
         <div>
@@ -3140,7 +3719,444 @@
   </div>
 
 </div><!-- end page-eval -->
+
+<!-- ══════════════════════════════════════════
+     PAGE 9 — 文本表示
+══════════════════════════════════════════ -->
+<div class="page" id="page-nlp">
+  <div class="summary">
+    <div class="summary-chip"><span class="dot" style="background:#ec4899"></span>基礎編碼（One-hot / BoW）</div>
+    <div class="summary-chip"><span class="dot" style="background:#ec4899"></span>傳統統計（TF-IDF / N-gram）</div>
+    <div class="summary-chip"><span class="dot" style="background:#ec4899"></span>詞嵌入（Word2Vec / GloVe / FastText）</div>
+    <div class="summary-chip"><span class="dot" style="background:#ec4899"></span>預訓練模型（ELMo / BERT / GPT）</div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">// 基礎編碼方法</div>
+
+    <!-- One-hot Encoding -->
+    <div class="card pink">
+      <div class="card-head"><div class="icon">1️⃣</div><div><div class="card-title">One-hot Encoding</div><div class="card-en">One-hot Vector</div></div></div>
+      <div class="card-body">
+        將每個詞映射到一個向量，該詞位置為 1，其他位置為 0。
+        <div class="formula">「貓」 → [0, 0, 1, 0, 0]<br>「狗」 → [0, 1, 0, 0, 0]<br>「鳥」 → [1, 0, 0, 0, 0]</div>
+        <div style="background:var(--surface2);border-radius:9px;padding:0.75rem;margin-top:0.8rem;font-size:0.78rem;line-height:1.7">
+          <span style="color:#ec4899">特點：</span><span style="color:var(--text-muted)">每個詞完全獨立，詞向量正交，無法表示詞之間的關係</span><br>
+          <span style="color:#ec4899">問題：</span><span style="color:var(--text-muted)">向量超高維、稀疏、詞量多時記憶體浪費</span><br>
+          <span style="color:#ec4899">用途：</span><span style="color:var(--text-muted)">分類任務的輸入、簡單快速的基準</span>
+        </div>
+        <div style="background:rgba(236,72,153,0.1);border:1px solid rgba(236,72,153,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#ec4899;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">1️⃣ 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">假設字典有 10 萬個詞，把每個詞做成一個 10 萬格的表格，只有那個詞的格子填「1」，其他全填「0」。<strong style="color:var(--text)">每個詞是完全獨立的數字格</strong>，「貓」和「狗」之間沒有任何關係，浪費大量空間。現代已很少直接使用。</div>
+        </div>
+      </div>
+      <div class="tags"><span class="badge badge-type">編碼方法</span><span class="badge badge-use">分類</span><span class="badge badge-norm">已淘汰</span></div>
+    </div>
+
+    <!-- Bag of Words -->
+    <div class="card pink">
+      <div class="card-head"><div class="icon">🎒</div><div><div class="card-title">Bag of Words（BoW）</div><div class="card-en">Word Frequency Vector</div></div></div>
+      <div class="card-body">
+        統計句子中每個詞出現的次數，忽略詞序。
+        <div class="formula">「貓喜歡狗，狗喜歡貓」<br>→ {貓: 2, 喜歡: 2, 狗: 2}</div>
+        <div style="background:var(--surface2);border-radius:9px;padding:0.75rem;margin-top:0.8rem;font-size:0.78rem;line-height:1.7">
+          <span style="color:#ec4899">特點：</span><span style="color:var(--text-muted)">簡單直觀，保留詞頻資訊，丟失詞序</span><br>
+          <span style="color:#ec4899">缺點：</span><span style="color:var(--text-muted)">無法區分「好評」和「評論」的順序差異</span><br>
+          <span style="color:#ec4899">用途：</span><span style="color:var(--text-muted)">垃圾郵件判斷、簡單分類</span>
+        </div>
+        <div style="background:rgba(236,72,153,0.1);border:1px solid rgba(236,72,153,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#ec4899;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🎒 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">把一段文字倒進「袋子」裡，只記<strong style="color:var(--text)">每個詞出現幾次，不管順序</strong>。「我喜歡狗」和「狗喜歡我」在 BoW 裡完全一樣（都是：我×1、喜歡×1、狗×1）。簡單但適合垃圾郵件等不需要語序的任務。</div>
+        </div>
+      </div>
+      <div class="tags"><span class="badge badge-type">編碼方法</span><span class="badge badge-use">文本分類</span><span class="badge badge-norm">快速基準</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">// 統計方法</div>
+
+    <!-- TF-IDF -->
+    <div class="card orange">
+      <div class="card-head"><div class="icon">📊</div><div><div class="card-title">TF-IDF</div><div class="card-en">Term Frequency - Inverse Document Frequency</div></div></div>
+      <div class="card-body">
+        賦予每個詞不同的權重：常見詞給低分，罕見且有區別性的詞給高分。
+        <div class="formula">TF-IDF = TF(t,d) × IDF(t)<br>TF = 詞在文件出現次數 / 文件總詞數<br>IDF = log(文件總數 / 包含該詞的文件數)</div>
+        <div style="background:var(--surface2);border-radius:9px;padding:0.75rem;margin-top:0.8rem;font-size:0.78rem;line-height:1.7">
+          <span style="color:#fb923c">優點：</span><span style="color:var(--text-muted)">快速、直觀、計算量小，對文本分類有效</span><br>
+          <span style="color:#fb923c">缺點：</span><span style="color:var(--text-muted)">詞義完全無關、語序被忽視、高維稀疏</span><br>
+          <span style="color:#fb923c">用途：</span><span style="color:var(--text-muted)">資訊檢索、文本搜尋、關鍵詞提取</span>
+        </div>
+        <div style="background:rgba(251,146,60,0.1);border:1px solid rgba(251,146,60,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#fb923c;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">📊 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">BoW 的升級版：「的、是、了」這種常見詞給低分（它們到處都有，沒有區分力），<strong style="color:var(--text)">「人工智慧」這種稀有且特定的詞給高分</strong>。搜尋引擎用這個找你要的文件——包含罕見關鍵詞的文件排最前面。</div>
+        </div>
+      </div>
+      <div class="tags"><span class="badge badge-type">統計方法</span><span class="badge badge-use">搜尋</span><span class="badge badge-use">分類</span><span class="badge badge-norm">經典方法</span></div>
+    </div>
+
+    <!-- N-grams -->
+    <div class="card orange">
+      <div class="card-head"><div class="icon">🔗</div><div><div class="card-title">N-grams</div><div class="card-en">Sequence of N Words</div></div></div>
+      <div class="card-body">
+        將文本分成連續 N 個詞的短片段，保留部分語序資訊。
+        <div class="formula">文本：「我 很 喜歡 機器 學習」<br>Unigram(1-gram): 我、很、喜歡、機器、學習<br>Bigram(2-gram): 我很、很喜歡、喜歡機器、機器學習<br>Trigram(3-gram): 我很喜歡、很喜歡機器、喜歡機器學習</div>
+        <div style="background:var(--surface2);border-radius:9px;padding:0.75rem;margin-top:0.8rem;font-size:0.78rem;line-height:1.7">
+          <span style="color:#fb923c">特點：</span><span style="color:var(--text-muted)">比 BoW 保留更多上下文、比完整序列更簡潔</span><br>
+          <span style="color:#fb923c">權衡詳解：</span><span style="color:var(--text-muted)"><br>
+          • <strong>N 越大 → 稀疏性高：</strong>可能組合數呈指數增長（N=5 時 1000^5 組合），但實際文本中大多組合很少出現，導致特徵向量充滿 0<br>
+          • <strong>N 越小 → 失去資訊：</strong>N=1 完全丟失詞序，「狗咬人」和「人咬狗」無法區分<br>
+          • <strong>實用建議：</strong>N=2 (bigram) 是最佳平衡點</span><br>
+          <span style="color:#fb923c">用途：</span><span style="color:var(--text-muted)">拼寫檢查、語言模型、文本分類</span>
+        </div>
+        <div style="background:rgba(251,146,60,0.1);border:1px solid rgba(251,146,60,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#fb923c;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🔗 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">把句子切成連續幾個詞的小片段。N=2 就切成「每兩個詞一組」：「機器學習」比「機器」+「學習」更有意義。<strong style="color:var(--text)">N 大 = 更完整語意，但可能組合太多、沒資料；N 小 = 資料多，但語意片段</strong>。通常 N=2（bigram）最實用。</div>
+        </div>
+      </div>
+      <div class="tags"><span class="badge badge-type">統計方法</span><span class="badge badge-use">語言模型</span><span class="badge badge-use">文本分類</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">// 詞嵌入（Word Embeddings）</div>
+
+    <!-- Word2Vec -->
+    <div class="card cyan">
+      <div class="card-head"><div class="icon">⃗v</div><div><div class="card-title">Word2Vec</div><div class="card-en">Skip-gram / CBOW</div></div></div>
+      <div class="card-body">
+        用淺層神經網路學習低維詞向量，使得**語義相似的詞在向量空間裡距離近**。
+        <div class="formula">Skip-gram: 輸入中心詞 → 預測周圍詞（1 輸入，多輸出）<br>CBOW (Continuous Bag Of Words): 輸入周圍詞 → 預測中心詞（多輸入，1 輸出）<br>結果：「國王」- 「男人」+ 「女人」≈「皇后」</div>
+        <div style="background:var(--surface2);border-radius:9px;padding:0.75rem;margin-top:0.8rem;font-size:0.78rem;line-height:1.7">
+          <span style="color:#06b6d4">記憶技巧：</span><span style="color:var(--text-muted)"><br>
+          • <strong>Skip-gram：「跳過」中心詞</strong>，給你中心詞，學習預測周圍詞<br>
+          • <strong>CBOW：周圍詞的「袋子」</strong>，給你周圍詞，學習預測被包圍的中心詞<br>
+          • 快速判斷：要預測「周圍詞」→ Skip-gram；要預測「中心詞」→ CBOW</span><br>
+          <span style="color:#06b6d4">優點：</span><span style="color:var(--text-muted)">快速訓練、詞向量有意義的語義、維度低（通常 300）</span><br>
+          <span style="color:#06b6d4">缺點：</span><span style="color:var(--text-muted)">一詞多義無法區分、OOV 詞無表示、靜態嵌入</span><br>
+          <span style="color:#06b6d4">訓練：</span><span style="color:var(--text-muted)">skip-gram 快，CBOW 更穩定；負採樣加速</span>
+        </div>
+        <div style="background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#06b6d4;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">⃗v 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">把每個詞變成一串數字（向量），語義相近的詞向量也相近。「國王」-「男人」+「女人」≈「皇后」。<strong style="color:var(--text)">Skip-gram 給中心詞猜周圍詞；CBOW 給周圍詞猜中心詞</strong>。背法：Skip = 只知道自己，猜旁邊的人；CBOW = 周圍都知道，猜中間那個。</div>
+        </div>
+      </div>
+      <div class="tags"><span class="badge badge-type">嵌入</span><span class="badge badge-use">通用</span><span class="badge badge-norm">經典</span><span class="badge badge-norm">快速</span></div>
+    </div>
+
+    <!-- GloVe -->
+    <div class="card cyan">
+      <div class="card-head"><div class="icon">🌐</div><div><div class="card-title">GloVe</div><div class="card-en">Global Vectors for Word Representation</div></div></div>
+      <div class="card-body">
+        結合**全局統計**（詞共現矩陣）和**局部學習**，同時利用全局語料庫統計和局部上下文。
+        <div class="formula">目標函數考慮詞對共現的全局模式<br>本質：加權最小平方迴歸<br>差異：Word2Vec 掃描局部窗口學習 vs GloVe 先算全語料共現矩陣再優化</div>
+        <div style="background:var(--surface2);border-radius:9px;padding:0.75rem;margin-top:0.8rem;font-size:0.78rem;line-height:1.7">
+          <span style="color:#06b6d4">核心差異：</span><span style="color:var(--text-muted)"><br>
+          • <strong>Word2Vec = 近視眼：</strong>只看 5-10 詞的滑動窗口，逐句學習<br>
+          • <strong>GloVe = 鷹眼：</strong>先統計整個語料庫詞對共現 1000 萬次，再用統計直接優化向量<br>
+          • 結果：GloVe 向量加法關係更清楚（king-man+woman≈queen）</span><br>
+          <span style="color:#06b6d4">優點：</span><span style="color:var(--text-muted)">向量品質好、訓練快（直接矩陣分解而非逐句神經網路）、向量加法關係明確</span><br>
+          <span style="color:#06b6d4">缺點：</span><span style="color:var(--text-muted)">同樣無法處理一詞多義、OOV 詞問題</span><br>
+          <span style="color:#06b6d4">何時用：</span><span style="color:var(--text-muted)">**大數據集**（共現統計才有價值），需要向量加法關係明確的場景</span>
+        </div>
+        <div style="background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#06b6d4;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🌐 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">Word2Vec 一次只看一個句子的小窗口。GloVe 先<strong style="color:var(--text)">統計整個語料庫裡每兩個詞同時出現幾次</strong>，再用這張「全局統計表」一次算出所有詞向量。像「鷹眼」看全局，比「近視眼」逐句學習更穩定，向量加法關係更準確。</div>
+        </div>
+      </div>
+      <div class="tags"><span class="badge badge-type">嵌入</span><span class="badge badge-use">通用</span><span class="badge badge-norm">向量好</span></div>
+    </div>
+
+    <!-- FastText -->
+    <div class="card cyan">
+      <div class="card-head"><div class="icon">⚡</div><div><div class="card-title">FastText</div><div class="card-en">Subword Embeddings</div></div></div>
+      <div class="card-body">
+        改進 Word2Vec，把詞分解成**字符 n-gram**，能處理 OOV 詞和形態變化。
+        <div class="formula">「跑步」拆成: &lt;跑, 跑步, 步&gt;（3-gram）<br>詞向量 = 其所有 n-gram 向量之和<br>OOV (Out Of Vocabulary)：訓練詞彙表中沒有出現的詞</div>
+        <div style="background:var(--surface2);border-radius:9px;padding:0.75rem;margin-top:0.8rem;font-size:0.78rem;line-height:1.7">
+          <span style="color:#06b6d4">關鍵創新：</span><span style="color:var(--text-muted)"><br>
+          • <strong>Word2Vec = 死記硬背：</strong>整詞記憶，遇到新詞「黑松露」就無法表示<br>
+          • <strong>FastText = 看偏旁部首：</strong>拆成字符片段「黑」「松」「露」「黑松」「松露」，即使新詞也能表示（因為片段見過）<br>
+          • 結果：拼寫錯誤「跑歩」也能表示（大部分 n-gram 與「跑步」相同）</span><br>
+          <span style="color:#06b6d4">優點：</span><span style="color:var(--text-muted)">能表示 OOV 詞、處理字符變化（拼寫錯誤）、多語言友善（形態豐富語言）</span><br>
+          <span style="color:#06b6d4">缺點：</span><span style="color:var(--text-muted)">向量維度更大（多個 n-gram 相加）、訓練更慢、一詞多義仍無法區分</span><br>
+          <span style="color:#06b6d4">何時用：</span><span style="color:var(--text-muted)">**中文、形態豐富語言、需要容錯、詞彙表有稀有詞**</span>
+        </div>
+        <div style="background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#06b6d4;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">⚡ 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">Word2Vec 遇到沒看過的詞就「不認識」。FastText 把每個詞<strong style="color:var(--text)">拆成小片段</strong>（「機器學習」→「機器」「器學」「學習」），用片段的向量加總代表整個詞。新詞「量子運算」雖然沒看過，但「量子」和「運算」見過，所以能猜出意思。</div>
+        </div>
+      </div>
+      <div class="tags"><span class="badge badge-type">嵌入</span><span class="badge badge-use">多語言</span><span class="badge badge-use">OOV 詞</span><span class="badge badge-norm">實用</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">// 預訓練神經模型</div>
+
+    <!-- ELMo -->
+    <div class="card purple">
+      <div class="card-head"><div class="icon">🌀</div><div><div class="card-title">ELMo</div><div class="card-en">Embeddings from Language Models</div></div></div>
+      <div class="card-body">
+        用雙向 LSTM 在無標籤大量文本上做**語言模型預訓練**，提取深層表示作為嵌入。
+        <div class="formula">通過語言模型任務學習 → 預測下一詞<br>使用多層 LSTM 的內部狀態作為詞表示</div>
+        <div style="background:var(--surface2);border-radius:9px;padding:0.75rem;margin-top:0.8rem;font-size:0.78rem;line-height:1.7">
+          <span style="color:#a78bfa">革新：</span><span style="color:var(--text-muted)">第一次成功的深層預訓練模型，**動態詞向量**（同詞不同語境不同向量）</span><br>
+          <span style="color:#a78bfa">優點：</span><span style="color:var(--text-muted)">處理一詞多義、下游任務性能大幅提升</span><br>
+          <span style="color:#a78bfa">缺點：</span><span style="color:var(--text-muted)">計算慢、模型大、被 BERT 取代</span>
+        </div>
+        <div style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#a78bfa;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🌀 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">Word2Vec 裡「蘋果」永遠是同一個向量，不管是「吃蘋果」還是「蘋果公司」。ELMo 用雙向 LSTM 讀整個句子，<strong style="color:var(--text)">同一個詞在不同句子裡給出不同的向量</strong>（動態嵌入）。是第一個成功解決「一詞多義」問題的模型。</div>
+        </div>
+      </div>
+      <div class="tags"><span class="badge badge-type">預訓練</span><span class="badge badge-use">NLP 通用</span><span class="badge badge-norm">里程碑</span></div>
+    </div>
+
+    <!-- BERT -->
+    <div class="card purple">
+      <div class="card-head"><div class="icon">🅱️</div><div><div class="card-title">BERT</div><div class="card-en">Bidirectional Encoder Representations from Transformers</div></div></div>
+      <div class="card-body">
+        用 Transformer 做雙向預訓練，通過**遮蔽語言模型**和**下句預測**任務學習深層文本表示。
+        <div class="formula">MLM: 隨機遮蔽 15% 的詞 → 預測它們<br>NSP: 判斷兩句是否相鄰<br>訓練 768-1024 維向量</div>
+        <div style="background:var(--surface2);border-radius:9px;padding:0.75rem;margin-top:0.8rem;font-size:0.78rem;line-height:1.7">
+          <span style="color:#a78bfa">優點：</span><span style="color:var(--text-muted)">**轉移學習標準**，微調即可解決各類下游任務，性能遠超 Word2Vec</span><br>
+          <span style="color:#a78bfa">機制：</span><span style="color:var(--text-muted)">Transformer Encoder 雙向注意力，上下文充分</span><br>
+          <span style="color:#a78bfa">應用：</span><span style="color:var(--text-muted)">分類、QA、命名實體、語義相似度……幾乎所有 NLP 任務</span>
+        </div>
+        <div style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#a78bfa;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🅱️ 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">訓練時隨機遮住句子裡 15% 的詞，要模型猜出來（像填空題）。同時<strong style="color:var(--text)">雙向讀懂上下文</strong>（左邊+右邊一起參考）。訓練完之後，拿去做各種 NLP 任務只需要小幅微調，準確率大幅超越之前所有方法，是現代 NLP 的分水嶺。</div>
+        </div>
+      </div>
+      <div class="tags"><span class="badge badge-type">預訓練</span><span class="badge badge-use">幾乎所有 NLP</span><span class="badge badge-norm">當代標準</span><span class="badge badge-norm">必學</span></div>
+    </div>
+
+    <!-- GPT -->
+    <div class="card purple">
+      <div class="card-head"><div class="icon">🚀</div><div><div class="card-title">GPT</div><div class="card-en">Generative Pre-trained Transformer</div></div></div>
+      <div class="card-body">
+        用 Transformer **自迴歸**（Decoder-only）做文本生成的預訓練，一個模型通吃多種任務（In-context Learning）。
+        <div class="formula">訓練目標：給定前文 → 預測下一詞<br>GPT-1: 12 層 | GPT-2: 48 層 | GPT-3: 175B 參數<br>新能力：few-shot learning，無需微調</div>
+        <div style="background:var(--surface2);border-radius:9px;padding:0.75rem;margin-top:0.8rem;font-size:0.78rem;line-height:1.7">
+          <span style="color:#a78bfa">vs BERT：</span><span style="color:var(--text-muted)">BERT 用於理解，GPT 用於生成；BERT 雙向，GPT 單向</span><br>
+          <span style="color:#a78bfa">革命：</span><span style="color:var(--text-muted)">大規模參數 (billions) + 大量語料 = 涌現能力（emergence），可做不在訓練中的任務</span><br>
+          <span style="color:#a78bfa">應用：</span><span style="color:var(--text-muted)">文本生成、翻譯、摘要、程式生成、對話、推理……</span>
+        </div>
+        <div style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+          <div style="font-size:0.68rem;color:#a78bfa;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🚀 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">訓練方式是「給你前半句，預測下一個詞」，一直重複。模型變得超大（數十億個參數）後，出現了「涌現能力」——<strong style="color:var(--text)">你只要用文字告訴它你要做什麼，它就能做到</strong>，不需要重新訓練。BERT 適合「理解」，GPT 適合「生成」，ChatGPT 就是基於 GPT 做的。</div>
+        </div>
+      </div>
+      <div class="tags"><span class="badge badge-type">預訓練</span><span class="badge badge-use">文本生成</span><span class="badge badge-use">多任務</span><span class="badge badge-norm">未來走向</span><span class="badge badge-norm">LLM 基礎</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">// 方法演進路線圖</div>
+    <div style="background:var(--surface);border:1px solid rgba(236,72,153,0.2);border-radius:14px;padding:1.25rem;margin-bottom:1.25rem;font-size:0.8rem;color:var(--text-muted);line-height:2.2">
+      <div style="display:grid;gap:0.8rem">
+        <div><strong style="color:var(--text)">第一階段（靜態嵌入）</strong><br>One-hot → Bag of Words → TF-IDF → Word2Vec / GloVe / FastText<br><span style="color:#f9a8d4">特點：詞對應固定向量，詞義無多義性</span></div>
+        <div><strong style="color:var(--text)">第二階段（動態上下文嵌入）</strong><br>ELMo（雙向 LSTM） → BERT（雙向 Transformer）<br><span style="color:#f9a8d4">特點：同詞不同語境有不同表示，下游任務微調</span></div>
+        <div><strong style="color:var(--text)">第三階段（大規模生成模型）</strong><br>GPT-1 → GPT-2 → GPT-3 / ChatGPT<br><span style="color:#f9a8d4">特點：自迴歸生成，參數極大，無需微調就能完成新任務（in-context learning）</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">// 快速對比表</div>
+    <table style="width:100%;border-collapse:collapse;margin-bottom:1.5rem;font-size:0.75rem">
+      <thead>
+        <tr style="background:var(--surface2);border-bottom:1px solid var(--border)">
+          <th style="padding:0.8rem;text-align:left;color:var(--text)">方法</th>
+          <th style="padding:0.8rem;text-align:left;color:var(--text)">向量維度</th>
+          <th style="padding:0.8rem;text-align:left;color:var(--text)">靜態/動態</th>
+          <th style="padding:0.8rem;text-align:left;color:var(--text)">訓練速度</th>
+          <th style="padding:0.8rem;text-align:left;color:var(--text)">語義能力</th>
+          <th style="padding:0.8rem;text-align:left;color:var(--text)">時代</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="border-bottom:1px solid var(--border);background:rgba(236,72,153,0.05)">
+          <td style="padding:0.8rem"><strong>One-hot</strong></td>
+          <td style="padding:0.8rem">詞表大小（百萬）</td>
+          <td style="padding:0.8rem">靜態</td>
+          <td style="padding:0.8rem">即時</td>
+          <td style="padding:0.8rem">無</td>
+          <td style="padding:0.8rem">1990s</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border)">
+          <td style="padding:0.8rem"><strong>TF-IDF</strong></td>
+          <td style="padding:0.8rem">詞表大小</td>
+          <td style="padding:0.8rem">靜態</td>
+          <td style="padding:0.8rem">快</td>
+          <td style="padding:0.8rem">弱（仍在用）</td>
+          <td style="padding:0.8rem">2000s</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border)">
+          <td style="padding:0.8rem"><strong>Word2Vec</strong></td>
+          <td style="padding:0.8rem">300</td>
+          <td style="padding:0.8rem">靜態</td>
+          <td style="padding:0.8rem">快</td>
+          <td style="padding:0.8rem">強</td>
+          <td style="padding:0.8rem">2013</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border)">
+          <td style="padding:0.8rem"><strong>GloVe</strong></td>
+          <td style="padding:0.8rem">300</td>
+          <td style="padding:0.8rem">靜態</td>
+          <td style="padding:0.8rem">中等</td>
+          <td style="padding:0.8rem">強</td>
+          <td style="padding:0.8rem">2014</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border)">
+          <td style="padding:0.8rem"><strong>FastText</strong></td>
+          <td style="padding:0.8rem">300</td>
+          <td style="padding:0.8rem">靜態</td>
+          <td style="padding:0.8rem">快</td>
+          <td style="padding:0.8rem">強（+形態）</td>
+          <td style="padding:0.8rem">2017</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border);background:rgba(236,72,153,0.08)">
+          <td style="padding:0.8rem"><strong>ELMo</strong></td>
+          <td style="padding:0.8rem">1024（多層）</td>
+          <td style="padding:0.8rem">動態</td>
+          <td style="padding:0.8rem">慢</td>
+          <td style="padding:0.8rem">非常強</td>
+          <td style="padding:0.8rem">2018</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border);background:rgba(236,72,153,0.08)">
+          <td style="padding:0.8rem"><strong>BERT</strong></td>
+          <td style="padding:0.8rem">768-1024</td>
+          <td style="padding:0.8rem">動態</td>
+          <td style="padding:0.8rem">慢（推理）</td>
+          <td style="padding:0.8rem">最強（當時）</td>
+          <td style="padding:0.8rem">2018</td>
+        </tr>
+        <tr style="border-bottom:1px solid var(--border);background:rgba(236,72,153,0.08)">
+          <td style="padding:0.8rem"><strong>GPT-3</strong></td>
+          <td style="padding:0.8rem">12288</td>
+          <td style="padding:0.8rem">動態</td>
+          <td style="padding:0.8rem">非常慢</td>
+          <td style="padding:0.8rem">超人級別</td>
+          <td style="padding:0.8rem">2020</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-title">// 怎麼選？決策樹</div>
+    <div style="background:var(--surface);border-left:3px solid #ec4899;border-radius:9px;padding:1.25rem;margin-bottom:1.5rem;font-size:0.8rem;color:var(--text-muted);line-height:1.9">
+      <div style="margin-bottom:1rem">
+        <strong style="color:var(--text);display:block;margin-bottom:0.4rem">🤔 問題 1：你的任務是什麼？</strong>
+        <div style="margin-left:1rem;padding:0.6rem;background:var(--surface2);border-radius:6px">
+          <div><span style="color:#ec4899">→ 簡單分類（垃圾郵件）</span>：TF-IDF / Bag of Words 夠用</div>
+          <div><span style="color:#ec4899">→ 文本相似度、聚類</span>：Word2Vec / GloVe / FastText</div>
+          <div><span style="color:#ec4899">→ 複雜任務（QA、實體、翻譯）</span>：BERT 或更新的模型</div>
+          <div><span style="color:#ec4899">→ 文本生成、對話</span>：GPT 或其他生成模型</div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:1rem">
+        <strong style="color:var(--text);display:block;margin-bottom:0.4rem">🤔 問題 2：有沒有預訓練模型可用？</strong>
+        <div style="margin-left:1rem;padding:0.6rem;background:var(--surface2);border-radius:6px">
+          <div><span style="color:#ec4899">→ 有，且任務相近</span>：使用預訓練模型，微調即可（BERT、GPT）</div>
+          <div><span style="color:#ec4899">→ 沒有 or 任務完全不同</span>：從靜態嵌入開始（Word2Vec / GloVe），或自己預訓練</div>
+          <div><span style="color:#ec4899">→ 資源極少</span>：TF-IDF、N-gram 等輕量級方法</div>
+        </div>
+      </div>
+
+      <div>
+        <strong style="color:var(--text);display:block;margin-bottom:0.4rem">🤔 問題 3：你有多少計算資源？</strong>
+        <div style="margin-left:1rem;padding:0.6rem;background:var(--surface2);border-radius:6px">
+          <div><span style="color:#ec4899">→ CPU only / 邊際設備</span>：One-hot、TF-IDF、小的 FastText</div>
+          <div><span style="color:#ec4899">→ GPU / 一般伺服器</span>：Word2Vec、GloVe、FastText、小的 BERT</div>
+          <div><span style="color:#ec4899">→ 大規模 GPU 叢集</span>：BERT、GPT、自訓練</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end page-nlp -->
 <script>
+  // ── Search Functionality ──
+  let debounceTimer;
+  const searchInput = document.getElementById('searchInput');
+  const clearBtn = document.getElementById('clearBtn');
+  const searchResult = document.getElementById('searchResult');
+
+  function performSearch(query) {
+    const trimmedQuery = query.trim().toLowerCase();
+    const cards = document.querySelectorAll('.card');
+    let matchCount = 0;
+    let firstMatchPage = null;
+    let firstMatchCard = null;
+
+    cards.forEach(card => {
+      const titleElement = card.querySelector('.card-title');
+      if (!titleElement) return;
+
+      const cardTitle = titleElement.textContent.toLowerCase();
+      const isMatch = cardTitle.includes(trimmedQuery);
+
+      if (isMatch && trimmedQuery.length > 0) {
+        card.classList.remove('hidden');
+        card.classList.add('highlight');
+        matchCount++;
+
+        if (!firstMatchCard) {
+          firstMatchCard = card;
+          // Find which page this card belongs to
+          let parent = card.closest('.page');
+          if (parent) {
+            firstMatchPage = parent.id.replace('page-', '');
+          }
+        }
+      } else {
+        card.classList.add('hidden');
+        card.classList.remove('highlight');
+      }
+    });
+
+    // Update result info
+    if (trimmedQuery.length === 0) {
+      searchResult.textContent = '';
+      // Reset to show all cards
+      cards.forEach(card => {
+        card.classList.remove('hidden', 'highlight');
+      });
+    } else if (matchCount === 0) {
+      searchResult.textContent = '❌ 無搜尋結果';
+    } else {
+      searchResult.textContent = `✓ 找到 ${matchCount} 個結果`;
+      // Switch to the first match's page and scroll to it
+      if (firstMatchPage && firstMatchCard) {
+        switchTab(firstMatchPage);
+        setTimeout(() => {
+          firstMatchCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 100);
+      }
+    }
+  }
+
+  // Add event listener to search input
+  searchInput.addEventListener('input', (e) => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      performSearch(e.target.value);
+    }, 100);
+  });
+
+  // Clear button functionality
+  clearBtn.addEventListener('click', () => {
+    searchInput.value = '';
+    searchResult.textContent = '';
+    document.querySelectorAll('.card').forEach(card => {
+      card.classList.remove('hidden', 'highlight');
+    });
+  });
+
   function switchTab(tab) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
