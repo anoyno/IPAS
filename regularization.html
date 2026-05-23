@@ -1082,6 +1082,110 @@
     </table>
   </div>
 
+  <!-- ── LDA / QDA ── -->
+  <div class="section" style="margin-top:2.5rem">
+    <div class="section-title">// 線性 / 二次判別分析（LDA & QDA）</div>
+
+    <div style="background:var(--surface);border:1px solid rgba(79,142,247,0.25);border-radius:14px;padding:1.25rem;margin-bottom:1.25rem">
+      <div style="font-size:0.7rem;color:#4f8ef7;font-family:'JetBrains Mono',monospace;margin-bottom:0.7rem">💡 共同前提：高斯判別分析</div>
+      <div style="font-size:0.83rem;color:var(--text-dim);line-height:1.8">兩者都假設每個類別的資料服從<strong style="color:var(--text)">多變量高斯分布</strong>，利用貝葉斯定理計算「這筆資料屬於哪個類別的機率最高」。差別在於各類別的協方差矩陣是否共用。</div>
+    </div>
+
+    <div class="grid" style="margin:0">
+
+      <div class="card blue">
+        <div class="card-head"><div class="icon">—</div><div><div class="card-title">LDA（線性判別分析）</div><div class="card-en">Linear Discriminant Analysis</div></div></div>
+        <div class="card-body">
+          假設<strong style="color:var(--text)">所有類別共用同一個協方差矩陣 Σ</strong>，決策邊界是線性的（超平面）。
+          <div class="formula">假設：P(x|y=k) = N(μₖ, <strong>Σ</strong>)　← 所有類別共用 Σ<br>決策邊界：線性（超平面）<br>需估參數：d(d+1)/2 個（整體共用一個 Σ）</div>
+
+          <div style="background:var(--surface2);border:1px solid rgba(79,142,247,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem;margin-bottom:0.9rem">
+            <div style="font-size:0.68rem;color:#4f8ef7;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">📐 協方差矩陣是什麼？</div>
+            <div style="font-size:0.8rem;color:var(--text-dim);line-height:1.7">記錄每兩個特徵之間「一起變動的程度」的矩陣（見數學工具頁）。d 個特徵 → d×d 的矩陣，需估計 d(d+1)/2 個獨立參數。</div>
+          </div>
+
+          <div style="background:rgba(79,142,247,0.1);border:1px solid rgba(79,142,247,0.2);border-radius:10px;padding:0.9rem;margin-bottom:0.9rem">
+            <div style="font-size:0.68rem;color:#4f8ef7;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">— 國中生版本</div>
+            <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">想像貓和狗的身高體重分布，LDA 認為「貓的體型變化規律」和「狗的體型變化規律」<strong style="color:var(--text)">是一樣的，只是中心點不同</strong>。所以用一條直線就能把兩群分開。參數少、估計穩，適合高維少樣本。</div>
+          </div>
+
+          <div style="background:var(--surface2);border-radius:9px;padding:0.75rem;font-size:0.78rem;line-height:1.7">
+            <span style="color:#93c5fd">優點：</span><span style="color:var(--text-muted)">共用 Σ 讓樣本有效利用，高維少樣本仍穩定</span><br>
+            <span style="color:#93c5fd">缺點：</span><span style="color:var(--text-muted)">若各類別形狀真的不同，線性邊界會欠擬合</span><br>
+            <span style="color:#93c5fd">也用於：</span><span style="color:var(--text-muted)">監督式降維——找出最能區分類別的投影方向</span>
+          </div>
+        </div>
+        <div class="tags"><span class="badge badge-use">分類</span><span class="badge badge-norm">高維少樣本穩健</span><span class="badge badge-type">線性邊界</span></div>
+      </div>
+
+      <div class="card purple">
+        <div class="card-head"><div class="icon">∪</div><div><div class="card-title">QDA（二次判別分析）</div><div class="card-en">Quadratic Discriminant Analysis</div></div></div>
+        <div class="card-body">
+          每個類別<strong style="color:var(--text)">各自擁有自己的協方差矩陣 Σₖ</strong>，決策邊界是二次曲線，更彈性。
+          <div class="formula">假設：P(x|y=k) = N(μₖ, <strong>Σₖ</strong>)　← 每類別各自的 Σₖ<br>決策邊界：二次曲線（橢圓、拋物線等）<br>需估參數：K × d(d+1)/2 個（每類別各估一個 Σₖ）</div>
+
+          <div style="background:var(--surface2);border:1px solid rgba(167,139,250,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem;margin-bottom:0.9rem">
+            <div style="font-size:0.68rem;color:#a78bfa;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">⚠️ 高維少樣本的危險</div>
+            <div style="font-size:0.8rem;color:var(--text-dim);line-height:1.7">
+              d=200 維，每類別需估：200×201/2 = <strong style="color:var(--text)">20,100 個參數</strong><br>
+              但每類別只有 30 筆樣本 → 樣本數 ≪ 參數數<br>
+              → 協方差矩陣估計不可靠、可能奇異（無法求逆）→ <strong style="color:var(--text)">嚴重過擬合</strong>
+            </div>
+          </div>
+
+          <div style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);border-radius:10px;padding:0.9rem;margin-bottom:0.9rem">
+            <div style="font-size:0.68rem;color:#a78bfa;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">∪ 國中生版本</div>
+            <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">QDA 認為「貓的體型變化規律」和「狗的體型變化規律」<strong style="color:var(--text)">是不同的</strong>，各自估各自的。邊界可以是橢圓形、曲線，更貼合真實分布。但要估的參數量暴增——<strong style="color:var(--text)">資料夠多才能用，資料少就過擬合</strong>。</div>
+          </div>
+
+          <div style="background:var(--surface2);border-radius:9px;padding:0.75rem;font-size:0.78rem;line-height:1.7">
+            <span style="color:#c4b5fd">優點：</span><span style="color:var(--text-muted)">邊界更彈性，各類別形狀不同時效果好</span><br>
+            <span style="color:#c4b5fd">缺點：</span><span style="color:var(--text-muted)">樣本少時估計不穩定，高維時幾乎不可用</span><br>
+            <span style="color:#c4b5fd">適用：</span><span style="color:var(--text-muted)">各類別分布形狀明顯不同，且樣本充足（n ≫ d）</span>
+          </div>
+        </div>
+        <div class="tags"><span class="badge badge-use">分類</span><span class="badge badge-warn">高維少樣本易過擬合</span><span class="badge badge-type">二次邊界</span></div>
+      </div>
+
+    </div>
+
+    <table style="margin-top:1.5rem">
+      <thead><tr><th></th><th style="color:#93c5fd">LDA</th><th style="color:#c4b5fd">QDA</th></tr></thead>
+      <tbody>
+        <tr><td><span class="method-name">協方差矩陣</span></td><td>所有類別共用同一個 Σ</td><td>每個類別各自的 Σₖ</td></tr>
+        <tr><td><span class="method-name">決策邊界</span></td><td>線性（超平面）</td><td>二次曲線（橢圓等）</td></tr>
+        <tr><td><span class="method-name">需估參數量</span></td><td>d(d+1)/2（少）</td><td>K × d(d+1)/2（多）</td></tr>
+        <tr><td><span class="method-name">高維少樣本</span></td><td>✓ 穩健</td><td>✗ 容易過擬合</td></tr>
+        <tr><td><span class="method-name">彈性</span></td><td>較低（線性限制）</td><td>較高（曲線邊界）</td></tr>
+        <tr><td><span class="method-name">適合情境</span></td><td>維度高、樣本少</td><td>樣本充足（n ≫ d²）</td></tr>
+      </tbody>
+    </table>
+
+    <div style="margin-top:1rem;padding:0.8rem 1rem;background:rgba(79,142,247,0.06);border:1px solid rgba(79,142,247,0.15);border-radius:10px;font-size:0.82rem;color:var(--text-dim);line-height:1.7">
+      💡 <strong style="color:var(--text)">一句話記：</strong>彈性大不代表好——沒有足夠資料支撐的彈性只是過擬合。高維少樣本優先選 LDA。
+    </div>
+
+    <!-- PCA vs LDA 對照 -->
+    <div style="margin-top:1.5rem;background:var(--surface);border:1px solid rgba(250,204,21,0.25);border-radius:14px;padding:1.25rem">
+      <div style="font-size:0.7rem;color:#facc15;font-family:'JetBrains Mono',monospace;margin-bottom:0.9rem">⚡ 常考混淆點：PCA vs LDA 降維比較</div>
+      <table style="margin:0">
+        <thead><tr><th></th><th style="color:#93c5fd">PCA</th><th style="color:#4f8ef7">LDA（降維用）</th></tr></thead>
+        <tbody>
+          <tr><td><span class="method-name">監督屬性</span></td><td>✗ <strong style="color:#6ee7b7">非監督式</strong>，不需標籤</td><td>✓ <strong style="color:#f9a8d4">監督式</strong>，必須有類別標籤</td></tr>
+          <tr><td><span class="method-name">優化目標</span></td><td>最大化資料<strong>變異數</strong></td><td>最大化<strong>類別間距</strong> / 最小化<strong>類別內距</strong></td></tr>
+          <tr><td><span class="method-name">數學工具</span></td><td>協方差矩陣的特徵值分解</td><td>Sᵦ（類別間）、Sᵥ（類別內）散布矩陣</td></tr>
+          <tr><td><span class="method-name">最大維度上限</span></td><td>min(n, d)（無嚴格限制）</td><td>最多 K−1 維（K = 類別數）</td></tr>
+          <tr><td><span class="method-name">邊界形狀</span></td><td>線性（投影方向）</td><td>線性（超平面）</td></tr>
+          <tr><td><span class="method-name">非線性結構</span></td><td colspan="2" style="text-align:center;color:var(--text-muted)">兩者都表現不佳 → 改用 Kernel PCA / Kernel LDA</td></tr>
+          <tr><td><span class="method-name">適合情境</span></td><td>無標籤、降維前處理、視覺化</td><td>有標籤、強化分類前的特徵投影</td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:0.9rem;padding:0.65rem 0.9rem;background:rgba(250,204,21,0.08);border:1px solid rgba(250,204,21,0.2);border-radius:8px;font-size:0.8rem;color:var(--text-dim)">
+        ⚠️ <strong style="color:#fde68a">常見誤解：</strong>「PCA 與 LDA 都是非監督式」是<strong style="color:var(--text)">錯誤的</strong>。PCA 看資料本身的變異（非監督）；LDA 看類別標籤間的差異（監督）。
+      </div>
+    </div>
+  </div>
+
   <!-- ── 非監督式學習 ── -->
   <div class="section" style="margin-top:2.5rem">
     <div class="section-title">// 非監督式學習 — 常見方法</div>
@@ -1194,6 +1298,66 @@
     </div>
   </div>
 
+  <!-- ── 光譜聚類 ── -->
+  <div class="section" style="margin-top:2.5rem">
+    <div class="section-title">// 光譜聚類（Spectral Clustering）</div>
+
+    <div style="background:var(--surface);border:1px solid rgba(167,139,250,0.25);border-radius:14px;padding:1.25rem;margin-bottom:1.25rem">
+      <div style="font-size:0.7rem;color:#a78bfa;font-family:'JetBrains Mono',monospace;margin-bottom:0.7rem">💡 為什麼需要光譜聚類？</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;font-size:0.82rem;color:var(--text-dim);line-height:1.8">
+        <div><strong style="color:var(--text)">K-means 的盲點：</strong>只能分球狀群。同心圓、月牙形等非線性結構，K-means 無論怎麼切都切錯。</div>
+        <div><strong style="color:var(--text)">光譜聚類的解法：</strong>先把資料「轉換到圖的空間」，讓原本線性不可分的結構變得線性可分，再用 K-means 完成分群。</div>
+      </div>
+    </div>
+
+    <div class="card purple" style="margin-bottom:1.25rem">
+      <div class="card-head"><div class="icon">λ̃</div><div><div class="card-title">光譜聚類三步驟</div><div class="card-en">Spectral Clustering Pipeline</div></div></div>
+      <div class="card-body">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0.75rem;margin-bottom:1rem">
+
+          <div style="background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.25);border-radius:10px;padding:1rem;position:relative">
+            <div style="font-size:1.5rem;font-weight:700;color:rgba(167,139,250,0.3);position:absolute;top:0.5rem;right:0.75rem;font-family:'JetBrains Mono',monospace">01</div>
+            <div style="color:#c4b5fd;font-weight:600;font-size:0.85rem;margin-bottom:0.5rem">建立相似度圖</div>
+            <div style="font-size:0.78rem;color:var(--text-muted);line-height:1.7">每個資料點當節點，兩點距離越近，邊的權重越大。常用 KNN 圖或 ε-neighborhood。</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:#c4b5fd;margin-top:0.5rem">Wᵢⱼ = exp(−‖xᵢ−xⱼ‖²/2σ²)</div>
+          </div>
+
+          <div style="background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.25);border-radius:10px;padding:1rem;position:relative">
+            <div style="font-size:1.5rem;font-weight:700;color:rgba(167,139,250,0.3);position:absolute;top:0.5rem;right:0.75rem;font-family:'JetBrains Mono',monospace">02</div>
+            <div style="color:#c4b5fd;font-weight:600;font-size:0.85rem;margin-bottom:0.5rem">計算拉普拉斯矩陣特徵向量</div>
+            <div style="font-size:0.78rem;color:var(--text-muted);line-height:1.7">度矩陣 D（每個節點的連線總權重）減去相似度矩陣 W，得到拉普拉斯矩陣 L，再取前 k 個最小特徵值對應的特徵向量。</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:#c4b5fd;margin-top:0.5rem">L = D − W → 取前 k 個特徵向量</div>
+          </div>
+
+          <div style="background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.25);border-radius:10px;padding:1rem;position:relative">
+            <div style="font-size:1.5rem;font-weight:700;color:rgba(167,139,250,0.3);position:absolute;top:0.5rem;right:0.75rem;font-family:'JetBrains Mono',monospace">03</div>
+            <div style="color:#c4b5fd;font-weight:600;font-size:0.85rem;margin-bottom:0.5rem">新空間用 K-means 分群</div>
+            <div style="font-size:0.78rem;color:var(--text-muted);line-height:1.7">特徵向量組成的新座標空間中，原本非線性可分的資料已變得線性可分，直接跑 K-means 即可正確分群。</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:#c4b5fd;margin-top:0.5rem">k 個特徵向量 → K-means(k 群)</div>
+          </div>
+
+        </div>
+
+        <div style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);border-radius:10px;padding:0.9rem;margin-bottom:0.9rem">
+          <div style="font-size:0.68rem;color:#a78bfa;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">λ̃ 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">想像同心圓的資料，K-means 只會「左右切」，永遠切錯。光譜聚類的訣竅是：先把每個點和它的鄰居「連邊建圖」，然後用拉普拉斯矩陣的特徵向量<strong style="color:var(--text)">把資料「翻轉」到新的座標空間</strong>——在這個新空間裡，內圈和外圈就分開了，再用 K-means 一刀切就完成了。</div>
+        </div>
+
+        <table style="font-size:0.75rem">
+          <thead><tr><th>情境</th><th style="color:#fca5a5">K-means</th><th style="color:#c4b5fd">光譜聚類</th><th style="color:#6ee7b7">DBSCAN</th></tr></thead>
+          <tbody>
+            <tr><td>球狀分布</td><td style="color:#6ee7b7">✓ 完美</td><td style="color:#6ee7b7">✓ 可以</td><td style="color:#6ee7b7">✓ 可以</td></tr>
+            <tr><td>同心圓 / 月牙形</td><td style="color:#f9a8d4">✗ 失敗</td><td style="color:#6ee7b7">✓ 正確</td><td style="color:#6ee7b7">✓ 正確</td></tr>
+            <tr><td>需指定群數 K</td><td>需要</td><td>需要</td><td>不需要</td></tr>
+            <tr><td>離群值偵測</td><td>✗</td><td>✗</td><td style="color:#6ee7b7">✓ 自動標記</td></tr>
+            <tr><td>計算複雜度</td><td>低</td><td>高（特徵分解）</td><td>中</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="tags"><span class="badge badge-norm">任意形狀</span><span class="badge badge-use">圖論降維</span><span class="badge badge-type">拉普拉斯矩陣</span><span class="badge badge-warn">需指定 K</span></div>
+    </div>
+  </div>
+
   <!-- ── 半監督式學習 ── -->
   <div class="section" style="margin-top:2.5rem">
     <div class="section-title">// 半監督式學習 — 常見方法</div>
@@ -1274,6 +1438,169 @@
     </table>
   </div>
 
+
+  <!-- ── 強化學習 ── -->
+  <div class="section" style="margin-top:2.5rem">
+    <div class="section-title">// 強化學習核心算法 — Q-Learning vs SARSA</div>
+
+    <div style="background:var(--surface);border:1px solid rgba(244,114,182,0.25);border-radius:14px;padding:1.25rem;margin-bottom:1.25rem">
+      <div style="font-size:0.7rem;color:#f472b6;font-family:'JetBrains Mono',monospace;margin-bottom:0.7rem">🎮 強化學習的基本元素</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:0.6rem;font-size:0.78rem">
+        <div style="background:var(--surface2);border-radius:7px;padding:0.6rem"><span style="color:#f9a8d4;font-weight:600;display:block;margin-bottom:0.2rem">Agent（智能體）</span><span style="color:var(--text-muted)">做決策的主體，如機器人、遊戲角色</span></div>
+        <div style="background:var(--surface2);border-radius:7px;padding:0.6rem"><span style="color:#f9a8d4;font-weight:600;display:block;margin-bottom:0.2rem">Environment（環境）</span><span style="color:var(--text-muted)">Agent 互動的世界，如棋盤、遊戲場景</span></div>
+        <div style="background:var(--surface2);border-radius:7px;padding:0.6rem"><span style="color:#f9a8d4;font-weight:600;display:block;margin-bottom:0.2rem">State s（狀態）</span><span style="color:var(--text-muted)">目前環境的快照，如棋盤目前局面</span></div>
+        <div style="background:var(--surface2);border-radius:7px;padding:0.6rem"><span style="color:#f9a8d4;font-weight:600;display:block;margin-bottom:0.2rem">Action a（動作）</span><span style="color:var(--text-muted)">Agent 可以採取的行為，如上下左右</span></div>
+        <div style="background:var(--surface2);border-radius:7px;padding:0.6rem"><span style="color:#f9a8d4;font-weight:600;display:block;margin-bottom:0.2rem">Reward r（獎勵）</span><span style="color:var(--text-muted)">環境回饋的分數，正分鼓勵、負分懲罰</span></div>
+        <div style="background:var(--surface2);border-radius:7px;padding:0.6rem"><span style="color:#f9a8d4;font-weight:600;display:block;margin-bottom:0.2rem">Q(s,a)（Q 值）</span><span style="color:var(--text-muted)">在狀態 s 採取動作 a 的預期長期總獎勵</span></div>
+      </div>
+    </div>
+
+    <div class="grid" style="margin:0">
+
+      <div class="card pink">
+        <div class="card-head"><div class="icon">Q*</div><div><div class="card-title">Q-Learning</div><div class="card-en">Off-policy TD Control</div></div></div>
+        <div class="card-body">
+          更新 Q 值時，假設下一步「<strong style="color:var(--text)">一定選最優動作</strong>」（max Q），不管實際走哪條路。
+          <div class="formula">Q(s,a) ← Q(s,a) + α [ r + γ · <strong>max</strong>Q(s',a') − Q(s,a) ]<br>↑ 用下一狀態所有動作中 Q 值最大的那個</div>
+
+          <div style="background:var(--surface2);border:1px solid rgba(244,114,182,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem;margin-bottom:0.9rem">
+            <div style="font-size:0.68rem;color:#f472b6;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🔑 Off-policy 的意思</div>
+            <div style="font-size:0.8rem;color:var(--text-dim);line-height:1.7">
+              <strong style="color:var(--text)">行為策略</strong>（實際走路的方式）：ε-greedy，偶爾隨機探索<br>
+              <strong style="color:var(--text)">學習目標</strong>（更新 Q 用的）：假設下一步永遠走最優解<br>
+              兩者不同 → Off-policy（脫離策略）
+            </div>
+          </div>
+
+          <div style="background:rgba(244,114,182,0.1);border:1px solid rgba(244,114,182,0.2);border-radius:10px;padding:0.9rem;margin-bottom:0.9rem">
+            <div style="font-size:0.68rem;color:#f472b6;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🎮 國中生版本</div>
+            <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">下棋時，Q-Learning 更新分數的方式是：「<strong style="color:var(--text)">假設我下一步一定走最好的那步</strong>，那這步值多少分？」。就算它有時候會隨機亂走探索，但學習時永遠假設下一步是最優解。學到的是「理論上最好的策略」，比較大膽。</div>
+          </div>
+
+          <div style="background:var(--surface2);border-radius:9px;padding:0.75rem;font-size:0.78rem;line-height:1.7">
+            <span style="color:#f9a8d4">懸崖行走（Cliff Walking）行為：</span><span style="color:var(--text-muted)">貼著懸崖邊走最短路——因為學習時假設不會失足，路徑最優但有風險</span>
+          </div>
+        </div>
+        <div class="tags"><span class="badge badge-type">Off-policy</span><span class="badge badge-use">學最優策略</span><span class="badge badge-norm">DQN 的基礎</span></div>
+      </div>
+
+      <div class="card yellow">
+        <div class="card-head"><div class="icon">S→A</div><div><div class="card-title">SARSA</div><div class="card-en">On-policy TD Control</div></div></div>
+        <div class="card-body">
+          更新 Q 值時，用「<strong style="color:var(--text)">實際採取的下一個動作</strong>」a' 來計算，不假設最優。
+          <div class="formula">Q(s,a) ← Q(s,a) + α [ r + γ · Q(s',<strong>a'</strong>) − Q(s,a) ]<br>↑ a' 是實際走的下一步（不是 max，是真實動作）</div>
+
+          <div style="background:var(--surface2);border:1px solid rgba(250,204,21,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem;margin-bottom:0.9rem">
+            <div style="font-size:0.68rem;color:#facc15;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🔑 On-policy 的意思 + SARSA 名字來源</div>
+            <div style="font-size:0.8rem;color:var(--text-dim);line-height:1.7;margin-bottom:0.6rem">
+              <strong style="color:var(--text)">行為策略</strong>與<strong style="color:var(--text)">學習目標</strong>用同一個策略 → On-policy（跟著策略走）<br>
+              學的是「自己實際在跑的策略」的價值
+            </div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:#fde68a;line-height:2">
+              名字來自更新用到的五元組：<br>
+              <strong style="color:var(--text)">S</strong>tate → <strong style="color:var(--text)">A</strong>ction → <strong style="color:var(--text)">R</strong>eward → <strong style="color:var(--text)">S</strong>tate → <strong style="color:var(--text)">A</strong>ction
+            </div>
+          </div>
+
+          <div style="background:rgba(250,204,21,0.1);border:1px solid rgba(250,204,21,0.2);border-radius:10px;padding:0.9rem;margin-bottom:0.9rem">
+            <div style="font-size:0.68rem;color:#facc15;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🎮 國中生版本</div>
+            <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">SARSA 更新分數時，用的是「<strong style="color:var(--text)">我下一步真的走了哪步</strong>」。如果下一步是隨機亂走的，那個「亂走」的後果也會被算進去。學到的是自己「實際行為的結果」，比較保守謹慎。</div>
+          </div>
+
+          <div style="background:var(--surface2);border-radius:9px;padding:0.75rem;font-size:0.78rem;line-height:1.7">
+            <span style="color:#fde68a">懸崖行走（Cliff Walking）行為：</span><span style="color:var(--text-muted)">繞遠路走安全路徑——因為學習時考慮自己真的可能失足，路徑較長但穩健</span>
+          </div>
+        </div>
+        <div class="tags"><span class="badge badge-type">On-policy</span><span class="badge badge-use">學當前策略</span><span class="badge badge-norm">較保守穩健</span></div>
+      </div>
+
+    </div>
+
+    <table style="margin-top:1.5rem">
+      <thead><tr><th></th><th style="color:#f9a8d4">Q-Learning</th><th style="color:#fde68a">SARSA</th></tr></thead>
+      <tbody>
+        <tr><td><span class="method-name">策略屬性</span></td><td>Off-policy（脫離策略）</td><td>On-policy（跟著策略）</td></tr>
+        <tr><td><span class="method-name">更新用的動作</span></td><td>下一狀態的 <strong>max Q</strong>（假設最優）</td><td>實際採取的 <strong>a'</strong>（真實動作）</td></tr>
+        <tr><td><span class="method-name">學到的策略</span></td><td>理論最優策略（較激進）</td><td>當前執行策略（較保守）</td></tr>
+        <tr><td><span class="method-name">懸崖行走</span></td><td>貼崖邊走（最短但有風險）</td><td>繞遠路走（安全但較長）</td></tr>
+        <tr><td><span class="method-name">延伸應用</span></td><td>DQN（Deep Q-Network）</td><td>Actor-Critic 的基礎概念</td></tr>
+      </tbody>
+    </table>
+
+    <div style="margin-top:1rem;padding:0.8rem 1rem;background:rgba(244,114,182,0.06);border:1px solid rgba(244,114,182,0.15);border-radius:10px;font-size:0.82rem;color:var(--text-dim);line-height:1.7">
+      💡 <strong style="color:var(--text)">一句話記：</strong>Q-Learning 問「下一步<em>最好</em>能拿幾分？」→ Off-policy；SARSA 問「我下一步<em>實際</em>拿了幾分？」→ On-policy。
+    </div>
+  </div>
+
+  <!-- ── DDPG ── -->
+  <div class="section" style="margin-top:2.5rem">
+    <div class="section-title">// DDPG — Actor-Critic 雙網路架構</div>
+
+    <div style="background:var(--surface);border:1px solid rgba(244,114,182,0.25);border-radius:14px;padding:1.25rem;margin-bottom:1.25rem">
+      <div style="font-size:0.7rem;color:#f472b6;font-family:'JetBrains Mono',monospace;margin-bottom:0.7rem">💡 為什麼需要 DDPG？</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;font-size:0.82rem;color:var(--text-dim);line-height:1.8">
+        <div><strong style="color:var(--text)">DQN 的限制：</strong>只能處理<strong style="color:var(--text)">離散動作</strong>（左/右/跳）。機械手臂角度、油門大小這類連續數值無法用 argmax 選動作。</div>
+        <div><strong style="color:var(--text)">DDPG 的解法：</strong>用 Actor 神經網路直接輸出連續動作值，Critic 評估這個動作的好壞，兩者互相配合。</div>
+      </div>
+    </div>
+
+    <div class="grid" style="margin:0 0 1.25rem">
+
+      <div class="card pink">
+        <div class="card-head"><div class="icon">🎭</div><div><div class="card-title">Actor（演員網路）</div><div class="card-en">Policy Network — 決定做什麼</div></div></div>
+        <div class="card-body">
+          輸入狀態 s，輸出<strong style="color:var(--text)">確定性連續動作 μ(s)</strong>（一個具體數值，不是機率分布）。
+          <div class="formula">a = μ(s; θᵘ)　← θᵘ 是 Actor 的參數<br>目標：找到讓 Q 值最大的動作<br>更新：∇Q 對 θᵘ 求梯度（Policy Gradient）</div>
+          <div style="background:rgba(244,114,182,0.1);border:1px solid rgba(244,114,182,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+            <div style="font-size:0.68rem;color:#f472b6;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🎭 國中生版本</div>
+            <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">Actor 就像「選手」，看到目前狀況，直接決定要做什麼動作。輸出的是一個具體數值（如「把手臂轉 47.3°」），不是選擇題。<strong style="color:var(--text)">靠 Critic 的評分來學習怎麼做更好</strong>。</div>
+          </div>
+        </div>
+        <div class="tags"><span class="badge badge-type">輸入：s</span><span class="badge badge-use">輸出：μ(s) 連續動作</span></div>
+      </div>
+
+      <div class="card yellow">
+        <div class="card-head"><div class="icon">🎯</div><div><div class="card-title">Critic（評論家網路）</div><div class="card-en">Q-Value Network — 評價好不好</div></div></div>
+        <div class="card-body">
+          輸入狀態 s 和動作 a，輸出<strong style="color:var(--text)">Q(s,a) 值</strong>（這個動作的長期預期獎勵）。
+          <div class="formula">Q = Q(s, a; θᴼ)　← θᴼ 是 Critic 的參數<br>目標：準確估計動作的長期價值<br>更新：TD-error = Q預測 vs (r + γQ(s', μ(s')))</div>
+          <div style="background:rgba(250,204,21,0.1);border:1px solid rgba(250,204,21,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem">
+            <div style="font-size:0.68rem;color:#facc15;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">🎯 國中生版本</div>
+            <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">Critic 就像「教練」，看到選手的動作，給一個分數（Q 值）：「這個動作長遠來看值 8.3 分」。<strong style="color:var(--text)">Actor 根據這個分數調整自己的動作策略</strong>。教練學得越準，選手就進步越快。</div>
+          </div>
+        </div>
+        <div class="tags"><span class="badge badge-type">輸入：s + a</span><span class="badge badge-use">輸出：Q(s,a) 數值</span></div>
+      </div>
+
+    </div>
+
+    <div style="background:var(--surface2);border:1px solid rgba(244,114,182,0.2);border-radius:12px;padding:1.1rem;margin-bottom:1.25rem">
+      <div style="font-size:0.68rem;color:#f472b6;font-family:'JetBrains Mono',monospace;margin-bottom:0.7rem">🔄 完整訓練流程</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:0.75rem;color:var(--text-dim);line-height:2.2">
+        <span style="color:#f9a8d4">① Actor</span> 看到狀態 s → 輸出動作 a = μ(s)<br>
+        <span style="color:#fde68a">② 執行</span>動作，獲得獎勵 r，進入下一狀態 s'<br>
+        <span style="color:#fde68a">③ Critic</span> 評估 Q(s, a) → 這個動作長期值多少分<br>
+        <span style="color:#fde68a">④ Critic 更新</span>：用 TD-error 讓 Q 估計更準確<br>
+        <span style="color:#f9a8d4">⑤ Actor 更新</span>：沿 ∇Q 方向調整，往讓 Q 更大的動作靠近<br>
+        <span style="color:#94a3b8">⑥ 探索</span>：動作加入 Ornstein-Uhlenbeck 雜訊避免陷入局部最優
+      </div>
+    </div>
+
+    <table>
+      <thead><tr><th></th><th style="color:#93c5fd">DQN</th><th style="color:#f9a8d4">DDPG</th></tr></thead>
+      <tbody>
+        <tr><td><span class="method-name">動作空間</span></td><td>離散（上/下/左/右）</td><td><strong>連續</strong>（0.0 ～ 360.0°）</td></tr>
+        <tr><td><span class="method-name">選動作方式</span></td><td>argmax Q（選最大的格子）</td><td>Actor 網路直接輸出數值</td></tr>
+        <tr><td><span class="method-name">網路數量</span></td><td>1 個 Q 網路</td><td>Actor + Critic 共 2 個</td></tr>
+        <tr><td><span class="method-name">探索方式</span></td><td>ε-greedy（隨機選動作）</td><td>動作 + OU 雜訊</td></tr>
+        <tr><td><span class="method-name">適用場景</span></td><td>遊戲、棋類</td><td>機械手臂、自動駕駛、控制</td></tr>
+      </tbody>
+    </table>
+
+    <div style="margin-top:1rem;padding:0.8rem 1rem;background:rgba(244,114,182,0.06);border:1px solid rgba(244,114,182,0.15);border-radius:10px;font-size:0.82rem;color:var(--text-dim);line-height:1.7">
+      💡 <strong style="color:var(--text)">一句話記：</strong>Actor 決定「做什麼」輸出動作；Critic 評價「有多好」輸出 Q 值；Actor 靠 Critic 的梯度變得更聰明。
+    </div>
+  </div>
 
   <!-- ── 遷移學習 ── -->
   <div class="section" style="margin-top:2.5rem">
@@ -2051,6 +2378,164 @@
         <tr><td><span class="method-name">Bayes' Theorem</span></td><td>看到證據後更新信念</td><td style="color:#93c5fd">先有猜測，看到證據再修正</td></tr>
         <tr><td><span class="method-name">MLE</span></td><td>找最能解釋資料的參數</td><td style="color:#c4b5fd">找最能解釋這份資料的參數</td></tr>
         <tr><td><span class="method-name">Cross Entropy</span></td><td>量預測和真實的差距</td><td style="color:#f9a8d4">猜越準、越有把握，loss 越小</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── 特徵值分解 & SVD ── -->
+  <div class="section" style="margin-top:2.5rem">
+    <div class="section-title">// 特徵值分解 & 奇異值分解（SVD）</div>
+
+    <div class="grid" style="margin:0">
+
+      <!-- 特徵值 & 特徵向量 -->
+      <div class="card blue" style="grid-column:1/-1">
+        <div class="card-head"><div class="icon">λ</div><div><div class="card-title">特徵值 & 特徵向量</div><div class="card-en">Eigenvalue & Eigenvector</div></div></div>
+        <div class="card-body">
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8;margin-bottom:0.9rem">
+            對一個方陣 <strong style="color:var(--text)">A</strong>，如果有一個非零向量 <strong style="color:var(--text)">v</strong>，使得：
+          </div>
+          <div class="formula">A · v = λ · v<br>v = 特徵向量（Eigenvector）<br>λ = 特徵值（Eigenvalue）</div>
+
+          <div style="background:var(--surface2);border:1px solid rgba(79,142,247,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem;margin-bottom:0.9rem">
+            <div style="font-size:0.68rem;color:#4f8ef7;font-family:'JetBrains Mono',monospace;margin-bottom:0.6rem">🔑 核心直覺：矩陣「不改變方向，只改變大小」的特殊向量</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.9rem;font-size:0.8rem;color:var(--text-dim);line-height:1.7">
+              <div>
+                <strong style="color:var(--text)">特徵向量 v：</strong><br>
+                矩陣 A 作用在這個向量上之後，<strong style="color:var(--text)">方向不變</strong>（可能反向），只有長度縮放。這個向量代表資料「最重要的方向」。
+              </div>
+              <div>
+                <strong style="color:var(--text)">特徵值 λ：</strong><br>
+                那個縮放的倍數。λ 越大，代表資料在這個方向的<strong style="color:var(--text)">變異量越大</strong>（資訊越多）；λ 越小，這個方向越不重要。
+              </div>
+            </div>
+          </div>
+
+          <div style="background:rgba(79,142,247,0.1);border:1px solid rgba(79,142,247,0.2);border-radius:10px;padding:0.9rem;margin-bottom:0.9rem">
+            <div style="font-size:0.68rem;color:#4f8ef7;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">λ 國中生版本 — 用身高體重來理解</div>
+            <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">
+              想像 1000 個人的「身高 vs 體重」資料點畫在平面上，會形成一個<strong style="color:var(--text)">斜的橢圓形雲</strong>。<br><br>
+              這個橢圓有兩個軸：<br>
+              &nbsp;· <strong style="color:var(--text)">最長的軸</strong>（點最分散的方向）→ 第一個特徵向量，特徵值最大<br>
+              &nbsp;· <strong style="color:var(--text)">最短的軸</strong>（點最集中的方向）→ 第二個特徵向量，特徵值較小<br><br>
+              特徵值告訴你「這個方向有多重要」：特徵值 6 的方向比特徵值 1 的方向重要 6 倍，保留前者就能保留最多資訊。這正是 PCA 降維的核心邏輯。
+            </div>
+          </div>
+
+          <div style="background:var(--surface2);border-radius:9px;padding:0.85rem;font-size:0.78rem;line-height:1.8">
+            <div style="color:#93c5fd;font-weight:600;margin-bottom:0.4rem">數值範例</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:0.75rem;color:var(--text-dim);line-height:2">
+              A = [[3, 1], [0, 2]]　特徵值：λ₁=3, λ₂=2<br>
+              λ₁=3 的特徵向量 v₁=[1, 0]：A·[1,0] = [3,0] = 3·[1,0] ✓　方向不變，長度變 3 倍<br>
+              λ₂=2 的特徵向量 v₂=[1,-1]：A·[1,-1] = [2,-2] = 2·[1,-1] ✓　方向不變，長度變 2 倍
+            </div>
+          </div>
+        </div>
+        <div class="tags"><span class="badge badge-type">線性代數</span><span class="badge badge-use">PCA 核心</span><span class="badge badge-norm">方陣專用</span></div>
+      </div>
+
+      <!-- 特徵值分解 -->
+      <div class="card purple">
+        <div class="card-head"><div class="icon">∧</div><div><div class="card-title">特徵值分解（EVD）</div><div class="card-en">Eigenvalue Decomposition</div></div></div>
+        <div class="card-body">把<strong style="color:var(--text)">方陣 A 分解</strong>成特徵向量矩陣與特徵值對角矩陣的乘積。
+        <div class="formula">A = Q Λ Q⁻¹<br>Q：各列為特徵向量（方向）<br>Λ：對角線為特徵值（大小）<br>Q⁻¹：Q 的逆矩陣</div>
+        <!-- 協方差矩陣說明 -->
+        <div style="background:var(--surface2);border:1px solid rgba(167,139,250,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem;margin-bottom:0.9rem">
+          <div style="font-size:0.68rem;color:#a78bfa;font-family:'JetBrains Mono',monospace;margin-bottom:0.6rem">📐 EVD 最重要的對象：協方差矩陣是什麼？</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8;margin-bottom:0.7rem">
+            <strong style="color:var(--text)">協方差（Covariance）</strong>= 兩個特徵一起變動的程度：<br>
+            身高↑ 體重也↑ → 正協方差 ；運動量↑ 體脂↓ → 負協方差 ；身高↑ 成績沒變 → 協方差≈0
+          </div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--text-dim);background:var(--surface);border-radius:7px;padding:0.7rem;line-height:2;margin-bottom:0.7rem">
+            <span style="color:#c4b5fd">協方差矩陣 C（3個特徵）：</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;身高&nbsp;&nbsp;&nbsp;體重&nbsp;&nbsp;&nbsp;成績<br>
+            身高 [ <span style="color:#6ee7b7">4.0</span>&nbsp;&nbsp;&nbsp; 2.5&nbsp;&nbsp;&nbsp; 0.1 ]<br>
+            體重 [ 2.5&nbsp;&nbsp;&nbsp; <span style="color:#6ee7b7">3.0</span>&nbsp;&nbsp;&nbsp; 0.2 ]<br>
+            成績 [ 0.1&nbsp;&nbsp;&nbsp; 0.2&nbsp;&nbsp;&nbsp; <span style="color:#6ee7b7">1.5</span> ]<br>
+            <span style="color:var(--text-muted);font-size:0.68rem">↑ 對角線 = 自己的變異數；非對角線 = 兩兩之間的協方差</span>
+          </div>
+          <div style="font-size:0.8rem;color:var(--text-dim);line-height:1.7">
+            協方差矩陣一定是<strong style="color:var(--text)">方陣且對稱</strong>（n 個特徵 → n×n），因此可以做 EVD。<br>
+            對它做 EVD → 特徵向量 = 資料最分散的方向 → 這就是 <strong style="color:var(--text)">PCA 的完整流程</strong>。
+          </div>
+        </div>
+
+        <!-- EVD 應用 -->
+        <div style="background:var(--surface2);border-radius:9px;padding:0.85rem;margin-bottom:0.9rem;font-size:0.78rem;line-height:1.8">
+          <div style="color:#c4b5fd;font-weight:600;margin-bottom:0.5rem">EVD 實際應用</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0.5rem">
+            <div><span style="color:#a78bfa">PCA 降維：</span><span style="color:var(--text-muted)">對協方差矩陣做 EVD，特徵向量=主成分方向，特徵值=重要程度</span></div>
+            <div><span style="color:#a78bfa">Google PageRank：</span><span style="color:var(--text-muted)">網頁連結矩陣的最大特徵向量 = 每個網頁的重要性分數</span></div>
+            <div><span style="color:#a78bfa">人臉辨識（Eigenface）：</span><span style="color:var(--text-muted)">人臉矩陣做 EVD，每張臉用少數特徵向量組合表示</span></div>
+            <div><span style="color:#a78bfa">振動/結構分析：</span><span style="color:var(--text-muted)">特徵值 = 橋梁共振頻率，特徵向量 = 振動模式</span></div>
+            <div><span style="color:#a78bfa">Markov Chain：</span><span style="color:var(--text-muted)">長期穩定機率分布 = 特徵值為 1 的特徵向量</span></div>
+          </div>
+        </div>
+
+        <div style="background:var(--surface2);border-radius:9px;padding:0.75rem;margin-bottom:0.9rem;font-size:0.78rem;line-height:1.7">
+          <span style="color:#a78bfa">限制：</span><span style="color:var(--text-muted)">只能對<strong style="color:var(--text-dim)">方陣</strong>（行數 = 列數）使用；非方陣要改用 SVD</span>
+        </div>
+        <div style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);border-radius:10px;padding:0.9rem">
+          <div style="font-size:0.68rem;color:#a78bfa;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">∧ 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">EVD 就是問：「這個矩陣最喜歡把什麼方向放大？放大幾倍？」<br>拆解成三步：<strong style="color:var(--text)">換到特徵向量的座標系 → 在那裡做縮放 → 換回來</strong>。<br>PCA 的本質就是對協方差矩陣做 EVD，找出資料最分散的幾個方向，然後把資料投影過去，維度就降了。</div>
+        </div></div>
+        <div class="tags"><span class="badge badge-type">線性代數</span><span class="badge badge-use">PCA / PageRank</span><span class="badge badge-warn">僅限方陣</span></div>
+      </div>
+
+      <!-- SVD -->
+      <div class="card teal">
+        <div class="card-head"><div class="icon">Σ</div><div><div class="card-title">奇異值分解（SVD）</div><div class="card-en">Singular Value Decomposition</div></div></div>
+        <div class="card-body"><strong style="color:var(--text)">任意矩陣</strong>（包括長方形）都能分解為三個矩陣的乘積，是特徵值分解的通用版本。
+        <div class="formula">A = U Σ Vᵀ<br>U（m×m）：左奇異向量，輸入空間的方向<br>Σ（m×n）：對角線為奇異值（≥0，由大到小排列）<br>Vᵀ（n×n）：右奇異向量，輸出空間的方向</div>
+
+        <div style="background:var(--surface2);border:1px solid rgba(34,211,238,0.2);border-radius:10px;padding:0.9rem;margin-top:0.9rem;margin-bottom:0.9rem">
+          <div style="font-size:0.68rem;color:#22d3ee;font-family:'JetBrains Mono',monospace;margin-bottom:0.6rem">🔬 奇異值 vs 特徵值</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.7rem;font-size:0.78rem">
+            <div style="background:rgba(167,139,250,0.07);border:1px solid rgba(167,139,250,0.15);border-radius:7px;padding:0.65rem">
+              <div style="color:#c4b5fd;font-weight:600;margin-bottom:0.3rem">特徵值（EVD）</div>
+              <div style="color:var(--text-muted);line-height:1.6">只對方陣有意義<br>可以是負數或複數<br>透過 A·v = λ·v 定義</div>
+            </div>
+            <div style="background:rgba(34,211,238,0.07);border:1px solid rgba(34,211,238,0.15);border-radius:7px;padding:0.65rem">
+              <div style="color:#67e8f9;font-weight:600;margin-bottom:0.3rem">奇異值（SVD）</div>
+              <div style="color:var(--text-muted);line-height:1.6">對任意矩陣有意義<br>永遠 ≥ 0<br>= 特徵值開根號（對稱正定矩陣）</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:var(--surface2);border-radius:9px;padding:0.75rem;margin-bottom:0.9rem;font-size:0.78rem;line-height:1.7">
+          <span style="color:#22d3ee">低秩近似：</span><span style="color:var(--text-muted)">只保留前 k 個最大奇異值，重建出「壓縮版」的矩陣</span><br>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:#67e8f9;margin-top:0.4rem">Aₖ = U[:,:k] · Σ[:k,:k] · Vᵀ[:k,:]　← 最佳 k 秩近似</div>
+        </div>
+
+        <div style="background:rgba(34,211,238,0.1);border:1px solid rgba(34,211,238,0.2);border-radius:10px;padding:0.9rem;margin-bottom:0.9rem">
+          <div style="font-size:0.68rem;color:#22d3ee;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">Σ 國中生版本</div>
+          <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">把任何一張矩陣（想像成一張圖片）分解成三個動作：<strong style="color:var(--text)">「旋轉 → 拉伸/壓縮 → 再旋轉」</strong>。Σ 的對角線數字（奇異值）告訴你每個方向被拉了多少。<br><br>最妙的地方：只保留前幾個最大的奇異值，就能用少量數字「重建」出原本矩陣的近似版——這就是<strong style="color:var(--text)">圖片壓縮、推薦系統、降維</strong>的原理。</div>
+        </div>
+
+        <div style="background:var(--surface2);border-radius:9px;padding:0.85rem;font-size:0.78rem;line-height:1.8">
+          <div style="color:#22d3ee;font-weight:600;margin-bottom:0.5rem">SVD 的實際應用</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:0.5rem">
+            <div><span style="color:#67e8f9">PCA：</span><span style="color:var(--text-muted)">對資料矩陣做 SVD，右奇異向量 = 主成分方向</span></div>
+            <div><span style="color:#67e8f9">推薦系統：</span><span style="color:var(--text-muted)">分解「用戶×電影」評分矩陣，找潛在因子</span></div>
+            <div><span style="color:#67e8f9">影像壓縮：</span><span style="color:var(--text-muted)">只保留前 k 個奇異值重建圖片，減少儲存量</span></div>
+            <div><span style="color:#67e8f9">自然語言：</span><span style="color:var(--text-muted)">LSA（潛在語義分析）對詞頻矩陣做 SVD</span></div>
+            <div><span style="color:#67e8f9">數值計算：</span><span style="color:var(--text-muted)">求偽逆（Moore-Penrose）、解方程組的穩定方法</span></div>
+          </div>
+        </div>
+        </div>
+        <div class="tags"><span class="badge badge-type">線性代數</span><span class="badge badge-use">任意矩陣</span><span class="badge badge-norm">PCA / 推薦系統 / 壓縮</span><span class="badge badge-use">最通用</span></div>
+      </div>
+
+    </div>
+
+    <table style="margin-top:1.5rem">
+      <thead><tr><th></th><th style="color:#a78bfa">特徵值分解（EVD）</th><th style="color:#22d3ee">奇異值分解（SVD）</th></tr></thead>
+      <tbody>
+        <tr><td><span class="method-name">適用矩陣</span></td><td>方陣（n×n）</td><td>任意矩陣（m×n）</td></tr>
+        <tr><td><span class="method-name">分解結果</span></td><td>A = Q Λ Q⁻¹</td><td>A = U Σ Vᵀ</td></tr>
+        <tr><td><span class="method-name">值的範圍</span></td><td>特徵值可為負、複數</td><td>奇異值永遠 ≥ 0</td></tr>
+        <tr><td><span class="method-name">兩者關係</span></td><td colspan="2" style="color:#a5f3fc;text-align:center">AᵀA 的特徵值 = A 的奇異值的平方；對稱正定矩陣時兩者等價</td></tr>
+        <tr><td><span class="method-name">主要用途</span></td><td>PCA（協方差矩陣）、動力系統</td><td>PCA（資料矩陣）、推薦系統、壓縮、NLP</td></tr>
       </tbody>
     </table>
   </div>
@@ -3816,6 +4301,83 @@
       </div>
       <div class="tags"><span class="badge badge-type">統計方法</span><span class="badge badge-use">語言模型</span><span class="badge badge-use">文本分類</span></div>
     </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">// 主題建模（Topic Modeling）— LDA vs NMF</div>
+
+    <div style="background:var(--surface);border:1px solid rgba(236,72,153,0.25);border-radius:14px;padding:1.25rem;margin-bottom:1.25rem">
+      <div style="font-size:0.7rem;color:#ec4899;font-family:'JetBrains Mono',monospace;margin-bottom:0.7rem">💡 主題建模在做什麼？</div>
+      <div style="font-size:0.83rem;color:var(--text-dim);line-height:1.8">給一堆文章，自動找出「這批文章在討論哪些主題」，並計算每篇文章各主題的比重。<strong style="color:var(--text)">不需要任何標籤</strong>，是非監督式學習。例如：5 萬篇新聞 → 自動發現「體育」「政治」「財經」等主題。</div>
+    </div>
+
+    <div class="grid" style="margin:0">
+
+      <div class="card orange" style="grid-column:1/-1">
+        <div class="card-head"><div class="icon">≥0</div><div><div class="card-title">NMF（非負矩陣分解）</div><div class="card-en">Non-negative Matrix Factorization</div></div></div>
+        <div class="card-body">
+          把「文件×詞彙」矩陣分解為兩個非負矩陣的乘積，直接得到每篇文章的主題比重與每個主題的關鍵詞。
+          <div class="formula">V (文件×詞彙) ≈ W (文件×主題) × H (主題×詞彙)<br>三個矩陣的所有元素都必須 ≥ 0<br>目標：最小化 ‖V − WH‖²（重建誤差）</div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.9rem;margin-top:0.9rem;margin-bottom:0.9rem">
+            <div style="background:var(--surface2);border:1px solid rgba(251,146,60,0.2);border-radius:10px;padding:0.9rem">
+              <div style="font-size:0.68rem;color:#fb923c;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">W — 文件×主題矩陣</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--text-dim);line-height:2">
+                <span style="color:#fdba74">文章 1：</span>體育 0.72、政治 0.18、財經 0.10<br>
+                <span style="color:#fdba74">文章 2：</span>體育 0.05、政治 0.85、財經 0.10<br>
+                <span style="color:#94a3b8;font-size:0.65rem">每篇文章在各主題的比重（全為正數）</span>
+              </div>
+            </div>
+            <div style="background:var(--surface2);border:1px solid rgba(251,146,60,0.2);border-radius:10px;padding:0.9rem">
+              <div style="font-size:0.68rem;color:#fb923c;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">H — 主題×詞彙矩陣</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:0.72rem;color:var(--text-dim);line-height:2">
+                <span style="color:#fdba74">主題1（體育）：</span>球、比賽、球員…<br>
+                <span style="color:#fdba74">主題2（政治）：</span>選舉、政策、議員…<br>
+                <span style="color:#94a3b8;font-size:0.65rem">每個主題由哪些詞彙組成（全為正數）</span>
+              </div>
+            </div>
+          </div>
+
+          <div style="background:var(--surface2);border:1px solid rgba(251,146,60,0.2);border-radius:10px;padding:0.9rem;margin-bottom:0.9rem">
+            <div style="font-size:0.68rem;color:#fb923c;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">⚠️ 核心限制：輸入矩陣所有元素必須 ≥ 0</div>
+            <div style="font-size:0.8rem;color:var(--text-dim);line-height:1.7;margin-bottom:0.6rem">NMF 的更新規則建立在「全部非負」的假設上。若輸入有負值（如 TF-IDF 浮點誤差），分解結果無意義或演算法發散。</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;font-size:0.78rem">
+              <div style="background:rgba(239,68,68,0.07);border:1px solid rgba(239,68,68,0.2);border-radius:7px;padding:0.6rem">
+                <div style="color:#fca5a5;font-weight:600;margin-bottom:0.3rem">✗ 有負值不能直接用</div>
+                <div style="color:var(--text-muted)">TF-IDF 平滑後出現極小負數 → 需先處理</div>
+              </div>
+              <div style="background:rgba(251,146,60,0.07);border:1px solid rgba(251,146,60,0.2);border-radius:7px;padding:0.6rem">
+                <div style="color:#fdba74;font-weight:600;margin-bottom:0.3rem">✓ 解決方案</div>
+                <div style="color:var(--text-muted);font-family:'JetBrains Mono',monospace;font-size:0.7rem">V = np.maximum(0, tfidf)<br>或改用原始詞頻矩陣（BoW）</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="background:rgba(251,146,60,0.1);border:1px solid rgba(251,146,60,0.2);border-radius:10px;padding:0.9rem;margin-bottom:0.9rem">
+            <div style="font-size:0.68rem;color:#fb923c;font-family:'JetBrains Mono',monospace;margin-bottom:0.5rem">≥0 國中生版本</div>
+            <div style="font-size:0.82rem;color:var(--text-dim);line-height:1.8">把一張「5萬篇文章 × 10萬個詞」的大表格，分解成兩個小表格相乘：一個記「每篇文章談了多少比例的體育/政治/財經」，另一個記「每個主題最常用哪些詞」。<strong style="color:var(--text)">因為比例和詞頻都不可能是負數，所以三個矩陣全部元素必須 ≥ 0</strong>——這就是「非負」的由來，也是最大的限制。</div>
+          </div>
+
+          <div style="background:var(--surface2);border-radius:9px;padding:0.75rem;font-size:0.78rem;line-height:1.7">
+            <span style="color:#fb923c">為何比 PCA 更適合主題建模：</span><span style="color:var(--text-muted)">PCA 的主成分含負值（「體育主題佔 −0.3」無意義）；NMF 全正數，直接對應「主題比重」，可解釋性強</span>
+          </div>
+        </div>
+        <div class="tags"><span class="badge badge-type">非監督式</span><span class="badge badge-use">主題建模</span><span class="badge badge-norm">非負可解讀</span><span class="badge badge-warn">輸入需全 ≥ 0</span></div>
+      </div>
+
+    </div>
+
+    <table style="margin-top:1.5rem">
+      <thead><tr><th></th><th style="color:#a78bfa">LDA（潛在狄利克雷分配）</th><th style="color:#fb923c">NMF（非負矩陣分解）</th></tr></thead>
+      <tbody>
+        <tr><td><span class="method-name">數學基礎</span></td><td>貝葉斯機率模型</td><td>矩陣分解（最小化重建誤差）</td></tr>
+        <tr><td><span class="method-name">輸入要求</span></td><td>詞頻計數（整數，天然非負）</td><td>所有元素嚴格 ≥ 0</td></tr>
+        <tr><td><span class="method-name">主題比重</span></td><td>機率分布（加總=1）</td><td>非負權重（加總不一定=1）</td></tr>
+        <tr><td><span class="method-name">可解釋性</span></td><td>高（機率語意清晰）</td><td>高（非負直接對應比重）</td></tr>
+        <tr><td><span class="method-name">計算速度</span></td><td>較慢（MCMC/變分推斷）</td><td>較快（梯度更新）</td></tr>
+        <tr><td><span class="method-name">適合輸入</span></td><td>原始詞頻（BoW）</td><td>TF-IDF（需確保非負）或 BoW</td></tr>
+      </tbody>
+    </table>
   </div>
 
   <div class="section">
